@@ -1,0 +1,276 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Vehicle Entry
+{% endblock %}
+
+{% block body %}
+
+<h1>Vehicle Entry</h1>
+
+<p>
+    Verify parking bookings and manage vehicle entry records.
+</p>
+
+<hr>
+
+<h2>Entry Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Today's Entries</th>
+        <th>Currently Parked</th>
+        <th>Pending Entries</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Vehicles entered today</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Vehicles currently inside</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Bookings awaiting entry</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Verify Booking</h2>
+
+<p>
+    Verify the user's booking before recording vehicle entry.
+</p>
+
+<form method="get">
+
+    <label for="booking_id">
+        Booking ID:
+    </label>
+
+    <input
+        type="text"
+        id="booking_id"
+        name="booking_id"
+        placeholder="Enter booking ID"
+    >
+
+    <button type="submit">
+        Verify Booking
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<h2>Booking Information</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Booking ID</th>
+        <th>User</th>
+        <th>Vehicle Number</th>
+        <th>Parking Location</th>
+        <th>Slot</th>
+        <th>Booking Date</th>
+        <th>Booking Time</th>
+        <th>Status</th>
+    </tr>
+
+    <tr>
+
+        <td>
+            SB000001
+        </td>
+
+        <td>
+            Example User
+        </td>
+
+        <td>
+            KL-11-AB-1234
+        </td>
+
+        <td>
+            Example Parking
+        </td>
+
+        <td>
+            A-01
+        </td>
+
+        <td>
+            18-09-2026
+        </td>
+
+        <td>
+            10:00 AM - 12:00 PM
+        </td>
+
+        <td>
+            Confirmed
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<p>
+    <a href="#">
+        Verify This Booking
+    </a>
+</p>
+
+<hr>
+
+<h2>Record Vehicle Entry</h2>
+
+<p>
+    Record the vehicle's entry after the booking has been verified.
+</p>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <label for="entry_booking_id">
+        Booking ID:
+    </label>
+
+    <input
+        type="text"
+        id="entry_booking_id"
+        name="booking_id"
+        placeholder="Booking ID"
+    >
+
+    <br><br>
+
+    <label for="vehicle_number">
+        Vehicle Number:
+    </label>
+
+    <input
+        type="text"
+        id="vehicle_number"
+        name="vehicle_number"
+        placeholder="Vehicle registration number"
+    >
+
+    <br><br>
+
+    <label for="entry_time">
+        Entry Time:
+    </label>
+
+    <input
+        type="datetime-local"
+        id="entry_time"
+        name="entry_time"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Record Entry
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<h2>Entry Records</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+
+        <tr>
+            <th>#</th>
+            <th>Booking ID</th>
+            <th>User</th>
+            <th>Vehicle Number</th>
+            <th>Parking Location</th>
+            <th>Slot</th>
+            <th>Entry Time</th>
+            <th>Status</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <!-- Temporary sample record -->
+
+        <tr>
+
+            <td>1</td>
+
+            <td>
+                SB000001
+            </td>
+
+            <td>
+                Example User
+            </td>
+
+            <td>
+                KL-11-AB-1234
+            </td>
+
+            <td>
+                Example Parking
+            </td>
+
+            <td>
+                A-01
+            </td>
+
+            <td>
+                10:15 AM
+            </td>
+
+            <td>
+                Entered
+            </td>
+
+        </tr>
+
+        <!-- Django entry records will be displayed here later -->
+
+    </tbody>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Vehicle Entry</h2>
+
+<p>
+    A vehicle can enter the parking area only after its booking
+    has been verified successfully.
+</p>
+
+{% endblock %}

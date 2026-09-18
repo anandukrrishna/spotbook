@@ -1,0 +1,173 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Reports
+{% endblock %}
+
+{% block body %}
+
+<h1>Reports</h1>
+
+<p>
+    View parking system statistics and reports.
+</p>
+
+<hr>
+
+<h2>Select a Report</h2>
+
+<p>
+    <a href="#">
+        Booking Statistics
+    </a>
+</p>
+
+<p>
+    <a href="#">
+        Slot Statistics
+    </a>
+</p>
+
+<p>
+    <a href="#">
+        Location Statistics
+    </a>
+</p>
+
+<p>
+    <a href="#">
+        Revenue Statistics
+    </a>
+</p>
+
+<hr>
+
+<h2>Report Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Total Bookings</th>
+        <th>Total Slots</th>
+        <th>Total Locations</th>
+        <th>Total Revenue</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Total bookings</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Parking slots</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Parking locations</p>
+        </td>
+
+        <td>
+            <h2>₹0</h2>
+            <p>Total revenue</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Available Reports</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Report</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+
+    <tr>
+        <td>
+            Booking Statistics
+        </td>
+
+        <td>
+            View booking activity and booking status statistics.
+        </td>
+
+        <td>
+            <a href="#">
+                View Report
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Slot Statistics
+        </td>
+
+        <td>
+            View parking slot availability, reservation, and occupancy statistics.
+        </td>
+
+        <td>
+            <a href="#">
+                View Report
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Location Statistics
+        </td>
+
+        <td>
+            View parking activity and usage statistics by location.
+        </td>
+
+        <td>
+            <a href="#">
+                View Report
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Revenue Statistics
+        </td>
+
+        <td>
+            View parking revenue and charge-related statistics.
+        </td>
+
+        <td>
+            <a href="#">
+                View Report
+            </a>
+        </td>
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Reports</h2>
+
+<p>
+    Reports will be generated from the parking, booking, slot,
+    and payment data available in the SpotBook system.
+</p>
+
+{% endblock %}

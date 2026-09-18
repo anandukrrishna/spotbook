@@ -1,0 +1,202 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - QR Verification
+{% endblock %}
+
+{% block body %}
+
+<h1>QR Verification</h1>
+
+<p>
+    Scan and verify parking booking QR codes before allowing vehicle entry.
+</p>
+
+<hr>
+
+<!-- Verification Overview -->
+
+<h2>Verification Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Total Verifications</th>
+        <th>Verified Bookings</th>
+        <th>Invalid QR Codes</th>
+        <th>Pending Verification</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Total QR verification attempts</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Successfully verified</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Invalid or expired QR codes</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Awaiting verification</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Scan QR -->
+
+<h2>Scan QR Code</h2>
+
+<p>
+    Scan the QR code provided by the user to retrieve the associated
+    parking booking.
+</p>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <label for="qr_code">
+        QR Code / Booking ID:
+    </label>
+
+    <input
+        type="text"
+        id="qr_code"
+        name="qr_code"
+        placeholder="Enter or scan QR code"
+    >
+
+    <button type="submit">
+        Scan / Verify
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<!-- Booking Verification -->
+
+<h2>Verify Booking</h2>
+
+<p>
+    Verify the booking details associated with the scanned QR code.
+</p>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Booking ID</th>
+        <th>User</th>
+        <th>Parking Location</th>
+        <th>Slot</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Verification</th>
+    </tr>
+
+    <tr>
+
+        <td>
+            SB000001
+        </td>
+
+        <td>
+            Example User
+        </td>
+
+        <td>
+            Example Parking
+        </td>
+
+        <td>
+            A-01
+        </td>
+
+        <td>
+            18-09-2026
+        </td>
+
+        <td>
+            10:00 AM - 12:00 PM
+        </td>
+
+        <td>
+            Confirmed
+        </td>
+
+        <td>
+            <a href="#">
+                Verify Booking
+            </a>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Verification Result -->
+
+<h2>Verification Result</h2>
+
+<p>
+    The booking verification result will be displayed here after
+    scanning a QR code.
+</p>
+
+<p>
+    <strong>Verification Status:</strong>
+    Not Verified
+</p>
+
+<p>
+    <strong>Booking Status:</strong>
+    -
+</p>
+
+<p>
+    <strong>Vehicle:</strong>
+    -
+</p>
+
+<p>
+    <strong>Parking Slot:</strong>
+    -
+</p>
+
+<hr>
+
+<!-- Verification Information -->
+
+<h2>QR Verification</h2>
+
+<ul>
+    <li>Scan the user's booking QR code.</li>
+    <li>Retrieve the associated booking.</li>
+    <li>Check the booking date and time.</li>
+    <li>Verify the parking slot.</li>
+    <li>Confirm that the booking is valid.</li>
+</ul>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SpotBook - Login</title>
+</head>
+
+<body>
+
+    <main>
+
+        <h1>SpotBook</h1>
+
+        <h2>Login</h2>
+
+        <p>Login to your SpotBook account</p>
+
+
+        <!-- Login Error -->
+
+        {% if error %}
+        <p role="alert">
+            {{ error }}
+        </p>
+        {% endif %}
+
+
+        <!-- Login Form -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- Username -->
+
+            <div>
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input type="text" id="username" name="username" placeholder="Enter your username"
+                    autocomplete="username" required maxlength="30">
+
+            </div>
+
+
+            <br>
+
+
+            <!-- Password -->
+
+            <div>
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input type="password" id="password" name="password" placeholder="Enter your password"
+                    autocomplete="current-password" required minlength="6" maxlength="20">
+
+                <button type="button" onclick="togglePassword()">
+                    Show Password
+                </button>
+
+            </div>
+
+            <br>
+
+            <!-- Login Button -->
+
+            <button type="submit">
+                Login
+            </button>
+
+
+        </form>
+
+
+        <br>
+
+
+        <!-- Forgot Password -->
+
+        <a href="#">
+            Forgot Password?
+        </a>
+
+
+        <br>
+        <br>
+
+
+        <!-- Registration -->
+
+        <p>
+            Don't have an account?
+            <a href="#">
+                Create an account
+            </a>
+        </p>
+
+    </main>
+
+
+    <!-- Show / Hide Password -->
+
+    <script>
+
+        function togglePassword() {
+
+            const password = document.getElementById("password");
+            const button = event.target;
+
+            if (password.type === "password") {
+
+                password.type = "text";
+                button.textContent = "Hide Password";
+
+            } else {
+
+                password.type = "password";
+                button.textContent = "Show Password";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

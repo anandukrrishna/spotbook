@@ -1,0 +1,175 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Parking Charges
+{% endblock %}
+
+{% block body %}
+
+<h1>Parking Charges</h1>
+
+<p>
+    Manage parking charges for the SpotBook parking system.
+</p>
+
+<hr>
+
+<!-- Charge Overview -->
+
+<h2>Charge Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Total Charge Rules</th>
+        <th>Active Charges</th>
+        <th>Inactive Charges</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Total charge rules</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently active</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently inactive</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Add Charge -->
+
+<h2>Add Parking Charge</h2>
+
+<p>
+    Create a new parking charge rule for a parking location or slot.
+</p>
+
+<p>
+    <a href="#">
+        + Add New Charge
+    </a>
+</p>
+
+<hr>
+
+<!-- View Charges -->
+
+<h2>Parking Charge Rules</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+
+        <tr>
+            <th>#</th>
+            <th>Parking Location</th>
+            <th>Vehicle Type</th>
+            <th>Charge Type</th>
+            <th>Rate</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <!-- Temporary sample charge -->
+
+        <tr>
+
+            <td>1</td>
+
+            <td>
+                Example Parking
+            </td>
+
+            <td>
+                Car
+            </td>
+
+            <td>
+                Per Hour
+            </td>
+
+            <td>
+                ₹50 / Hour
+            </td>
+
+            <td>
+                Active
+            </td>
+
+            <td>
+                <a href="#">
+                    View
+                </a>
+
+                |
+
+                <a href="#">
+                    Edit
+                </a>
+
+                |
+
+                <a href="#">
+                    Update
+                </a>
+
+            </td>
+
+        </tr>
+
+        <!-- Django charge records will be displayed here later -->
+
+    </tbody>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Update Charge -->
+
+<h2>Update Parking Charge</h2>
+
+<p>
+    Update the rate or other details of an existing parking charge rule.
+</p>
+
+<p>
+    <a href="#">
+        Manage Charge Updates
+    </a>
+</p>
+
+<hr>
+
+<!-- Charge Information -->
+
+<h2>Charge Management</h2>
+
+<ul>
+    <li>View existing parking charges</li>
+    <li>Add new parking charges</li>
+    <li>Update existing parking charges</li>
+</ul>
+
+{% endblock %}

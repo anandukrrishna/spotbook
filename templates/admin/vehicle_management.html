@@ -1,0 +1,31 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Vehicle Management
+{% endblock %}
+
+{% block body %}
+
+<h1>Vehicle Management</h1>
+
+<p>
+    Manage vehicle entry and vehicle exit operations.
+</p>
+
+<hr>
+
+<h2>Select an Action</h2>
+
+<p>
+    <a href="{% url 'VehicleEntry' %}">
+        Vehicle Entry
+    </a>
+</p>
+
+<p>
+    <a href="{% url 'VehicleExit' %}">
+        Vehicle Exit
+    </a>
+</p>
+
+{% endblock %}

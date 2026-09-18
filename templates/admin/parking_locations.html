@@ -1,0 +1,150 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Parking Locations
+{% endblock %}
+
+{% block body %}
+
+<h1>Parking Locations</h1>
+
+<p>
+    Manage all parking locations in the SpotBook system.
+</p>
+
+<hr>
+
+<h2>Location Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+    <tr>
+        <th>Total Locations</th>
+        <th>Active Locations</th>
+        <th>Inactive Locations</th>
+    </tr>
+
+    <tr align="center">
+        <td>
+            <h2>0</h2>
+            <p>Total parking locations</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently active</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently inactive</p>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<hr>
+
+<h2>Search Locations</h2>
+
+<form method="get">
+
+    <label for="search">
+        Search Location:
+    </label>
+
+    <input
+        type="text"
+        id="search"
+        name="search"
+        placeholder="Location name or address"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    <button type="reset">
+        Clear
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<h2>Registered Parking Locations</h2>
+
+<p>
+    <a href="#">
+        + Add New Location
+    </a>
+</p>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Location Name</th>
+            <th>Address</th>
+            <th>Total Slots</th>
+            <th>Available Slots</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr>
+            <td>1</td>
+            <td>Example Parking</td>
+            <td>Kozhikode, Kerala</td>
+            <td>50</td>
+            <td>35</td>
+            <td>Active</td>
+
+            <td>
+                <a href="#">View</a>
+                |
+                <a href="#">Edit</a>
+                |
+                <a href="#">Deactivate</a>
+                |
+                <a href="#">Delete</a>
+            </td>
+        </tr>
+
+    </tbody>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Location Management</h2>
+
+<p>
+    <strong>Add Location:</strong>
+    Add a new parking location to the system.
+</p>
+
+<p>
+    <strong>Edit Location:</strong>
+    Update the details of an existing parking location.
+</p>
+
+<p>
+    <strong>Deactivate:</strong>
+    Temporarily disable a parking location.
+</p>
+
+<p>
+    <strong>Delete:</strong>
+    Remove a parking location from the system.
+</p>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - User Management
+{% endblock %}
+
+{% block body %}
+
+<h1>User Management</h1>
+
+<p>
+    Manage and monitor all registered users in the SpotBook system.
+</p>
+
+<hr>
+
+<!-- User Statistics -->
+
+<h2>User Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+    <tr>
+        <th>Total Users</th>
+        <th>Active Users</th>
+        <th>Inactive Users</th>
+    </tr>
+
+    <tr align="center">
+        <td>
+            <h2>0</h2>
+            <p>Total registered users</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently active</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently inactive</p>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<hr>
+
+<!-- Search and Filter -->
+
+<h2>Search & Filter Users</h2>
+
+<form method="get">
+
+    <label for="search">
+        Search User:
+    </label>
+
+    <input
+        type="text"
+        id="search"
+        name="search"
+        placeholder="Name, username, email or phone"
+    >
+
+    &nbsp;
+
+    <label for="status">
+        Status:
+    </label>
+
+    <select id="status" name="status">
+        <option value="">All Users</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
+
+    &nbsp;
+
+    <button type="submit">
+        Search
+    </button>
+
+    <button type="reset">
+        Clear
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<!-- Users Table -->
+
+<h2>Registered Users</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <!-- Temporary sample row -->
+
+        <tr>
+            <td>1</td>
+            <td>Example User</td>
+            <td>example</td>
+            <td>example@email.com</td>
+            <td>9876543210</td>
+
+            <td>
+                Active
+            </td>
+
+            <td>
+                <a href="#">View</a>
+                |
+                <a href="#">Deactivate</a>
+                |
+                <a href="#">Delete</a>
+            </td>
+        </tr>
+
+        <!-- Django users will be displayed here later -->
+
+    </tbody>
+
+</table>
+
+<br>
+
+<p>
+    Showing registered users from the SpotBook system.
+</p>
+
+<hr>
+
+<!-- User Actions -->
+
+<h2>User Actions</h2>
+
+<p>
+    <strong>View:</strong>
+    View complete information about a selected user.
+</p>
+
+<p>
+    <strong>Activate / Deactivate:</strong>
+    Change the account status of a user.
+</p>
+
+<p>
+    <strong>Delete:</strong>
+    Permanently remove a user from the system.
+</p>
+
+{% endblock %}

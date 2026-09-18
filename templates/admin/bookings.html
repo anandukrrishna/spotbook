@@ -1,0 +1,297 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Booking Management
+{% endblock %}
+
+{% block body %}
+
+<h1>Booking Management</h1>
+
+<p>
+    Manage and monitor all parking bookings in the SpotBook system.
+</p>
+
+<hr>
+
+<!-- Booking Overview -->
+
+<h2>Booking Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Total Bookings</th>
+        <th>Upcoming Bookings</th>
+        <th>Active Bookings</th>
+        <th>Completed Bookings</th>
+        <th>Cancelled Bookings</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Total bookings</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Upcoming bookings</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Currently active</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Completed bookings</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Cancelled bookings</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Search and Filter -->
+
+<h2>Search & Filter Bookings</h2>
+
+<form method="get">
+
+    <label for="search">
+        Search Booking:
+    </label>
+
+    <input
+        type="text"
+        id="search"
+        name="search"
+        placeholder="Booking ID, username or slot number"
+    >
+
+    &nbsp;
+
+    <label for="status">
+        Status:
+    </label>
+
+    <select id="status" name="status">
+
+        <option value="">
+            All Status
+        </option>
+
+        <option value="pending">
+            Pending
+        </option>
+
+        <option value="confirmed">
+            Confirmed
+        </option>
+
+        <option value="active">
+            Active
+        </option>
+
+        <option value="completed">
+            Completed
+        </option>
+
+        <option value="cancelled">
+            Cancelled
+        </option>
+
+    </select>
+
+    &nbsp;
+
+    <label for="date">
+        Date:
+    </label>
+
+    <input
+        type="date"
+        id="date"
+        name="date"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Search / Filter
+    </button>
+
+    <button type="reset">
+        Clear
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<!-- All Bookings -->
+
+<h2>All Bookings</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+
+        <tr>
+            <th>#</th>
+            <th>Booking ID</th>
+            <th>User</th>
+            <th>Parking Location</th>
+            <th>Slot</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Duration</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <!-- Temporary sample booking -->
+
+        <tr>
+
+            <td>1</td>
+
+            <td>
+                SB000001
+            </td>
+
+            <td>
+                Example User
+            </td>
+
+            <td>
+                Example Parking
+            </td>
+
+            <td>
+                A-01
+            </td>
+
+            <td>
+                18-09-2026
+            </td>
+
+            <td>
+                10:00 AM
+            </td>
+
+            <td>
+                2 Hours
+            </td>
+
+            <td>
+                ₹100
+            </td>
+
+            <td>
+                Confirmed
+            </td>
+
+            <td>
+                <a href="#">
+                    View
+                </a>
+
+                |
+
+                <a href="#">
+                    Cancel
+                </a>
+            </td>
+
+        </tr>
+
+        <!-- Django booking records will be displayed here later -->
+
+    </tbody>
+
+</table>
+
+<br>
+
+<hr>
+
+<!-- Booking Details -->
+
+<h2>Booking Details</h2>
+
+<p>
+    View complete information about a selected parking booking.
+</p>
+
+<p>
+    Booking details will include:
+</p>
+
+<ul>
+    <li>Booking ID</li>
+    <li>User information</li>
+    <li>Vehicle information</li>
+    <li>Parking location</li>
+    <li>Parking slot</li>
+    <li>Booking date</li>
+    <li>Start time</li>
+    <li>End time</li>
+    <li>Duration</li>
+    <li>Parking charge</li>
+    <li>Booking status</li>
+    <li>QR code</li>
+</ul>
+
+<p>
+    <a href="#">
+        View Booking Details
+    </a>
+</p>
+
+<hr>
+
+<!-- Cancel Booking -->
+
+<h2>Cancel Booking</h2>
+
+<p>
+    Cancel an active or upcoming parking booking when required.
+</p>
+
+<p>
+    <a href="#">
+        Manage Booking Cancellation
+    </a>
+</p>
+
+<hr>
+
+<!-- Booking Management Information -->
+
+<h2>Booking Management</h2>
+
+<p>
+    Administrators can search, filter, view, and manage parking
+    bookings from this page.
+</p>
+
+{% endblock %}

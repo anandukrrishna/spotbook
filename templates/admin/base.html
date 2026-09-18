@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        SpotBook Admin
+        {% endblock %}
+    </title>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <h1>SpotBook</h1>
+
+        <p>Smart Parking Slot Booking System</p>
+
+    </header>
+
+
+    <hr>
+
+
+    <!-- ================= MAIN LAYOUT ================= -->
+
+    <table width="100%">
+
+        <tr>
+
+
+            <!-- ================= SIDEBAR ================= -->
+
+            <td width="20%" valign="top">
+
+                <h2>ADMIN PANEL</h2>
+
+
+                <nav>
+
+                    <p>
+                        <a href="{% url 'admin_home' %}">
+                            Dashboard
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'users' %}">
+                            Users
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'parking_management' %}">
+                            Parking Management
+                        </a>
+                    </p>
+
+
+
+                    <p>
+                        <a href="{% url 'Bookings' %}">
+                            Bookings
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'ParkingCharges' %}">
+                            Parking Charges
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'QRVerification' %}">
+                            QR Verification
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'VehicleManagement' %}">
+                            Vehicle Management
+                        </a>
+                    </p>
+
+
+                    <p>
+                        <a href="{% url 'Reports' %}">
+                            Reports
+                        </a>
+                    </p>
+
+
+                    <hr>
+
+
+                    <p>
+                        <a href="#">
+                            Logout
+                        </a>
+                    </p>
+
+                </nav>
+
+            </td>
+
+
+            <!-- ================= PAGE CONTENT ================= -->
+
+            <td width="80%" valign="top">
+
+                {% block body %}
+
+                {% endblock %}
+
+            </td>
+
+
+        </tr>
+
+    </table>
+
+
+    <hr>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            SpotBook - Smart Parking Slot Booking System
+        </p>
+
+        <p>
+            &copy; 2026 SpotBook
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

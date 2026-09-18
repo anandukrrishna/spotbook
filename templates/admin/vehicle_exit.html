@@ -1,0 +1,260 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Vehicle Exit
+{% endblock %}
+
+{% block body %}
+
+<h1>Vehicle Exit</h1>
+
+<p>
+    Manage vehicle exit and completed parking records.
+</p>
+
+<hr>
+
+<h2>Exit Overview</h2>
+
+<table border="1" cellpadding="15" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Today's Exits</th>
+        <th>Currently Parked</th>
+        <th>Completed Sessions</th>
+    </tr>
+
+    <tr align="center">
+
+        <td>
+            <h2>0</h2>
+            <p>Vehicles exited today</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Vehicles currently inside</p>
+        </td>
+
+        <td>
+            <h2>0</h2>
+            <p>Completed parking sessions</p>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Record Vehicle Exit</h2>
+
+<p>
+    Search for a vehicle currently parked and record its exit.
+</p>
+
+<form method="get">
+
+    <label for="booking_id">
+        Booking ID:
+    </label>
+
+    <input
+        type="text"
+        id="booking_id"
+        name="booking_id"
+        placeholder="Enter booking ID"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<h2>Current Parking Information</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <tr>
+        <th>Booking ID</th>
+        <th>User</th>
+        <th>Vehicle Number</th>
+        <th>Parking Location</th>
+        <th>Slot</th>
+        <th>Entry Time</th>
+        <th>Current Status</th>
+        <th>Action</th>
+    </tr>
+
+    <tr>
+
+        <td>
+            SB000001
+        </td>
+
+        <td>
+            Example User
+        </td>
+
+        <td>
+            KL-11-AB-1234
+        </td>
+
+        <td>
+            Example Parking
+        </td>
+
+        <td>
+            A-01
+        </td>
+
+        <td>
+            10:15 AM
+        </td>
+
+        <td>
+            Parked
+        </td>
+
+        <td>
+            <a href="#">
+                Record Exit
+            </a>
+        </td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Exit Details</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <label for="exit_booking_id">
+        Booking ID:
+    </label>
+
+    <input
+        type="text"
+        id="exit_booking_id"
+        name="booking_id"
+        placeholder="Booking ID"
+    >
+
+    <br><br>
+
+    <label for="exit_time">
+        Exit Time:
+    </label>
+
+    <input
+        type="datetime-local"
+        id="exit_time"
+        name="exit_time"
+    >
+
+    <br><br>
+
+    <button type="submit">
+        Record Exit
+    </button>
+
+</form>
+
+<br>
+
+<hr>
+
+<h2>Exit Records</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+    <thead>
+
+        <tr>
+            <th>#</th>
+            <th>Booking ID</th>
+            <th>User</th>
+            <th>Vehicle Number</th>
+            <th>Parking Location</th>
+            <th>Slot</th>
+            <th>Entry Time</th>
+            <th>Exit Time</th>
+            <th>Status</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <!-- Temporary sample record -->
+
+        <tr>
+
+            <td>1</td>
+
+            <td>
+                SB000001
+            </td>
+
+            <td>
+                Example User
+            </td>
+
+            <td>
+                KL-11-AB-1234
+            </td>
+
+            <td>
+                Example Parking
+            </td>
+
+            <td>
+                A-01
+            </td>
+
+            <td>
+                10:15 AM
+            </td>
+
+            <td>
+                12:05 PM
+            </td>
+
+            <td>
+                Completed
+            </td>
+
+        </tr>
+
+        <!-- Django exit records will be displayed here later -->
+
+    </tbody>
+
+</table>
+
+<br>
+
+<hr>
+
+<h2>Vehicle Exit</h2>
+
+<p>
+    Record the vehicle's exit after completing its parking session.
+    The parking slot will become available for future bookings.
+</p>
+
+{% endblock %}

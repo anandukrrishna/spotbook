@@ -1,0 +1,31 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+SpotBook - Parking Management
+{% endblock %}
+
+{% block body %}
+
+<h1>Parking Management</h1>
+
+<p>
+    Manage parking locations and parking slots in the SpotBook system.
+</p>
+
+<hr>
+
+<h2>Parking Management Options</h2>
+
+<p>
+    <a href="{% url 'ParkingLocations' %}">
+        Parking Locations
+    </a>
+</p>
+
+<p>
+    <a href="{% url 'ParkingSlots' %}">
+        Parking Slots
+    </a>
+</p>
+
+{% endblock %}
