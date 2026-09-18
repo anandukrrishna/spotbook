@@ -16,171 +16,178 @@ SpotBook - Vehicle Exit
 
 <h2>Exit Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
+<div class="stats-grid">
 
-    <tr>
-        <th>Today's Exits</th>
-        <th>Currently Parked</th>
-        <th>Completed Sessions</th>
-    </tr>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Vehicles exited today</p>
+    </div>
 
-    <tr align="center">
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Vehicles currently inside</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Vehicles exited today</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Completed parking sessions</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Vehicles currently inside</p>
-        </td>
-
-        <td>
-            <h2>0</h2>
-            <p>Completed parking sessions</p>
-        </td>
-
-    </tr>
-
-</table>
-
-<br>
+</div>
 
 <hr>
 
 <h2>Record Vehicle Exit</h2>
 
-<p>
-    Search for a vehicle currently parked and record its exit.
-</p>
+<div class="card">
 
-<form method="get">
+    <p>
+        Search for a vehicle currently parked and record its exit.
+    </p>
 
-    <label for="booking_id">
-        Booking ID:
-    </label>
+    <form method="get">
 
-    <input
-        type="text"
-        id="booking_id"
-        name="booking_id"
-        placeholder="Enter booking ID"
-    >
+        <div class="form-group">
 
-    <button type="submit">
-        Search
-    </button>
+            <label for="booking_id">
+                Booking ID
+            </label>
 
-</form>
+            <input
+                type="text"
+                id="booking_id"
+                name="booking_id"
+                class="form-control"
+                placeholder="Enter booking ID"
+            >
 
-<br>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
 <h2>Current Parking Information</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
-    <tr>
-        <th>Booking ID</th>
-        <th>User</th>
-        <th>Vehicle Number</th>
-        <th>Parking Location</th>
-        <th>Slot</th>
-        <th>Entry Time</th>
-        <th>Current Status</th>
-        <th>Action</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>User</th>
+            <th>Vehicle Number</th>
+            <th>Parking Location</th>
+            <th>Slot</th>
+            <th>Entry Time</th>
+            <th>Current Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
 
-    <tr>
+    <tbody>
 
-        <td>
-            SB000001
-        </td>
+        <tr>
 
-        <td>
-            Example User
-        </td>
+            <td>
+                SB000001
+            </td>
 
-        <td>
-            KL-11-AB-1234
-        </td>
+            <td>
+                Example User
+            </td>
 
-        <td>
-            Example Parking
-        </td>
+            <td>
+                KL-11-AB-1234
+            </td>
 
-        <td>
-            A-01
-        </td>
+            <td>
+                Example Parking
+            </td>
 
-        <td>
-            10:15 AM
-        </td>
+            <td>
+                A-01
+            </td>
 
-        <td>
-            Parked
-        </td>
+            <td>
+                10:15 AM
+            </td>
 
-        <td>
-            <a href="#">
-                Record Exit
-            </a>
-        </td>
+            <td>
+                Parked
+            </td>
 
-    </tr>
+            <td>
+                <a href="#" class="btn btn-primary">
+                    Record Exit
+                </a>
+            </td>
+
+        </tr>
+
+    </tbody>
 
 </table>
-
-<br>
 
 <hr>
 
 <h2>Exit Details</h2>
 
-<form method="post">
+<div class="card">
 
-    {% csrf_token %}
+    <form method="post">
 
-    <label for="exit_booking_id">
-        Booking ID:
-    </label>
+        {% csrf_token %}
 
-    <input
-        type="text"
-        id="exit_booking_id"
-        name="booking_id"
-        placeholder="Booking ID"
-    >
+        <div class="form-group">
 
-    <br><br>
+            <label for="exit_booking_id">
+                Booking ID
+            </label>
 
-    <label for="exit_time">
-        Exit Time:
-    </label>
+            <input
+                type="text"
+                id="exit_booking_id"
+                name="booking_id"
+                class="form-control"
+                placeholder="Booking ID"
+            >
 
-    <input
-        type="datetime-local"
-        id="exit_time"
-        name="exit_time"
-    >
+        </div>
 
-    <br><br>
+        <div class="form-group">
 
-    <button type="submit">
-        Record Exit
-    </button>
+            <label for="exit_time">
+                Exit Time
+            </label>
 
-</form>
+            <input
+                type="datetime-local"
+                id="exit_time"
+                name="exit_time"
+                class="form-control"
+            >
 
-<br>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Record Exit
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
 <h2>Exit Records</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
 
@@ -246,15 +253,17 @@ SpotBook - Vehicle Exit
 
 </table>
 
-<br>
-
 <hr>
 
 <h2>Vehicle Exit</h2>
 
-<p>
-    Record the vehicle's exit after completing its parking session.
-    The parking slot will become available for future bookings.
-</p>
+<div class="card">
+
+    <p>
+        Record the vehicle's exit after completing its parking session.
+        The parking slot will become available for future bookings.
+    </p>
+
+</div>
 
 {% endblock %}

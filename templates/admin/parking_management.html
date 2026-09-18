@@ -16,16 +16,30 @@ SpotBook - Parking Management
 
 <h2>Parking Management Options</h2>
 
-<p>
-    <a href="{% url 'ParkingLocations' %}">
-        Parking Locations
-    </a>
-</p>
+<div class="stats-grid">
 
-<p>
-    <a href="{% url 'ParkingSlots' %}">
-        Parking Slots
-    </a>
-</p>
+    <div class="card">
+        <p>
+            <a href="{% url 'ParkingLocations' %}" class="btn btn-primary">
+                Parking Locations
+            </a>
+        </p>
+        <p>
+            Add, edit, and manage parking locations.
+        </p>
+    </div>
+
+    <div class="card">
+        <p>
+            <a href="{% url 'ParkingSlots' %}" class="btn btn-primary">
+                Parking Slots
+            </a>
+        </p>
+        <p>
+            Add, edit, and manage individual parking slots.
+        </p>
+    </div>
+
+</div>
 
 {% endblock %}

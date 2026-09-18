@@ -16,16 +16,30 @@ SpotBook - Vehicle Management
 
 <h2>Select an Action</h2>
 
-<p>
-    <a href="{% url 'VehicleEntry' %}">
-        Vehicle Entry
-    </a>
-</p>
+<div class="stats-grid">
 
-<p>
-    <a href="{% url 'VehicleExit' %}">
-        Vehicle Exit
-    </a>
-</p>
+    <div class="card">
+        <p>
+            <a href="{% url 'VehicleEntry' %}" class="btn btn-primary">
+                Vehicle Entry
+            </a>
+        </p>
+        <p>
+            Verify a booking and record the vehicle's entry.
+        </p>
+    </div>
+
+    <div class="card">
+        <p>
+            <a href="{% url 'VehicleExit' %}" class="btn btn-primary">
+                Vehicle Exit
+            </a>
+        </p>
+        <p>
+            Record a vehicle's exit and complete its parking session.
+        </p>
+    </div>
+
+</div>
 
 {% endblock %}

@@ -18,32 +18,24 @@ SpotBook - User Management
 
 <h2>User Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
-    <tr>
-        <th>Total Users</th>
-        <th>Active Users</th>
-        <th>Inactive Users</th>
-    </tr>
+<div class="stats-grid">
 
-    <tr align="center">
-        <td>
-            <h2>0</h2>
-            <p>Total registered users</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Users</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently active</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Active Users</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently inactive</p>
-        </td>
-    </tr>
-</table>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Inactive Users</p>
+    </div>
 
-<br>
+</div>
 
 <hr>
 
@@ -51,44 +43,51 @@ SpotBook - User Management
 
 <h2>Search & Filter Users</h2>
 
-<form method="get">
+<div class="card">
 
-    <label for="search">
-        Search User:
-    </label>
+    <form method="get">
 
-    <input
-        type="text"
-        id="search"
-        name="search"
-        placeholder="Name, username, email or phone"
-    >
+        <div class="form-group">
 
-    &nbsp;
+            <label for="search">
+                Search User
+            </label>
 
-    <label for="status">
-        Status:
-    </label>
+            <input
+                type="text"
+                id="search"
+                name="search"
+                class="form-control"
+                placeholder="Name, username, email or phone"
+            >
 
-    <select id="status" name="status">
-        <option value="">All Users</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-    </select>
+        </div>
 
-    &nbsp;
+        <div class="form-group">
 
-    <button type="submit">
-        Search
-    </button>
+            <label for="status">
+                Status
+            </label>
 
-    <button type="reset">
-        Clear
-    </button>
+            <select id="status" name="status" class="form-control">
+                <option value="">All Users</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
 
-</form>
+        </div>
 
-<br>
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+        <button type="reset" class="btn btn-secondary">
+            Clear
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
@@ -96,7 +95,7 @@ SpotBook - User Management
 
 <h2>Registered Users</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
         <tr>
@@ -126,11 +125,9 @@ SpotBook - User Management
             </td>
 
             <td>
-                <a href="#">View</a>
-                |
-                <a href="#">Deactivate</a>
-                |
-                <a href="#">Delete</a>
+                <a href="#" class="btn btn-secondary">View</a>
+                <a href="#" class="btn btn-secondary">Deactivate</a>
+                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this user?">Delete</a>
             </td>
         </tr>
 
@@ -152,19 +149,23 @@ SpotBook - User Management
 
 <h2>User Actions</h2>
 
-<p>
-    <strong>View:</strong>
-    View complete information about a selected user.
-</p>
+<div class="card">
 
-<p>
-    <strong>Activate / Deactivate:</strong>
-    Change the account status of a user.
-</p>
+    <p>
+        <strong>View:</strong>
+        View complete information about a selected user.
+    </p>
 
-<p>
-    <strong>Delete:</strong>
-    Permanently remove a user from the system.
-</p>
+    <p>
+        <strong>Activate / Deactivate:</strong>
+        Change the account status of a user.
+    </p>
+
+    <p>
+        <strong>Delete:</strong>
+        Permanently remove a user from the system.
+    </p>
+
+</div>
 
 {% endblock %}

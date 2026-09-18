@@ -18,48 +18,34 @@ SpotBook - Booking Management
 
 <h2>Booking Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
+<div class="stats-grid">
 
-    <tr>
-        <th>Total Bookings</th>
-        <th>Upcoming Bookings</th>
-        <th>Active Bookings</th>
-        <th>Completed Bookings</th>
-        <th>Cancelled Bookings</th>
-    </tr>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Bookings</p>
+    </div>
 
-    <tr align="center">
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Upcoming Bookings</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Total bookings</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Active Bookings</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Upcoming bookings</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Completed Bookings</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently active</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Cancelled Bookings</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Completed bookings</p>
-        </td>
-
-        <td>
-            <h2>0</h2>
-            <p>Cancelled bookings</p>
-        </td>
-
-    </tr>
-
-</table>
-
-<br>
+</div>
 
 <hr>
 
@@ -67,78 +53,88 @@ SpotBook - Booking Management
 
 <h2>Search & Filter Bookings</h2>
 
-<form method="get">
+<div class="card">
 
-    <label for="search">
-        Search Booking:
-    </label>
+    <form method="get">
 
-    <input
-        type="text"
-        id="search"
-        name="search"
-        placeholder="Booking ID, username or slot number"
-    >
+        <div class="form-group">
 
-    &nbsp;
+            <label for="search">
+                Search Booking
+            </label>
 
-    <label for="status">
-        Status:
-    </label>
+            <input
+                type="text"
+                id="search"
+                name="search"
+                class="form-control"
+                placeholder="Booking ID, username or slot number"
+            >
 
-    <select id="status" name="status">
+        </div>
 
-        <option value="">
-            All Status
-        </option>
+        <div class="form-group">
 
-        <option value="pending">
-            Pending
-        </option>
+            <label for="status">
+                Status
+            </label>
 
-        <option value="confirmed">
-            Confirmed
-        </option>
+            <select id="status" name="status" class="form-control">
 
-        <option value="active">
-            Active
-        </option>
+                <option value="">
+                    All Status
+                </option>
 
-        <option value="completed">
-            Completed
-        </option>
+                <option value="pending">
+                    Pending
+                </option>
 
-        <option value="cancelled">
-            Cancelled
-        </option>
+                <option value="confirmed">
+                    Confirmed
+                </option>
 
-    </select>
+                <option value="active">
+                    Active
+                </option>
 
-    &nbsp;
+                <option value="completed">
+                    Completed
+                </option>
 
-    <label for="date">
-        Date:
-    </label>
+                <option value="cancelled">
+                    Cancelled
+                </option>
 
-    <input
-        type="date"
-        id="date"
-        name="date"
-    >
+            </select>
 
-    <br><br>
+        </div>
 
-    <button type="submit">
-        Search / Filter
-    </button>
+        <div class="form-group">
 
-    <button type="reset">
-        Clear
-    </button>
+            <label for="date">
+                Date
+            </label>
 
-</form>
+            <input
+                type="date"
+                id="date"
+                name="date"
+                class="form-control"
+            >
 
-<br>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Search / Filter
+        </button>
+
+        <button type="reset" class="btn btn-secondary">
+            Clear
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
@@ -146,7 +142,7 @@ SpotBook - Booking Management
 
 <h2>All Bookings</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
 
@@ -211,15 +207,8 @@ SpotBook - Booking Management
             </td>
 
             <td>
-                <a href="#">
-                    View
-                </a>
-
-                |
-
-                <a href="#">
-                    Cancel
-                </a>
+                <a href="#" class="btn btn-secondary">View</a>
+                <a href="#" class="btn btn-danger js-confirm" data-message="Cancel this booking?">Cancel</a>
             </td>
 
         </tr>
@@ -230,42 +219,44 @@ SpotBook - Booking Management
 
 </table>
 
-<br>
-
 <hr>
 
 <!-- Booking Details -->
 
 <h2>Booking Details</h2>
 
-<p>
-    View complete information about a selected parking booking.
-</p>
+<div class="card">
 
-<p>
-    Booking details will include:
-</p>
+    <p>
+        View complete information about a selected parking booking.
+    </p>
 
-<ul>
-    <li>Booking ID</li>
-    <li>User information</li>
-    <li>Vehicle information</li>
-    <li>Parking location</li>
-    <li>Parking slot</li>
-    <li>Booking date</li>
-    <li>Start time</li>
-    <li>End time</li>
-    <li>Duration</li>
-    <li>Parking charge</li>
-    <li>Booking status</li>
-    <li>QR code</li>
-</ul>
+    <p>
+        Booking details will include:
+    </p>
 
-<p>
-    <a href="#">
-        View Booking Details
-    </a>
-</p>
+    <ul>
+        <li>Booking ID</li>
+        <li>User information</li>
+        <li>Vehicle information</li>
+        <li>Parking location</li>
+        <li>Parking slot</li>
+        <li>Booking date</li>
+        <li>Start time</li>
+        <li>End time</li>
+        <li>Duration</li>
+        <li>Parking charge</li>
+        <li>Booking status</li>
+        <li>QR code</li>
+    </ul>
+
+    <p>
+        <a href="#" class="btn btn-primary">
+            View Booking Details
+        </a>
+    </p>
+
+</div>
 
 <hr>
 
@@ -273,15 +264,19 @@ SpotBook - Booking Management
 
 <h2>Cancel Booking</h2>
 
-<p>
-    Cancel an active or upcoming parking booking when required.
-</p>
+<div class="card">
 
-<p>
-    <a href="#">
-        Manage Booking Cancellation
-    </a>
-</p>
+    <p>
+        Cancel an active or upcoming parking booking when required.
+    </p>
+
+    <p>
+        <a href="#" class="btn btn-danger">
+            Manage Booking Cancellation
+        </a>
+    </p>
+
+</div>
 
 <hr>
 
@@ -289,9 +284,13 @@ SpotBook - Booking Management
 
 <h2>Booking Management</h2>
 
-<p>
-    Administrators can search, filter, view, and manage parking
-    bookings from this page.
-</p>
+<div class="card">
+
+    <p>
+        Administrators can search, filter, view, and manage parking
+        bookings from this page.
+    </p>
+
+</div>
 
 {% endblock %}

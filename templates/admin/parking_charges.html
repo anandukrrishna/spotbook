@@ -18,36 +18,24 @@ SpotBook - Parking Charges
 
 <h2>Charge Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
+<div class="stats-grid">
 
-    <tr>
-        <th>Total Charge Rules</th>
-        <th>Active Charges</th>
-        <th>Inactive Charges</th>
-    </tr>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Charge Rules</p>
+    </div>
 
-    <tr align="center">
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Active Charges</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Total charge rules</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Inactive Charges</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently active</p>
-        </td>
-
-        <td>
-            <h2>0</h2>
-            <p>Currently inactive</p>
-        </td>
-
-    </tr>
-
-</table>
-
-<br>
+</div>
 
 <hr>
 
@@ -55,15 +43,19 @@ SpotBook - Parking Charges
 
 <h2>Add Parking Charge</h2>
 
-<p>
-    Create a new parking charge rule for a parking location or slot.
-</p>
+<div class="card">
 
-<p>
-    <a href="#">
-        + Add New Charge
-    </a>
-</p>
+    <p>
+        Create a new parking charge rule for a parking location or slot.
+    </p>
+
+    <p>
+        <a href="#" class="btn btn-primary">
+            + Add New Charge
+        </a>
+    </p>
+
+</div>
 
 <hr>
 
@@ -71,7 +63,7 @@ SpotBook - Parking Charges
 
 <h2>Parking Charge Rules</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
 
@@ -116,22 +108,9 @@ SpotBook - Parking Charges
             </td>
 
             <td>
-                <a href="#">
-                    View
-                </a>
-
-                |
-
-                <a href="#">
-                    Edit
-                </a>
-
-                |
-
-                <a href="#">
-                    Update
-                </a>
-
+                <a href="#" class="btn btn-secondary">View</a>
+                <a href="#" class="btn btn-secondary">Edit</a>
+                <a href="#" class="btn btn-secondary js-confirm" data-message="Update this charge rule?">Update</a>
             </td>
 
         </tr>
@@ -142,23 +121,25 @@ SpotBook - Parking Charges
 
 </table>
 
-<br>
-
 <hr>
 
 <!-- Update Charge -->
 
 <h2>Update Parking Charge</h2>
 
-<p>
-    Update the rate or other details of an existing parking charge rule.
-</p>
+<div class="card">
 
-<p>
-    <a href="#">
-        Manage Charge Updates
-    </a>
-</p>
+    <p>
+        Update the rate or other details of an existing parking charge rule.
+    </p>
+
+    <p>
+        <a href="#" class="btn btn-primary">
+            Manage Charge Updates
+        </a>
+    </p>
+
+</div>
 
 <hr>
 
@@ -166,10 +147,14 @@ SpotBook - Parking Charges
 
 <h2>Charge Management</h2>
 
-<ul>
-    <li>View existing parking charges</li>
-    <li>Add new parking charges</li>
-    <li>Update existing parking charges</li>
-</ul>
+<div class="card">
+
+    <ul>
+        <li>View existing parking charges</li>
+        <li>Add new parking charges</li>
+        <li>Update existing parking charges</li>
+    </ul>
+
+</div>
 
 {% endblock %}

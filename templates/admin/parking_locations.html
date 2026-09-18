@@ -16,73 +16,72 @@ SpotBook - Parking Locations
 
 <h2>Location Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
-    <tr>
-        <th>Total Locations</th>
-        <th>Active Locations</th>
-        <th>Inactive Locations</th>
-    </tr>
+<div class="stats-grid">
 
-    <tr align="center">
-        <td>
-            <h2>0</h2>
-            <p>Total parking locations</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Locations</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently active</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Active Locations</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Currently inactive</p>
-        </td>
-    </tr>
-</table>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Inactive Locations</p>
+    </div>
 
-<br>
+</div>
 
 <hr>
 
 <h2>Search Locations</h2>
 
-<form method="get">
+<div class="card">
 
-    <label for="search">
-        Search Location:
-    </label>
+    <form method="get">
 
-    <input
-        type="text"
-        id="search"
-        name="search"
-        placeholder="Location name or address"
-    >
+        <div class="form-group">
 
-    <button type="submit">
-        Search
-    </button>
+            <label for="search">
+                Search Location
+            </label>
 
-    <button type="reset">
-        Clear
-    </button>
+            <input
+                type="text"
+                id="search"
+                name="search"
+                class="form-control"
+                placeholder="Location name or address"
+            >
 
-</form>
+        </div>
 
-<br>
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+        <button type="reset" class="btn btn-secondary">
+            Clear
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
 <h2>Registered Parking Locations</h2>
 
 <p>
-    <a href="#">
+    <a href="#" class="btn btn-primary">
         + Add New Location
     </a>
 </p>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
         <tr>
@@ -107,13 +106,10 @@ SpotBook - Parking Locations
             <td>Active</td>
 
             <td>
-                <a href="#">View</a>
-                |
-                <a href="#">Edit</a>
-                |
-                <a href="#">Deactivate</a>
-                |
-                <a href="#">Delete</a>
+                <a href="#" class="btn btn-secondary">View</a>
+                <a href="#" class="btn btn-secondary">Edit</a>
+                <a href="#" class="btn btn-secondary js-confirm" data-message="Deactivate this location?">Deactivate</a>
+                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this location?">Delete</a>
             </td>
         </tr>
 
@@ -121,30 +117,32 @@ SpotBook - Parking Locations
 
 </table>
 
-<br>
-
 <hr>
 
 <h2>Location Management</h2>
 
-<p>
-    <strong>Add Location:</strong>
-    Add a new parking location to the system.
-</p>
+<div class="card">
 
-<p>
-    <strong>Edit Location:</strong>
-    Update the details of an existing parking location.
-</p>
+    <p>
+        <strong>Add Location:</strong>
+        Add a new parking location to the system.
+    </p>
 
-<p>
-    <strong>Deactivate:</strong>
-    Temporarily disable a parking location.
-</p>
+    <p>
+        <strong>Edit Location:</strong>
+        Update the details of an existing parking location.
+    </p>
 
-<p>
-    <strong>Delete:</strong>
-    Remove a parking location from the system.
-</p>
+    <p>
+        <strong>Deactivate:</strong>
+        Temporarily disable a parking location.
+    </p>
+
+    <p>
+        <strong>Delete:</strong>
+        Remove a parking location from the system.
+    </p>
+
+</div>
 
 {% endblock %}

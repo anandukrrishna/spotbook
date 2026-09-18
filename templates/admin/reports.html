@@ -16,76 +16,75 @@ SpotBook - Reports
 
 <h2>Select a Report</h2>
 
-<p>
-    <a href="#">
-        Booking Statistics
-    </a>
-</p>
+<div class="stats-grid">
 
-<p>
-    <a href="#">
-        Slot Statistics
-    </a>
-</p>
+    <div class="card">
+        <p>
+            <a href="#" class="btn btn-primary">
+                Booking Statistics
+            </a>
+        </p>
+    </div>
 
-<p>
-    <a href="#">
-        Location Statistics
-    </a>
-</p>
+    <div class="card">
+        <p>
+            <a href="#" class="btn btn-primary">
+                Slot Statistics
+            </a>
+        </p>
+    </div>
 
-<p>
-    <a href="#">
-        Revenue Statistics
-    </a>
-</p>
+    <div class="card">
+        <p>
+            <a href="#" class="btn btn-primary">
+                Location Statistics
+            </a>
+        </p>
+    </div>
+
+    <div class="card">
+        <p>
+            <a href="#" class="btn btn-primary">
+                Revenue Statistics
+            </a>
+        </p>
+    </div>
+
+</div>
 
 <hr>
 
 <h2>Report Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
+<div class="stats-grid">
 
-    <tr>
-        <th>Total Bookings</th>
-        <th>Total Slots</th>
-        <th>Total Locations</th>
-        <th>Total Revenue</th>
-    </tr>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Bookings</p>
+    </div>
 
-    <tr align="center">
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Slots</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Total bookings</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Locations</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Parking slots</p>
-        </td>
+    <div class="stat-box">
+        <h2>₹0</h2>
+        <p>Total Revenue</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Parking locations</p>
-        </td>
-
-        <td>
-            <h2>₹0</h2>
-            <p>Total revenue</p>
-        </td>
-
-    </tr>
-
-</table>
-
-<br>
+</div>
 
 <hr>
 
 <h2>Available Reports</h2>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <tr>
         <th>Report</th>
@@ -103,7 +102,7 @@ SpotBook - Reports
         </td>
 
         <td>
-            <a href="#">
+            <a href="#" class="btn btn-secondary">
                 View Report
             </a>
         </td>
@@ -119,7 +118,7 @@ SpotBook - Reports
         </td>
 
         <td>
-            <a href="#">
+            <a href="#" class="btn btn-secondary">
                 View Report
             </a>
         </td>
@@ -135,7 +134,7 @@ SpotBook - Reports
         </td>
 
         <td>
-            <a href="#">
+            <a href="#" class="btn btn-secondary">
                 View Report
             </a>
         </td>
@@ -151,7 +150,7 @@ SpotBook - Reports
         </td>
 
         <td>
-            <a href="#">
+            <a href="#" class="btn btn-secondary">
                 View Report
             </a>
         </td>
@@ -159,15 +158,17 @@ SpotBook - Reports
 
 </table>
 
-<br>
-
 <hr>
 
 <h2>Reports</h2>
 
-<p>
-    Reports will be generated from the parking, booking, slot,
-    and payment data available in the SpotBook system.
-</p>
+<div class="card">
+
+    <p>
+        Reports will be generated from the parking, booking, slot,
+        and payment data available in the SpotBook system.
+    </p>
+
+</div>
 
 {% endblock %}

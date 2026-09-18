@@ -1,10 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
@@ -12,6 +12,12 @@
         SpotBook Admin
         {% endblock %}
     </title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- External CSS -->
+    {% block css %}
+    {% endblock %}
 
 </head>
 
@@ -21,11 +27,11 @@
 
     <!-- ================= HEADER ================= -->
 
-    <header>
+    <header class="site-header">
 
         <h1>SpotBook</h1>
 
-        <p>Smart Parking Slot Booking System</p>
+        <p>Smart Parking Slot Booking System - Admin Panel</p>
 
     </header>
 
@@ -35,19 +41,20 @@
 
     <!-- ================= MAIN LAYOUT ================= -->
 
-    <table width="100%">
+    <table class="admin-layout" width="100%">
 
         <tr>
 
 
             <!-- ================= SIDEBAR ================= -->
 
-            <td width="20%" valign="top">
+            <td class="sidebar" width="20%" valign="top">
 
-                <h2>ADMIN PANEL</h2>
-
+                <h2>Admin Panel</h2>
 
                 <nav>
+
+                    <!-- Dashboard -->
 
                     <p>
                         <a href="{% url 'admin_home' %}">
@@ -56,12 +63,16 @@
                     </p>
 
 
+                    <!-- Users -->
+
                     <p>
                         <a href="{% url 'users' %}">
                             Users
                         </a>
                     </p>
 
+
+                    <!-- Parking Management + sub-pages -->
 
                     <p>
                         <a href="{% url 'parking_management' %}">
@@ -71,12 +82,16 @@
 
 
 
+                    <!-- Bookings -->
+
                     <p>
                         <a href="{% url 'Bookings' %}">
                             Bookings
                         </a>
                     </p>
 
+
+                    <!-- Parking Charges -->
 
                     <p>
                         <a href="{% url 'ParkingCharges' %}">
@@ -85,6 +100,8 @@
                     </p>
 
 
+                    <!-- QR Verification -->
+
                     <p>
                         <a href="{% url 'QRVerification' %}">
                             QR Verification
@@ -92,12 +109,17 @@
                     </p>
 
 
+                    <!-- Vehicle Management + sub-pages -->
+
                     <p>
                         <a href="{% url 'VehicleManagement' %}">
                             Vehicle Management
                         </a>
                     </p>
 
+
+
+                    <!-- Reports -->
 
                     <p>
                         <a href="{% url 'Reports' %}">
@@ -108,6 +130,8 @@
 
                     <hr>
 
+
+                    <!-- TODO: no logout view/url exists yet for admin -->
 
                     <p>
                         <a href="#">
@@ -122,10 +146,18 @@
 
             <!-- ================= PAGE CONTENT ================= -->
 
-            <td width="80%" valign="top">
+            <td class="main-content" width="80%" valign="top">
+
+                {% if messages %}
+                {% for message in messages %}
+                <div
+                    class="alert js-alert {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
 
                 {% block body %}
-
                 {% endblock %}
 
             </td>
@@ -141,7 +173,7 @@
 
     <!-- ================= FOOTER ================= -->
 
-    <footer>
+    <footer class="site-footer">
 
         <p>
             SpotBook - Smart Parking Slot Booking System
@@ -152,6 +184,13 @@
         </p>
 
     </footer>
+
+
+    <script src="{% static 'js/script.js' %}" defer></script>
+
+    <!-- External JS -->
+    {% block js %}
+    {% endblock %}
 
 
 </body>

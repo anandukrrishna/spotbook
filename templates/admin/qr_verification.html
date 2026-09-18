@@ -18,42 +18,29 @@ SpotBook - QR Verification
 
 <h2>Verification Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
+<div class="stats-grid">
 
-    <tr>
-        <th>Total Verifications</th>
-        <th>Verified Bookings</th>
-        <th>Invalid QR Codes</th>
-        <th>Pending Verification</th>
-    </tr>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total QR verification attempts</p>
+    </div>
 
-    <tr align="center">
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Successfully verified</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Total QR verification attempts</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Invalid or expired QR codes</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Successfully verified</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Awaiting verification</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Invalid or expired QR codes</p>
-        </td>
-
-        <td>
-            <h2>0</h2>
-            <p>Awaiting verification</p>
-        </td>
-
-    </tr>
-
-</table>
-
-<br>
+</div>
 
 <hr>
 
@@ -61,33 +48,40 @@ SpotBook - QR Verification
 
 <h2>Scan QR Code</h2>
 
-<p>
-    Scan the QR code provided by the user to retrieve the associated
-    parking booking.
-</p>
+<div class="card">
 
-<form method="post">
+    <p>
+        Scan the QR code provided by the user to retrieve the associated
+        parking booking.
+    </p>
 
-    {% csrf_token %}
+    <form method="post">
 
-    <label for="qr_code">
-        QR Code / Booking ID:
-    </label>
+        {% csrf_token %}
 
-    <input
-        type="text"
-        id="qr_code"
-        name="qr_code"
-        placeholder="Enter or scan QR code"
-    >
+        <div class="form-group">
 
-    <button type="submit">
-        Scan / Verify
-    </button>
+            <label for="qr_code">
+                QR Code / Booking ID
+            </label>
 
-</form>
+            <input
+                type="text"
+                id="qr_code"
+                name="qr_code"
+                class="form-control"
+                placeholder="Enter or scan QR code"
+            >
 
-<br>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Scan / Verify
+        </button>
+
+    </form>
+
+</div>
 
 <hr>
 
@@ -99,60 +93,66 @@ SpotBook - QR Verification
     Verify the booking details associated with the scanned QR code.
 </p>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
-    <tr>
-        <th>Booking ID</th>
-        <th>User</th>
-        <th>Parking Location</th>
-        <th>Slot</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Status</th>
-        <th>Verification</th>
-    </tr>
+    <thead>
 
-    <tr>
+        <tr>
+            <th>Booking ID</th>
+            <th>User</th>
+            <th>Parking Location</th>
+            <th>Slot</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Verification</th>
+        </tr>
 
-        <td>
-            SB000001
-        </td>
+    </thead>
 
-        <td>
-            Example User
-        </td>
+    <tbody>
 
-        <td>
-            Example Parking
-        </td>
+        <tr>
 
-        <td>
-            A-01
-        </td>
+            <td>
+                SB000001
+            </td>
 
-        <td>
-            18-09-2026
-        </td>
+            <td>
+                Example User
+            </td>
 
-        <td>
-            10:00 AM - 12:00 PM
-        </td>
+            <td>
+                Example Parking
+            </td>
 
-        <td>
-            Confirmed
-        </td>
+            <td>
+                A-01
+            </td>
 
-        <td>
-            <a href="#">
-                Verify Booking
-            </a>
-        </td>
+            <td>
+                18-09-2026
+            </td>
 
-    </tr>
+            <td>
+                10:00 AM - 12:00 PM
+            </td>
+
+            <td>
+                Confirmed
+            </td>
+
+            <td>
+                <a href="#" class="btn btn-primary">
+                    Verify Booking
+                </a>
+            </td>
+
+        </tr>
+
+    </tbody>
 
 </table>
-
-<br>
 
 <hr>
 
@@ -160,30 +160,34 @@ SpotBook - QR Verification
 
 <h2>Verification Result</h2>
 
-<p>
-    The booking verification result will be displayed here after
-    scanning a QR code.
-</p>
+<div class="card">
 
-<p>
-    <strong>Verification Status:</strong>
-    Not Verified
-</p>
+    <p>
+        The booking verification result will be displayed here after
+        scanning a QR code.
+    </p>
 
-<p>
-    <strong>Booking Status:</strong>
-    -
-</p>
+    <p>
+        <strong>Verification Status:</strong>
+        Not Verified
+    </p>
 
-<p>
-    <strong>Vehicle:</strong>
-    -
-</p>
+    <p>
+        <strong>Booking Status:</strong>
+        -
+    </p>
 
-<p>
-    <strong>Parking Slot:</strong>
-    -
-</p>
+    <p>
+        <strong>Vehicle:</strong>
+        -
+    </p>
+
+    <p>
+        <strong>Parking Slot:</strong>
+        -
+    </p>
+
+</div>
 
 <hr>
 
@@ -191,12 +195,16 @@ SpotBook - QR Verification
 
 <h2>QR Verification</h2>
 
-<ul>
-    <li>Scan the user's booking QR code.</li>
-    <li>Retrieve the associated booking.</li>
-    <li>Check the booking date and time.</li>
-    <li>Verify the parking slot.</li>
-    <li>Confirm that the booking is valid.</li>
-</ul>
+<div class="card">
+
+    <ul>
+        <li>Scan the user's booking QR code.</li>
+        <li>Retrieve the associated booking.</li>
+        <li>Check the booking date and time.</li>
+        <li>Verify the parking slot.</li>
+        <li>Confirm that the booking is valid.</li>
+    </ul>
+
+</div>
 
 {% endblock %}

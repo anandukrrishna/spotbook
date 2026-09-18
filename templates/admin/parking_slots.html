@@ -16,123 +16,105 @@ SpotBook - Parking Slots
 
 <h2>Slot Overview</h2>
 
-<table border="1" cellpadding="15" cellspacing="0" width="100%">
-    <tr>
-        <th>Total Slots</th>
-        <th>Available</th>
-        <th>Reserved</th>
-        <th>Occupied</th>
-    </tr>
+<div class="stats-grid">
 
-    <tr align="center">
-        <td>
-            <h2>0</h2>
-            <p>Total parking slots</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Total Slots</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Available slots</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Available Slots</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Reserved slots</p>
-        </td>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Reserved Slots</p>
+    </div>
 
-        <td>
-            <h2>0</h2>
-            <p>Occupied slots</p>
-        </td>
-    </tr>
-</table>
+    <div class="stat-box">
+        <h2>0</h2>
+        <p>Occupied Slots</p>
+    </div>
 
-<br>
+</div>
 
 <hr>
 
 <h2>Search & Filter Slots</h2>
 
-<form method="get">
+<div class="card">
 
-    <label for="search">
-        Search Slot:
-    </label>
+    <form method="get">
 
-    <input
-        type="text"
-        id="search"
-        name="search"
-        placeholder="Slot number"
-    >
+        <div class="form-group">
 
-    &nbsp;
+            <label for="search">
+                Search Slot
+            </label>
 
-    <label for="location">
-        Location:
-    </label>
+            <input
+                type="text"
+                id="search"
+                name="search"
+                class="form-control"
+                placeholder="Slot number"
+            >
 
-    <select id="location" name="location">
+        </div>
 
-        <option value="">
-            All Locations
-        </option>
+        <div class="form-group">
 
-        <option value="1">
-            Example Parking
-        </option>
+            <label for="location">
+                Location
+            </label>
 
-    </select>
+            <select id="location" name="location" class="form-control">
+                <option value="">All Locations</option>
+                <option value="1">Example Parking</option>
+            </select>
 
-    &nbsp;
+        </div>
 
-    <label for="status">
-        Status:
-    </label>
+        <div class="form-group">
 
-    <select id="status" name="status">
+            <label for="status">
+                Status
+            </label>
 
-        <option value="">
-            All Status
-        </option>
+            <select id="status" name="status" class="form-control">
+                <option value="">All Status</option>
+                <option value="available">Available</option>
+                <option value="reserved">Reserved</option>
+                <option value="occupied">Occupied</option>
+            </select>
 
-        <option value="available">
-            Available
-        </option>
+        </div>
 
-        <option value="reserved">
-            Reserved
-        </option>
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
 
-        <option value="occupied">
-            Occupied
-        </option>
+        <button type="reset" class="btn btn-secondary">
+            Clear
+        </button>
 
-    </select>
+    </form>
 
-    <button type="submit">
-        Search
-    </button>
-
-    <button type="reset">
-        Clear
-    </button>
-
-</form>
-
-<br>
+</div>
 
 <hr>
 
 <h2>Parking Slots</h2>
 
 <p>
-    <a href="#">
+    <a href="#" class="btn btn-primary">
         + Add New Slot
     </a>
 </p>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+<table class="table-standard">
 
     <thead>
         <tr>
@@ -155,13 +137,10 @@ SpotBook - Parking Slots
             <td>Available</td>
 
             <td>
-                <a href="#">View</a>
-                |
-                <a href="#">Edit</a>
-                |
-                <a href="#">Update Status</a>
-                |
-                <a href="#">Delete</a>
+                <a href="#" class="btn btn-secondary">View</a>
+                <a href="#" class="btn btn-secondary">Edit</a>
+                <a href="#" class="btn btn-secondary">Update Status</a>
+                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this slot?">Delete</a>
             </td>
         </tr>
 
@@ -169,30 +148,32 @@ SpotBook - Parking Slots
 
 </table>
 
-<br>
-
 <hr>
 
 <h2>Slot Management</h2>
 
-<p>
-    <strong>Add Slot:</strong>
-    Add a new parking slot to a parking location.
-</p>
+<div class="card">
 
-<p>
-    <strong>Edit Slot:</strong>
-    Update the details of an existing slot.
-</p>
+    <p>
+        <strong>Add Slot:</strong>
+        Add a new parking slot to a parking location.
+    </p>
 
-<p>
-    <strong>Update Status:</strong>
-    Change a slot between available, reserved, and occupied states.
-</p>
+    <p>
+        <strong>Edit Slot:</strong>
+        Update the details of an existing slot.
+    </p>
 
-<p>
-    <strong>Delete Slot:</strong>
-    Remove a parking slot from the system.
-</p>
+    <p>
+        <strong>Update Status:</strong>
+        Change a slot between available, reserved, and occupied states.
+    </p>
+
+    <p>
+        <strong>Delete Slot:</strong>
+        Remove a parking slot from the system.
+    </p>
+
+</div>
 
 {% endblock %}
