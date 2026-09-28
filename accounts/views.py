@@ -31,3 +31,5 @@ class Login(View):
                 return HttpResponse('''<script>alert('User Invalid');window.location='/'</script>''')
         except LoginTable.DoesNotExist:
             return HttpResponse('''<script>alert('Invalid Credentials');window.location='/'</script>''')
+
+

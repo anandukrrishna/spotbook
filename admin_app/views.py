@@ -3,17 +3,6 @@ from django.views import View
 
 # Create your views here.
 
-
-class AdminHome(View):
-
-    def get(self, request):
-        return render(request, 'admin/admin_home.html')
-
-
-from django.shortcuts import render
-from django.views import View
-
-
 class AdminHome(View):
 
     def get(self, request):
@@ -25,10 +14,6 @@ class Users(View):
     def get(self, request):
         return render(request, 'admin/user.html')
 
-class Users(View):
-
-    def get(self, request):
-        return render(request, 'admin/user.html')
 
 class ParkingManagement(View):
 
