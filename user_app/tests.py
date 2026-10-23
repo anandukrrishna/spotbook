@@ -2,6 +2,7 @@ import datetime
 from decimal import Decimal
 from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 from accounts.models import LoginTable, UserTable
 from admin_app.models import ParkingLocationTable, ParkingSlotTable, EntryExitTable
 from user_app.models import BookingTable
@@ -14,7 +15,13 @@ from user_app.services import (
 
 class SmartParkingCoreTests(TestCase):
     def setUp(self):
-        # 1. Create Login & User
+        # 1. Create Django User & Profile
+        self.django_user = User.objects.create_user(
+            username='test_driver',
+            email='driver@example.com',
+            password='Password@123'
+        )
+
         self.login_user = LoginTable.objects.create(
             username='test_driver',
             password='Password@123',
@@ -66,7 +73,7 @@ class SmartParkingCoreTests(TestCase):
         duration = 3 # 3 hours * 50 = 150
 
         booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-ZZ-9999',
             vehicle_type='Car',
@@ -75,15 +82,15 @@ class SmartParkingCoreTests(TestCase):
             duration_hours=duration
         )
 
-        # Check fee
-        self.assertEqual(booking.fee, Decimal('150.00'))
+        # Check fee and properties
+        self.assertEqual(booking.total_fee, Decimal('150.00'))
         self.assertEqual(booking.end_time, datetime.time(13, 0))
         self.assertTrue(booking.booking_id.startswith('SB-'))
-        self.assertEqual(booking.status, 'Booked')
+        self.assertEqual(booking.status, 'Confirmed')
 
         # Check QR Code Image is generated
-        self.assertTrue(bool(booking.qr_code_image))
-        self.assertTrue(booking.qr_code_image.name.endswith('.png'))
+        self.assertTrue(bool(booking.qr_code))
+        self.assertTrue(booking.qr_code.name.endswith('.png'))
 
     def test_double_booking_prevention_strict(self):
         """
@@ -91,7 +98,7 @@ class SmartParkingCoreTests(TestCase):
         """
         # Baseline booking: Slot A on test_date from 10:00 to 12:00 (2 hours)
         base_booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-AA-1111',
             vehicle_type='Car',
@@ -104,7 +111,7 @@ class SmartParkingCoreTests(TestCase):
         # Case 1: Partial overlap starting later (11:00 to 13:00) -> MUST FAIL
         with self.assertRaises(ValidationError) as cm:
             create_booking(
-                user_profile=self.user_profile,
+                user=self.django_user,
                 slot=self.slot_a,
                 vehicle_number='KL-11-BB-2222',
                 vehicle_type='Car',
@@ -117,7 +124,7 @@ class SmartParkingCoreTests(TestCase):
         # Case 2: Partial overlap starting earlier (09:00 to 11:00) -> MUST FAIL
         with self.assertRaises(ValidationError) as cm:
             create_booking(
-                user_profile=self.user_profile,
+                user=self.django_user,
                 slot=self.slot_a,
                 vehicle_number='KL-11-CC-3333',
                 vehicle_type='Car',
@@ -130,7 +137,7 @@ class SmartParkingCoreTests(TestCase):
         # Case 3: Completely enclosed within existing window (10:30 to 11:30) -> MUST FAIL
         with self.assertRaises(ValidationError) as cm:
             create_booking(
-                user_profile=self.user_profile,
+                user=self.django_user,
                 slot=self.slot_a,
                 vehicle_number='KL-11-DD-4444',
                 vehicle_type='Car',
@@ -142,7 +149,7 @@ class SmartParkingCoreTests(TestCase):
 
         # Case 4: Adjacent booking right when previous ends (12:00 to 14:00) -> MUST SUCCEED
         adjacent_booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-EE-5555',
             vehicle_type='Car',
@@ -154,7 +161,7 @@ class SmartParkingCoreTests(TestCase):
 
         # Case 5: Different Slot at same time (Slot B, 10:00 to 12:00) -> MUST SUCCEED
         slot_b_booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_b,
             vehicle_number='KL-11-FF-6666',
             vehicle_type='Car',
@@ -167,7 +174,7 @@ class SmartParkingCoreTests(TestCase):
         # Case 6: Same Slot, same time, but on a DIFFERENT date -> MUST SUCCEED
         next_day = self.test_date + datetime.timedelta(days=1)
         next_day_booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-GG-7777',
             vehicle_type='Car',
@@ -180,7 +187,7 @@ class SmartParkingCoreTests(TestCase):
     def test_cancellation_frees_slot_for_rebooking(self):
         """Cancelling a booking frees the slot so another booking can take that time window."""
         booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-HH-8888',
             vehicle_type='Car',
@@ -192,7 +199,7 @@ class SmartParkingCoreTests(TestCase):
         # Try overlapping -> Fails
         with self.assertRaises(ValidationError):
             create_booking(
-                user_profile=self.user_profile,
+                user=self.django_user,
                 slot=self.slot_a,
                 vehicle_number='KL-11-II-9999',
                 vehicle_type='Car',
@@ -202,12 +209,12 @@ class SmartParkingCoreTests(TestCase):
             )
 
         # Cancel the first booking
-        cancel_booking_record(booking, user_profile=self.user_profile)
+        cancel_booking_record(booking, user=self.django_user)
         self.assertEqual(booking.status, 'Cancelled')
 
         # Now booking the exact same time window must succeed!
         rebooking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-II-9999',
             vehicle_type='Car',
@@ -216,13 +223,13 @@ class SmartParkingCoreTests(TestCase):
             duration_hours=2
         )
         self.assertIsNotNone(rebooking.id)
-        self.assertEqual(rebooking.status, 'Booked')
+        self.assertEqual(rebooking.status, 'Confirmed')
 
     def test_gate_entry_and_exit_workflow(self):
         """Verify Vehicle Entry -> Occupied -> Vehicle Exit -> Available workflow."""
         today = datetime.date.today()
         booking = create_booking(
-            user_profile=self.user_profile,
+            user=self.django_user,
             slot=self.slot_a,
             vehicle_number='KL-11-GATE-01',
             vehicle_type='Car',

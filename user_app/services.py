@@ -21,23 +21,23 @@ def check_slot_availability(slot, date, start_time, end_time, exclude_booking_id
     Checks if any active/booked reservation overlaps with [start_time, end_time) on date.
     Returns (is_available: bool, conflicting_booking: BookingTable or None).
     """
-    active_statuses = ['Booked', 'Active']
-    
+    active_statuses = ['Confirmed', 'Booked', 'Active']
+
     # Query all active bookings for this slot on this date
     existing_bookings = BookingTable.objects.filter(
-        SLOTID=slot,
-        date=date,
+        slot=slot,
+        booking_date=date,
         status__in=active_statuses
     )
-    
+
     if exclude_booking_id:
         existing_bookings = existing_bookings.exclude(id=exclude_booking_id)
-        
+
     for existing in existing_bookings:
         # Standard time overlap logic: (NewStart < ExistEnd) and (NewEnd > ExistStart)
-        if (start_time < existing.end_time) and (end_time > existing.start_time):
+        if (start_time < existing.end_time) and (end_time > existing.entry_time):
             return False, existing
-            
+
     return True, None
 
 def get_slots_with_window_status(location, date=None, start_time=None, duration_hours=None):
@@ -47,9 +47,8 @@ def get_slots_with_window_status(location, date=None, start_time=None, duration_
     - conflict_info (if any)
     """
     slots = ParkingSlotTable.objects.filter(LOCATIONID=location, is_active=True).order_by('slot_number')
-    
+
     if not date or not start_time or not duration_hours:
-        # Just use current status
         result = []
         for s in slots:
             result.append({
@@ -71,7 +70,7 @@ def get_slots_with_window_status(location, date=None, start_time=None, duration_
     return result
 
 @transaction.atomic
-def create_booking(user_profile, slot, vehicle_number, vehicle_type, date, start_time, duration_hours):
+def create_booking(user, slot, vehicle_number, vehicle_type, date, start_time, duration_hours):
     """
     Atomic booking reservation with strict double-booking prevention.
     """
@@ -88,7 +87,7 @@ def create_booking(user_profile, slot, vehicle_number, vehicle_type, date, start
     if not is_available:
         conflict_msg = (
             f"Double-Booking Prevented: Slot {locked_slot.slot_number} is already booked from "
-            f"{conflict.start_time.strftime('%I:%M %p')} to {conflict.end_time.strftime('%I:%M %p')} "
+            f"{conflict.entry_time.strftime('%I:%M %p')} to {conflict.end_time.strftime('%I:%M %p')} "
             f"on {date}. Please select a different slot or time."
         )
         raise ValidationError(conflict_msg)
@@ -98,19 +97,18 @@ def create_booking(user_profile, slot, vehicle_number, vehicle_type, date, start
     total_fee = Decimal(rate_per_hour) * Decimal(duration)
 
     booking = BookingTable.objects.create(
-        USERID=user_profile,
-        SLOTID=locked_slot,
-        vehicle_number=vehicle_number.strip().upper(),
-        vehicle_type=vehicle_type,
-        date=date,
-        start_time=start_time,
-        end_time=end_time,
+        user=user,
+        slot=locked_slot,
+        booking_date=date,
+        entry_time=start_time,
         duration_hours=duration,
-        fee=total_fee,
-        status='Booked'
+        total_fee=total_fee,
+        status='Confirmed',
+        vehicle_number=vehicle_number.strip().upper() if vehicle_number else '',
+        vehicle_type=vehicle_type or 'Car'
     )
 
-    # If the booking date is today and covers current time, update slot status to Reserved
+    # If the booking date is today, update slot status to Reserved
     today = datetime.date.today()
     if date == today:
         locked_slot.status = 'Reserved'
@@ -119,11 +117,11 @@ def create_booking(user_profile, slot, vehicle_number, vehicle_type, date, start
     return booking
 
 @transaction.atomic
-def cancel_booking_record(booking, user_profile=None, is_admin=False):
+def cancel_booking_record(booking, user=None, is_admin=False):
     """
     Cancels a booking and frees up slot status if no other active booking exists.
     """
-    if not is_admin and booking.USERID != user_profile:
+    if not is_admin and booking.user != user:
         raise ValidationError("You do not have permission to cancel this booking.")
 
     if booking.status in ['Completed', 'Cancelled']:
@@ -133,13 +131,12 @@ def cancel_booking_record(booking, user_profile=None, is_admin=False):
     booking.save()
 
     # Re-evaluate slot status
-    slot = booking.SLOTID
-    # Check if there are other active bookings for this slot today
+    slot = booking.slot
     today = datetime.date.today()
     has_active = BookingTable.objects.filter(
-        SLOTID=slot,
-        date=today,
-        status__in=['Booked', 'Active']
+        slot=slot,
+        booking_date=today,
+        status__in=['Confirmed', 'Booked', 'Active']
     ).exists()
 
     if not has_active and slot.status != 'Occupied':

@@ -3,8 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from accounts.helpers import user_required, get_current_user_profile
-from accounts.models import UserTable, LoginTable
+from accounts.helpers import user_required, get_current_user_profile, get_current_django_user
 from admin_app.models import ParkingLocationTable, ParkingSlotTable, ParkingChargeTable
 from user_app.models import BookingTable
 from user_app.services import (
@@ -20,6 +19,7 @@ class UserHome(View):
     User landing page & parking location directory with search.
     """
     def get(self, request):
+        django_user = get_current_django_user(request)
         user_profile = get_current_user_profile(request)
         search_query = request.GET.get('q', '').strip()
         city_filter = request.GET.get('city', '').strip()
@@ -34,10 +34,10 @@ class UserHome(View):
 
         # Compute user's active bookings count if logged in
         active_bookings_count = 0
-        if user_profile:
+        if django_user:
             active_bookings_count = BookingTable.objects.filter(
-                USERID=user_profile,
-                status__in=['Booked', 'Active']
+                user=django_user,
+                status__in=['Confirmed', 'Booked', 'Active']
             ).count()
 
         context = {
@@ -59,7 +59,6 @@ class LocationDetail(View):
         user_profile = get_current_user_profile(request)
         location = get_object_or_404(ParkingLocationTable, id=location_id, is_active=True)
 
-        # Filters for slot time window
         today_str = datetime.date.today().strftime('%Y-%m-%d')
         date_str = request.GET.get('date', today_str)
         time_str = request.GET.get('start_time', '10:00')
@@ -93,7 +92,6 @@ class LocationDetail(View):
         )
 
         end_time = calculate_end_time(start_time, duration)
-
         charges = ParkingChargeTable.objects.filter(status='Active')
 
         context = {
@@ -115,8 +113,8 @@ class BookSlot(View):
     Handles slot booking creation with strict double-booking prevention.
     """
     def get(self, request, slot_id):
-        user_profile = get_current_user_profile(request)
-        if not user_profile:
+        django_user = get_current_django_user(request)
+        if not django_user:
             messages.info(request, "Please log in to book a parking slot.")
             return redirect('login')
 
@@ -137,7 +135,7 @@ class BookSlot(View):
         context = {
             'slot': slot,
             'location': slot.LOCATIONID,
-            'user_profile': user_profile,
+            'user_profile': get_current_user_profile(request),
             'date_str': date_str,
             'time_str': time_str,
             'duration': duration,
@@ -147,8 +145,8 @@ class BookSlot(View):
         return render(request, 'user/book_slot.html', context)
 
     def post(self, request, slot_id):
-        user_profile = get_current_user_profile(request)
-        if not user_profile:
+        django_user = get_current_django_user(request)
+        if not django_user:
             messages.error(request, "Session expired. Please log in.")
             return redirect('login')
 
@@ -192,7 +190,7 @@ class BookSlot(View):
         # Attempt atomic reservation with Double-Booking Prevention Engine
         try:
             booking = create_booking(
-                user_profile=user_profile,
+                user=django_user,
                 slot=slot,
                 vehicle_number=vehicle_number,
                 vehicle_type=vehicle_type,
@@ -200,7 +198,7 @@ class BookSlot(View):
                 start_time=start_time,
                 duration_hours=duration
             )
-            messages.success(request, f"Parking slot {slot.slot_number} booked successfully!")
+            messages.success(request, f"Parking slot {slot.slot_number} reserved successfully!")
             return redirect('booking_pass', booking_id=booking.id)
 
         except ValidationError as e:
@@ -214,24 +212,24 @@ class BookingPass(View):
     Displays the generated QR Code Pass and booking details.
     """
     def get(self, request, booking_id):
-        user_profile = get_current_user_profile(request)
+        django_user = get_current_django_user(request)
         is_admin = request.session.get('usertype') == 'admin'
 
-        if not is_admin and not user_profile:
+        if not is_admin and not django_user:
             return redirect('login')
 
         booking = get_object_or_404(BookingTable, id=booking_id)
 
         # Security check: User can only view their own booking unless admin
-        if not is_admin and booking.USERID != user_profile:
+        if not is_admin and booking.user != django_user:
             messages.error(request, "Access denied.")
             return redirect('user_home')
 
         return render(request, 'user/booking_pass.html', {
             'booking': booking,
-            'slot': booking.SLOTID,
-            'location': booking.SLOTID.LOCATIONID,
-            'user_profile': user_profile,
+            'slot': booking.slot,
+            'location': booking.slot.LOCATIONID,
+            'user_profile': get_current_user_profile(request),
             'is_admin': is_admin,
         })
 
@@ -241,23 +239,23 @@ class MyBookings(View):
     Dashboard for user to view active, upcoming, and past parking bookings.
     """
     def get(self, request):
-        user_profile = get_current_user_profile(request)
-        if not user_profile:
+        django_user = get_current_django_user(request)
+        if not django_user:
             messages.info(request, "Please log in to view your bookings.")
             return redirect('login')
 
         active_bookings = BookingTable.objects.filter(
-            USERID=user_profile,
-            status__in=['Booked', 'Active']
-        ).order_by('-date', '-start_time')
+            user=django_user,
+            status__in=['Confirmed', 'Booked', 'Active']
+        ).order_by('-booking_date', '-entry_time')
 
         past_bookings = BookingTable.objects.filter(
-            USERID=user_profile,
+            user=django_user,
             status__in=['Completed', 'Cancelled']
-        ).order_by('-date', '-start_time')
+        ).order_by('-booking_date', '-entry_time')
 
         context = {
-            'user_profile': user_profile,
+            'user_profile': get_current_user_profile(request),
             'active_bookings': active_bookings,
             'past_bookings': past_bookings,
         }
@@ -269,17 +267,17 @@ class CancelBooking(View):
     Cancels a booking and automatically restores slot availability.
     """
     def post(self, request, booking_id):
-        user_profile = get_current_user_profile(request)
+        django_user = get_current_django_user(request)
         is_admin = request.session.get('usertype') == 'admin'
 
-        if not is_admin and not user_profile:
+        if not is_admin and not django_user:
             return redirect('login')
 
         booking = get_object_or_404(BookingTable, id=booking_id)
 
         try:
-            cancel_booking_record(booking, user_profile=user_profile, is_admin=is_admin)
-            messages.success(request, f"Booking {booking.booking_id} has been cancelled successfully.")
+            cancel_booking_record(booking, user=django_user, is_admin=is_admin)
+            messages.success(request, f"Booking #{booking.id} has been cancelled successfully.")
         except ValidationError as e:
             messages.error(request, str(e.message if hasattr(e, 'message') else e))
 

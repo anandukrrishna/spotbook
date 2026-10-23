@@ -11,6 +11,39 @@ from admin_app.models import ParkingLocationTable, ParkingSlotTable, ParkingChar
 from user_app.models import BookingTable
 from user_app.services import cancel_booking_record
 
+def parse_booking_ref_to_id(code_str):
+    """
+    Parses a Booking Ref like 'SB-20261023-0001' or 'SB000001' or '1' into an integer ID.
+    """
+    if not code_str:
+        return None
+    code = code_str.strip()
+    if 'BOOKING_ID:' in code:
+        parts = code.split('|')
+        for part in parts:
+            if part.startswith('BOOKING_ID:'):
+                code = part.split(':', 1)[1].strip()
+                break
+    if code.startswith('SPOTBOOK:'):
+        parts = code.split(':')
+        if len(parts) >= 2:
+            code = parts[1].strip()
+
+    # Try extracting digits from the end of SB-YYYYMMDD-XXXX
+    if '-' in code:
+        last_chunk = code.split('-')[-1]
+        if last_chunk.isdigit():
+            return int(last_chunk)
+    
+    if code.startswith('SB') and code[2:].isdigit():
+        return int(code[2:])
+
+    if code.isdigit():
+        return int(code)
+
+    return None
+
+
 class AdminHome(View):
     def get(self, request):
         if request.session.get('usertype') != 'admin':
@@ -24,10 +57,10 @@ class AdminHome(View):
         occupied_slots = ParkingSlotTable.objects.filter(is_active=True, status='Occupied').count()
         total_bookings = BookingTable.objects.count()
 
-        total_revenue = BookingTable.objects.exclude(status='Cancelled').aggregate(Sum('fee'))['fee__sum'] or Decimal('0.00')
+        total_revenue = BookingTable.objects.exclude(status='Cancelled').aggregate(Sum('total_fee'))['total_fee__sum'] or Decimal('0.00')
 
-        recent_bookings = BookingTable.objects.select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID').order_by('-created_at')[:8]
-        currently_parked = BookingTable.objects.filter(status='Active').select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID')
+        recent_bookings = BookingTable.objects.select_related('user', 'slot', 'slot__LOCATIONID').order_by('-created_at')[:8]
+        currently_parked = BookingTable.objects.filter(status='Active').select_related('user', 'slot', 'slot__LOCATIONID')
 
         context = {
             'total_users': total_users,
@@ -98,7 +131,7 @@ class Users(View):
         elif action == 'delete':
             login_obj = user_obj.LOGINID
             name = user_obj.name
-            login_obj.delete() # cascading delete
+            login_obj.delete()
             messages.success(request, f"User {name} was permanently deleted.")
 
         return redirect('users')
@@ -167,7 +200,6 @@ class ParkingLocations(View):
                 is_active=True
             )
 
-            # Auto-generate slots if specified
             if int(total_slots or 0) > 0:
                 for i in range(1, int(total_slots) + 1):
                     slot_num = f"S-{i:02d}"
@@ -302,7 +334,7 @@ class ParkingSlots(View):
             slot_id = request.POST.get('slot_id')
             slot = get_object_or_404(ParkingSlotTable, id=slot_id)
             num = slot.slot_number
-            slot.is_active = False # soft delete
+            slot.is_active = False
             slot.save()
             messages.success(request, f"Slot {num} deleted.")
 
@@ -318,24 +350,33 @@ class Bookings(View):
         status_filter = request.GET.get('status', '').strip()
         date_filter = request.GET.get('date', '').strip()
 
-        bookings = BookingTable.objects.select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID').all().order_by('-created_at')
+        bookings = BookingTable.objects.select_related('user', 'slot', 'slot__LOCATIONID').all().order_by('-created_at')
 
         if search_query:
-            bookings = bookings.filter(
-                Q(booking_id__icontains=search_query) |
-                Q(USERID__name__icontains=search_query) |
-                Q(vehicle_number__icontains=search_query) |
-                Q(SLOTID__slot_number__icontains=search_query)
-            )
+            parsed_id = parse_booking_ref_to_id(search_query)
+            if parsed_id:
+                bookings = bookings.filter(
+                    Q(id=parsed_id) |
+                    Q(user__username__icontains=search_query) |
+                    Q(vehicle_number__icontains=search_query) |
+                    Q(slot__slot_number__icontains=search_query)
+                )
+            else:
+                bookings = bookings.filter(
+                    Q(user__username__icontains=search_query) |
+                    Q(user__first_name__icontains=search_query) |
+                    Q(vehicle_number__icontains=search_query) |
+                    Q(slot__slot_number__icontains=search_query)
+                )
 
         if status_filter:
             bookings = bookings.filter(status__iexact=status_filter)
 
         if date_filter:
-            bookings = bookings.filter(date=date_filter)
+            bookings = bookings.filter(booking_date=date_filter)
 
         total_bookings = BookingTable.objects.count()
-        upcoming_bookings = BookingTable.objects.filter(status='Booked').count()
+        upcoming_bookings = BookingTable.objects.filter(status__in=['Confirmed', 'Booked']).count()
         active_bookings = BookingTable.objects.filter(status='Active').count()
         completed_bookings = BookingTable.objects.filter(status='Completed').count()
         cancelled_bookings = BookingTable.objects.filter(status='Cancelled').count()
@@ -363,7 +404,7 @@ class Bookings(View):
 
         if action == 'cancel':
             cancel_booking_record(booking, is_admin=True)
-            messages.success(request, f"Booking {booking.booking_id} cancelled.")
+            messages.success(request, f"Booking #{booking.id} cancelled.")
 
         return redirect('Bookings')
 
@@ -443,7 +484,7 @@ class QRVerification(View):
 
         total_attempts = BookingTable.objects.count()
         verified_count = BookingTable.objects.filter(status__in=['Active', 'Completed']).count()
-        awaiting_count = BookingTable.objects.filter(status='Booked').count()
+        awaiting_count = BookingTable.objects.filter(status__in=['Confirmed', 'Booked']).count()
 
         query_code = request.GET.get('qr_code', '').strip()
         matched_booking = None
@@ -451,26 +492,16 @@ class QRVerification(View):
         status_message = ''
 
         if query_code:
-            # Parse QR string or Booking ID
-            code = query_code
-            if 'BOOKING_ID:' in code:
-                # SPOTBOOK_PASS|BOOKING_ID:SB-...|...
-                parts = code.split('|')
-                for part in parts:
-                    if part.startswith('BOOKING_ID:'):
-                        code = part.split(':', 1)[1].strip()
-                        break
-            elif code.startswith('SPOTBOOK:'):
-                parts = code.split(':')
-                if len(parts) >= 2:
-                    code = parts[1].strip()
-
-            matched_booking = BookingTable.objects.filter(
-                Q(booking_id__iexact=code) | Q(qr_code__iexact=query_code)
-            ).select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID').first()
+            parsed_id = parse_booking_ref_to_id(query_code)
+            if parsed_id:
+                matched_booking = BookingTable.objects.filter(id=parsed_id).select_related('user', 'slot', 'slot__LOCATIONID').first()
+            if not matched_booking:
+                matched_booking = BookingTable.objects.filter(
+                    Q(vehicle_number__iexact=query_code)
+                ).select_related('user', 'slot', 'slot__LOCATIONID').first()
 
             if matched_booking:
-                if matched_booking.status == 'Booked':
+                if matched_booking.status in ['Confirmed', 'Booked']:
                     verification_status = 'Valid'
                     status_message = 'Booking is confirmed and awaiting vehicle entry.'
                 elif matched_booking.status == 'Active':
@@ -510,11 +541,6 @@ class VehicleManagement(View):
 
 
 class VehicleEntry(View):
-    """
-    Gate Entry Interface:
-    Searches booking, verifies, records entry timestamp,
-    toggles slot status to Occupied and booking to Active.
-    """
     def get(self, request):
         if request.session.get('usertype') != 'admin':
             return redirect('login')
@@ -524,18 +550,20 @@ class VehicleEntry(View):
 
         matched_booking = None
         if search_id:
-            matched_booking = BookingTable.objects.filter(
-                Q(booking_id__iexact=search_id) | Q(vehicle_number__iexact=search_id)
-            ).select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID').first()
+            parsed_id = parse_booking_ref_to_id(search_id)
+            if parsed_id:
+                matched_booking = BookingTable.objects.filter(id=parsed_id).select_related('user', 'slot', 'slot__LOCATIONID').first()
+            if not matched_booking:
+                matched_booking = BookingTable.objects.filter(
+                    Q(vehicle_number__iexact=search_id)
+                ).select_related('user', 'slot', 'slot__LOCATIONID').first()
 
-        # Stats
         entered_today = EntryExitTable.objects.filter(entry_time__date=today).count()
         vehicles_inside = BookingTable.objects.filter(status='Active').count()
-        awaiting_entry = BookingTable.objects.filter(date=today, status='Booked').count()
+        awaiting_entry = BookingTable.objects.filter(booking_date=today, status__in=['Confirmed', 'Booked']).count()
 
-        # Recent entry logs
         recent_entries = EntryExitTable.objects.select_related(
-            'BOOKINGID', 'BOOKINGID__USERID', 'BOOKINGID__SLOTID', 'BOOKINGID__SLOTID__LOCATIONID'
+            'BOOKINGID', 'BOOKINGID__user', 'BOOKINGID__slot', 'BOOKINGID__slot__LOCATIONID'
         ).filter(entry_time__isnull=False).order_by('-entry_time')[:10]
 
         context = {
@@ -556,23 +584,25 @@ class VehicleEntry(View):
         booking_code = request.POST.get('booking_id', '').strip()
         entry_time_str = request.POST.get('entry_time')
 
-        booking = BookingTable.objects.filter(
-            Q(booking_id__iexact=booking_code) | Q(id__iexact=booking_code)
-        ).first()
+        parsed_id = parse_booking_ref_to_id(booking_code)
+        booking = None
+        if parsed_id:
+            booking = BookingTable.objects.filter(id=parsed_id).first()
+        if not booking:
+            booking = BookingTable.objects.filter(vehicle_number__iexact=booking_code).first()
 
         if not booking:
             messages.error(request, f"Booking '{booking_code}' not found.")
             return redirect('VehicleEntry')
 
         if booking.status == 'Active':
-            messages.warning(request, f"Vehicle for Booking {booking.booking_id} has already entered!")
+            messages.warning(request, f"Vehicle for Booking #{booking.id} has already entered!")
             return redirect('VehicleEntry')
 
         if booking.status in ['Completed', 'Cancelled']:
             messages.error(request, f"Cannot record entry: Booking is already {booking.status}.")
             return redirect('VehicleEntry')
 
-        # Timestamp
         entry_dt = timezone.now()
         if entry_time_str:
             try:
@@ -581,31 +611,24 @@ class VehicleEntry(View):
             except Exception:
                 pass
 
-        # Update Booking and Slot
         booking.status = 'Active'
         booking.save()
 
-        slot = booking.SLOTID
+        slot = booking.slot
         slot.status = 'Occupied'
         slot.save()
 
-        # Record in EntryExitTable
         EntryExitTable.objects.create(
             BOOKINGID=booking,
             entry_time=entry_dt,
             notes='Gate entry recorded'
         )
 
-        messages.success(request, f"Vehicle entry confirmed for Booking {booking.booking_id}! Slot {slot.slot_number} marked Occupied.")
+        messages.success(request, f"Vehicle entry confirmed for Booking #{booking.id}! Slot {slot.slot_number} marked Occupied.")
         return redirect('VehicleEntry')
 
 
 class VehicleExit(View):
-    """
-    Gate Exit Interface:
-    Searches vehicle parked inside, records exit timestamp,
-    toggles slot status back to Available, and booking status to Completed.
-    """
     def get(self, request):
         if request.session.get('usertype') != 'admin':
             return redirect('login')
@@ -615,23 +638,25 @@ class VehicleExit(View):
 
         matched_booking = None
         if search_id:
-            matched_booking = BookingTable.objects.filter(
-                Q(booking_id__iexact=search_id) | Q(vehicle_number__iexact=search_id),
-                status='Active'
-            ).select_related('USERID', 'SLOTID', 'SLOTID__LOCATIONID').first()
+            parsed_id = parse_booking_ref_to_id(search_id)
+            if parsed_id:
+                matched_booking = BookingTable.objects.filter(id=parsed_id, status='Active').select_related('user', 'slot', 'slot__LOCATIONID').first()
+            if not matched_booking:
+                matched_booking = BookingTable.objects.filter(
+                    Q(vehicle_number__iexact=search_id),
+                    status='Active'
+                ).select_related('user', 'slot', 'slot__LOCATIONID').first()
 
         exited_today = EntryExitTable.objects.filter(exit_time__date=today).count()
         vehicles_inside = BookingTable.objects.filter(status='Active').count()
         completed_sessions = BookingTable.objects.filter(status='Completed').count()
 
-        # Vehicles currently inside
         parked_vehicles = BookingTable.objects.filter(status='Active').select_related(
-            'USERID', 'SLOTID', 'SLOTID__LOCATIONID'
-        ).order_by('-date')
+            'user', 'slot', 'slot__LOCATIONID'
+        ).order_by('-booking_date')
 
-        # Recent exit records
         recent_exits = EntryExitTable.objects.select_related(
-            'BOOKINGID', 'BOOKINGID__USERID', 'BOOKINGID__SLOTID', 'BOOKINGID__SLOTID__LOCATIONID'
+            'BOOKINGID', 'BOOKINGID__user', 'BOOKINGID__slot', 'BOOKINGID__slot__LOCATIONID'
         ).filter(exit_time__isnull=False).order_by('-exit_time')[:10]
 
         context = {
@@ -653,19 +678,21 @@ class VehicleExit(View):
         booking_code = request.POST.get('booking_id', '').strip()
         exit_time_str = request.POST.get('exit_time')
 
-        booking = BookingTable.objects.filter(
-            Q(booking_id__iexact=booking_code) | Q(id__iexact=booking_code)
-        ).first()
+        parsed_id = parse_booking_ref_to_id(booking_code)
+        booking = None
+        if parsed_id:
+            booking = BookingTable.objects.filter(id=parsed_id).first()
+        if not booking:
+            booking = BookingTable.objects.filter(vehicle_number__iexact=booking_code).first()
 
         if not booking:
             messages.error(request, f"Booking '{booking_code}' not found.")
             return redirect('VehicleExit')
 
         if booking.status != 'Active':
-            messages.error(request, f"Cannot record exit: Booking is not currently Active (Current status: {booking.status}).")
+            messages.error(request, f"Cannot record exit: Booking is not currently Active (Status: {booking.status}).")
             return redirect('VehicleExit')
 
-        # Timestamp
         exit_dt = timezone.now()
         if exit_time_str:
             try:
@@ -674,15 +701,13 @@ class VehicleExit(View):
             except Exception:
                 pass
 
-        # Update Booking and Slot
         booking.status = 'Completed'
         booking.save()
 
-        slot = booking.SLOTID
+        slot = booking.slot
         slot.status = 'Available'
         slot.save()
 
-        # Update or create EntryExitTable
         log_entry = EntryExitTable.objects.filter(BOOKINGID=booking).order_by('-id').first()
         if log_entry:
             log_entry.exit_time = exit_dt
@@ -695,7 +720,7 @@ class VehicleExit(View):
                 notes='Gate exit recorded'
             )
 
-        messages.success(request, f"Vehicle exit confirmed for Booking {booking.booking_id}! Slot {slot.slot_number} is now Available.")
+        messages.success(request, f"Vehicle exit confirmed for Booking #{booking.id}! Slot {slot.slot_number} is now Available.")
         return redirect('VehicleExit')
 
 
@@ -707,17 +732,15 @@ class Reports(View):
         total_bookings = BookingTable.objects.count()
         total_slots = ParkingSlotTable.objects.filter(is_active=True).count()
         total_locations = ParkingLocationTable.objects.filter(is_active=True).count()
-        total_revenue = BookingTable.objects.exclude(status='Cancelled').aggregate(Sum('fee'))['fee__sum'] or Decimal('0.00')
+        total_revenue = BookingTable.objects.exclude(status='Cancelled').aggregate(Sum('total_fee'))['total_fee__sum'] or Decimal('0.00')
 
-        # Status breakdown
         bookings_by_status = BookingTable.objects.values('status').annotate(count=Count('id'))
 
-        # Location stats
         location_stats = []
         for loc in ParkingLocationTable.objects.filter(is_active=True):
             slot_cnt = loc.parkingslottable_set.filter(is_active=True).count()
-            booking_cnt = BookingTable.objects.filter(SLOTID__LOCATIONID=loc).count()
-            rev = BookingTable.objects.filter(SLOTID__LOCATIONID=loc).exclude(status='Cancelled').aggregate(Sum('fee'))['fee__sum'] or Decimal('0.00')
+            booking_cnt = BookingTable.objects.filter(slot__LOCATIONID=loc).count()
+            rev = BookingTable.objects.filter(slot__LOCATIONID=loc).exclude(status='Cancelled').aggregate(Sum('total_fee'))['total_fee__sum'] or Decimal('0.00')
             location_stats.append({
                 'location': loc,
                 'slot_count': slot_cnt,
@@ -725,9 +748,8 @@ class Reports(View):
                 'revenue': rev,
             })
 
-        # Recent entry-exit logs
         entry_exit_logs = EntryExitTable.objects.select_related(
-            'BOOKINGID', 'BOOKINGID__USERID', 'BOOKINGID__SLOTID', 'BOOKINGID__SLOTID__LOCATIONID'
+            'BOOKINGID', 'BOOKINGID__user', 'BOOKINGID__slot', 'BOOKINGID__slot__LOCATIONID'
         ).order_by('-id')[:15]
 
         context = {
