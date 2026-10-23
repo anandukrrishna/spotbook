@@ -1,179 +1,250 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Parking Slots
-{% endblock %}
+{% block title %}Parking Slots - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Parking Slots</h1>
-
-<p>
-    Manage individual parking slots available at SpotBook parking locations.
-</p>
-
-<hr>
-
-<h2>Slot Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Slots</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Parking Slots Management</h2>
+        <p class="text-muted small mb-0">Monitor and configure individual parking slots across all facilities</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Available Slots</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Reserved Slots</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Occupied Slots</p>
-    </div>
-
+    <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
+        <i class="bi bi-plus-lg"></i> Add New Slot
+    </button>
 </div>
 
-<hr>
-
-<h2>Search & Filter Slots</h2>
-
-<div class="card">
-
-    <form method="get">
-
-        <div class="form-group">
-
-            <label for="search">
-                Search Slot
-            </label>
-
-            <input
-                type="text"
-                id="search"
-                name="search"
-                class="form-control"
-                placeholder="Slot number"
-            >
-
+<!-- Slot Overview Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Slots</span>
+            <h3 class="fw-bold text-dark mb-0">{{ total_slots }}</h3>
         </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Available</span>
+            <h3 class="fw-bold text-success mb-0">{{ available_slots }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Reserved</span>
+            <h3 class="fw-bold text-warning mb-0">{{ reserved_slots }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Occupied</span>
+            <h3 class="fw-bold text-danger mb-0">{{ occupied_slots }}</h3>
+        </div>
+    </div>
+</div>
 
-        <div class="form-group">
-
-            <label for="location">
-                Location
-            </label>
-
-            <select id="location" name="location" class="form-control">
-                <option value="">All Locations</option>
-                <option value="1">Example Parking</option>
+<!-- Search & Filter Card -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form method="GET" action="{% url 'ParkingSlots' %}" class="row g-2 align-items-center">
+        <div class="col-md-3">
+            <input type="text" name="search" class="form-control bg-light border-0" placeholder="Slot number (e.g. A-01)..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-4">
+            <select name="location" class="form-select bg-light border-0">
+                <option value="">All Parking Facilities</option>
+                {% for loc in locations %}
+                <option value="{{ loc.id }}" {% if selected_location == loc.id|stringformat:"s" %}selected{% endif %}>{{ loc.name }}</option>
+                {% endfor %}
             </select>
-
         </div>
-
-        <div class="form-group">
-
-            <label for="status">
-                Status
-            </label>
-
-            <select id="status" name="status" class="form-control">
-                <option value="">All Status</option>
-                <option value="available">Available</option>
-                <option value="reserved">Reserved</option>
-                <option value="occupied">Occupied</option>
+        <div class="col-md-3">
+            <select name="status" class="form-select bg-light border-0">
+                <option value="">All Statuses</option>
+                <option value="available" {% if status_filter == 'available' %}selected{% endif %}>Available</option>
+                <option value="reserved" {% if status_filter == 'reserved' %}selected{% endif %}>Reserved</option>
+                <option value="occupied" {% if status_filter == 'occupied' %}selected{% endif %}>Occupied</option>
             </select>
-
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Search
-        </button>
-
-        <button type="reset" class="btn btn-secondary">
-            Clear
-        </button>
-
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 btn-sm">Filter</button>
+            {% if search_query or selected_location or status_filter %}
+            <a href="{% url 'ParkingSlots' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            {% endif %}
+        </div>
     </form>
-
 </div>
 
-<hr>
+<!-- Slots Table -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Slot Number</th>
+                    <th>Facility Location</th>
+                    <th>Vehicle Type</th>
+                    <th>Hourly Price</th>
+                    <th>Current Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in slots %}
+                <tr>
+                    <td class="text-muted small">{{ forloop.counter }}</td>
+                    <td>
+                        <strong class="font-monospace text-primary fs-6">{{ s.slot_number }}</strong>
+                    </td>
+                    <td>
+                        <strong>{{ s.LOCATIONID.name }}</strong>
+                        <div class="text-muted fs-xs">{{ s.LOCATIONID.city }}</div>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border">
+                            {% if s.slot_type == 'EV' %}<i class="bi bi-lightning-charge text-warning me-1"></i>
+                            {% elif s.slot_type == 'Bike' %}<i class="bi bi-bicycle text-success me-1"></i>
+                            {% else %}<i class="bi bi-car-front text-primary me-1"></i>{% endif %}
+                            {{ s.slot_type }}
+                        </span>
+                    </td>
+                    <td class="fw-bold">₹{{ s.price_per_hour }}</td>
+                    <td>
+                        <span class="badge {% if s.status == 'Available' %}bg-success{% elif s.status == 'Reserved' %}bg-warning text-dark{% else %}bg-danger{% endif %} rounded-pill">
+                            {{ s.status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1 align-items-center">
+                            <!-- Quick Status Update Form -->
+                            <form method="POST" action="{% url 'ParkingSlots' %}" class="d-inline-flex align-items-center gap-1">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="update_status">
+                                <input type="hidden" name="slot_id" value="{{ s.id }}">
+                                <select name="status" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                                    <option value="Available" {% if s.status == 'Available' %}selected{% endif %}>Available</option>
+                                    <option value="Reserved" {% if s.status == 'Reserved' %}selected{% endif %}>Reserved</option>
+                                    <option value="Occupied" {% if s.status == 'Occupied' %}selected{% endif %}>Occupied</option>
+                                </select>
+                            </form>
 
-<h2>Parking Slots</h2>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editSlotModal{{ s.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
 
-<p>
-    <a href="#" class="btn btn-primary">
-        + Add New Slot
-    </a>
-</p>
+                            <form method="POST" action="{% url 'ParkingSlots' %}" class="d-inline" onsubmit="return confirm('Delete slot {{ s.slot_number }}?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="slot_id" value="{{ s.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
 
-<table class="table-standard">
-
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Slot Number</th>
-            <th>Parking Location</th>
-            <th>Slot Type</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <tr>
-            <td>1</td>
-            <td>A-01</td>
-            <td>Example Parking</td>
-            <td>Car</td>
-            <td>Available</td>
-
-            <td>
-                <a href="#" class="btn btn-secondary">View</a>
-                <a href="#" class="btn btn-secondary">Edit</a>
-                <a href="#" class="btn btn-secondary">Update Status</a>
-                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this slot?">Delete</a>
-            </td>
-        </tr>
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<h2>Slot Management</h2>
-
-<div class="card">
-
-    <p>
-        <strong>Add Slot:</strong>
-        Add a new parking slot to a parking location.
-    </p>
-
-    <p>
-        <strong>Edit Slot:</strong>
-        Update the details of an existing slot.
-    </p>
-
-    <p>
-        <strong>Update Status:</strong>
-        Change a slot between available, reserved, and occupied states.
-    </p>
-
-    <p>
-        <strong>Delete Slot:</strong>
-        Remove a parking slot from the system.
-    </p>
-
+                        <!-- Edit Slot Modal -->
+                        <div class="modal fade" id="editSlotModal{{ s.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-start">
+                                <div class="modal-content rounded-4 border-0 shadow">
+                                    <form method="POST" action="{% url 'ParkingSlots' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="edit">
+                                        <input type="hidden" name="slot_id" value="{{ s.id }}">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-heading fw-bold">Edit Slot {{ s.slot_number }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Slot Number</label>
+                                                <input type="text" name="slot_number" class="form-control font-monospace" value="{{ s.slot_number }}" required>
+                                            </div>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Vehicle Type</label>
+                                                    <select name="slot_type" class="form-select">
+                                                        <option value="Car" {% if s.slot_type == 'Car' %}selected{% endif %}>Car</option>
+                                                        <option value="Bike" {% if s.slot_type == 'Bike' %}selected{% endif %}>Bike</option>
+                                                        <option value="EV" {% if s.slot_type == 'EV' %}selected{% endif %}>Electric Vehicle (EV)</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Price per Hour (₹)</label>
+                                                    <input type="number" step="0.5" name="price_per_hour" class="form-control" value="{{ s.price_per_hour }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="Available" {% if s.status == 'Available' %}selected{% endif %}>Available</option>
+                                                    <option value="Reserved" {% if s.status == 'Reserved' %}selected{% endif %}>Reserved</option>
+                                                    <option value="Occupied" {% if s.status == 'Occupied' %}selected{% endif %}>Occupied</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No slots matching your filter criteria.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
+<!-- Add Slot Modal -->
+<div class="modal fade" id="addSlotModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-start">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form method="POST" action="{% url 'ParkingSlots' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-heading fw-bold">Add Parking Slot</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Parking Facility *</label>
+                        <select name="location_id" class="form-select" required>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }} ({{ loc.city }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Slot Number *</label>
+                            <input type="text" name="slot_number" class="form-control font-monospace" placeholder="e.g. A-07" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Slot Vehicle Type</label>
+                            <select name="slot_type" class="form-select">
+                                <option value="Car">Car (4-Wheeler)</option>
+                                <option value="Bike">Bike (2-Wheeler)</option>
+                                <option value="EV">Electric Vehicle (EV)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Hourly Rate (₹) *</label>
+                        <input type="number" step="0.5" name="price_per_hour" class="form-control" value="50.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Add Slot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

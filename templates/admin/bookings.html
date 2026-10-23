@@ -1,296 +1,151 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Booking Management
-{% endblock %}
+{% block title %}Bookings Management - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Booking Management</h1>
-
-<p>
-    Manage and monitor all parking bookings in the SpotBook system.
-</p>
-
-<hr>
-
-<!-- Booking Overview -->
-
-<h2>Booking Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Bookings</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Booking Management</h2>
+        <p class="text-muted small mb-0">Oversee all customer reservations, verify double-booking prevention, and manage passes</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Upcoming Bookings</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Active Bookings</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Completed Bookings</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Cancelled Bookings</p>
-    </div>
-
 </div>
 
-<hr>
-
-<!-- Search and Filter -->
-
-<h2>Search & Filter Bookings</h2>
-
-<div class="card">
-
-    <form method="get">
-
-        <div class="form-group">
-
-            <label for="search">
-                Search Booking
-            </label>
-
-            <input
-                type="text"
-                id="search"
-                name="search"
-                class="form-control"
-                placeholder="Booking ID, username or slot number"
-            >
-
+<!-- Booking Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-md">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total</span>
+            <h3 class="fw-bold text-dark mb-0">{{ total_bookings }}</h3>
         </div>
+    </div>
+    <div class="col-sm-6 col-md">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Upcoming</span>
+            <h3 class="fw-bold text-success mb-0">{{ upcoming_bookings }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Currently Parked</span>
+            <h3 class="fw-bold text-warning mb-0">{{ active_bookings }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Completed</span>
+            <h3 class="fw-bold text-info mb-0">{{ completed_bookings }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Cancelled</span>
+            <h3 class="fw-bold text-danger mb-0">{{ cancelled_bookings }}</h3>
+        </div>
+    </div>
+</div>
 
-        <div class="form-group">
-
-            <label for="status">
-                Status
-            </label>
-
-            <select id="status" name="status" class="form-control">
-
-                <option value="">
-                    All Status
-                </option>
-
-                <option value="pending">
-                    Pending
-                </option>
-
-                <option value="confirmed">
-                    Confirmed
-                </option>
-
-                <option value="active">
-                    Active
-                </option>
-
-                <option value="completed">
-                    Completed
-                </option>
-
-                <option value="cancelled">
-                    Cancelled
-                </option>
-
+<!-- Search & Filter Card -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form method="GET" action="{% url 'Bookings' %}" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Booking Ref, customer name, vehicle, or slot..." value="{{ search_query }}">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select bg-light border-0">
+                <option value="">All Statuses</option>
+                <option value="booked" {% if status_filter == 'booked' %}selected{% endif %}>Booked (Upcoming)</option>
+                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active (Parked)</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed (Exited)</option>
+                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
             </select>
-
         </div>
-
-        <div class="form-group">
-
-            <label for="date">
-                Date
-            </label>
-
-            <input
-                type="date"
-                id="date"
-                name="date"
-                class="form-control"
-            >
-
+        <div class="col-md-2">
+            <input type="date" name="date" class="form-control bg-light border-0" value="{{ date_filter }}">
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Search / Filter
-        </button>
-
-        <button type="reset" class="btn btn-secondary">
-            Clear
-        </button>
-
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 btn-sm">Filter</button>
+            {% if search_query or status_filter or date_filter %}
+            <a href="{% url 'Bookings' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            {% endif %}
+        </div>
     </form>
-
 </div>
 
-<hr>
-
-<!-- All Bookings -->
-
-<h2>All Bookings</h2>
-
-<table class="table-standard">
-
-    <thead>
-
-        <tr>
-            <th>#</th>
-            <th>Booking ID</th>
-            <th>User</th>
-            <th>Parking Location</th>
-            <th>Slot</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Duration</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        <!-- Temporary sample booking -->
-
-        <tr>
-
-            <td>1</td>
-
-            <td>
-                SB000001
-            </td>
-
-            <td>
-                Example User
-            </td>
-
-            <td>
-                Example Parking
-            </td>
-
-            <td>
-                A-01
-            </td>
-
-            <td>
-                18-09-2026
-            </td>
-
-            <td>
-                10:00 AM
-            </td>
-
-            <td>
-                2 Hours
-            </td>
-
-            <td>
-                ₹100
-            </td>
-
-            <td>
-                Confirmed
-            </td>
-
-            <td>
-                <a href="#" class="btn btn-secondary">View</a>
-                <a href="#" class="btn btn-danger js-confirm" data-message="Cancel this booking?">Cancel</a>
-            </td>
-
-        </tr>
-
-        <!-- Django booking records will be displayed here later -->
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<!-- Booking Details -->
-
-<h2>Booking Details</h2>
-
-<div class="card">
-
-    <p>
-        View complete information about a selected parking booking.
-    </p>
-
-    <p>
-        Booking details will include:
-    </p>
-
-    <ul>
-        <li>Booking ID</li>
-        <li>User information</li>
-        <li>Vehicle information</li>
-        <li>Parking location</li>
-        <li>Parking slot</li>
-        <li>Booking date</li>
-        <li>Start time</li>
-        <li>End time</li>
-        <li>Duration</li>
-        <li>Parking charge</li>
-        <li>Booking status</li>
-        <li>QR code</li>
-    </ul>
-
-    <p>
-        <a href="#" class="btn btn-primary">
-            View Booking Details
-        </a>
-    </p>
-
+<!-- Bookings Table -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Ref ID</th>
+                    <th>Customer</th>
+                    <th>Facility & Slot</th>
+                    <th>Vehicle Plate</th>
+                    <th>Date & Window</th>
+                    <th>Fee</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>
+                        <a href="{% url 'booking_pass' b.id %}" target="_blank" class="fw-bold text-primary font-monospace text-decoration-none">
+                            {{ b.booking_id }}
+                        </a>
+                        <div class="text-muted fs-xxs">{{ b.created_at|date:"M d, Y H:i" }}</div>
+                    </td>
+                    <td>
+                        <strong class="text-dark">{{ b.USERID.name }}</strong>
+                        <div class="text-muted small">{{ b.USERID.phone }}</div>
+                    </td>
+                    <td>
+                        <div>{{ b.SLOTID.LOCATIONID.name }}</div>
+                        <span class="badge bg-light text-dark border fs-xxs">Slot {{ b.SLOTID.slot_number }} ({{ b.SLOTID.slot_type }})</span>
+                    </td>
+                    <td>
+                        <span class="font-monospace fw-semibold">{{ b.vehicle_number }}</span>
+                        <div class="text-muted fs-xxs">{{ b.vehicle_type }}</div>
+                    </td>
+                    <td class="small">
+                        <strong>{{ b.date }}</strong>
+                        <div class="text-muted">{{ b.start_time }} &mdash; {{ b.end_time }} ({{ b.duration_hours }}h)</div>
+                    </td>
+                    <td class="fw-bold text-primary">₹{{ b.fee }}</td>
+                    <td>
+                        <span class="badge {% if b.status == 'Booked' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                            {{ b.status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{% url 'booking_pass' b.id %}" target="_blank" class="btn btn-sm btn-outline-primary" title="View Pass">
+                                <i class="bi bi-qr-code"></i> Pass
+                            </a>
+                            {% if b.status == 'Booked' %}
+                            <form method="POST" action="{% url 'Bookings' %}" class="d-inline" onsubmit="return confirm('Override & cancel booking {{ b.booking_id }}?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="cancel">
+                                <input type="hidden" name="booking_id" value="{{ b.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel Booking">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No bookings found matching criteria.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<hr>
-
-<!-- Cancel Booking -->
-
-<h2>Cancel Booking</h2>
-
-<div class="card">
-
-    <p>
-        Cancel an active or upcoming parking booking when required.
-    </p>
-
-    <p>
-        <a href="#" class="btn btn-danger">
-            Manage Booking Cancellation
-        </a>
-    </p>
-
-</div>
-
-<hr>
-
-<!-- Booking Management Information -->
-
-<h2>Booking Management</h2>
-
-<div class="card">
-
-    <p>
-        Administrators can search, filter, view, and manage parking
-        bookings from this page.
-    </p>
-
-</div>
-
 {% endblock %}

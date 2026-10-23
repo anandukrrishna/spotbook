@@ -1,0 +1,159 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Book Slot {{ slot.slot_number }} - {{ location.name }} | SpotBook{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-3 small">
+                    <li class="breadcrumb-item"><a href="{% url 'user_home' %}" class="text-decoration-none">Locations</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'location_detail' location.id %}" class="text-decoration-none">{{ location.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Book Slot {{ slot.slot_number }}</li>
+                </ol>
+            </nav>
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white mb-4">
+                <div class="card-header bg-primary text-white p-4 border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-white text-primary fw-bold mb-2">Slot Reservation</span>
+                            <h3 class="fw-bold mb-1">Confirm Parking Reservation</h3>
+                            <p class="text-white-50 small mb-0">{{ location.name }} &bull; Slot {{ slot.slot_number }}</p>
+                        </div>
+                        <div class="slot-badge-big bg-white text-dark rounded-4 p-3 text-center shadow-sm">
+                            <span class="fs-xs text-muted text-uppercase d-block fw-bold">Slot</span>
+                            <span class="fs-2 fw-bold text-primary">{{ slot.slot_number }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <!-- Reservation Form -->
+                    <form method="POST" action="{% url 'book_slot' slot.id %}" id="bookingForm">
+                        {% csrf_token %}
+                        <div class="row g-4 mb-4">
+                            <!-- Vehicle Number -->
+                            <div class="col-md-6">
+                                <label for="vehicle_number" class="form-label fw-semibold text-secondary small">Vehicle Registration Number *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-car-front-fill"></i></span>
+                                    <input type="text" name="vehicle_number" id="vehicle_number" class="form-control" placeholder="e.g. KL-11-AB-1234" required autofocus style="text-transform: uppercase;">
+                                </div>
+                                <span class="fs-xs text-muted">Enter vehicle license plate number for verification</span>
+                            </div>
+
+                            <!-- Vehicle Type -->
+                            <div class="col-md-6">
+                                <label for="vehicle_type" class="form-label fw-semibold text-secondary small">Vehicle Type *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-truck"></i></span>
+                                    <select name="vehicle_type" id="vehicle_type" class="form-select">
+                                        <option value="Car" {% if slot.slot_type == 'Car' %}selected{% endif %}>Car (4-Wheeler)</option>
+                                        <option value="Bike" {% if slot.slot_type == 'Bike' %}selected{% endif %}>Bike / Motorcycle (2-Wheeler)</option>
+                                        <option value="EV" {% if slot.slot_type == 'EV' %}selected{% endif %}>Electric Vehicle (EV)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Date -->
+                            <div class="col-md-4">
+                                <label for="date" class="form-label fw-semibold text-secondary small">Reservation Date *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-calendar3"></i></span>
+                                    <input type="date" name="date" id="date" class="form-control" value="{{ date_str }}" min="{{ min_date }}" required onchange="updateCalculation()">
+                                </div>
+                            </div>
+
+                            <!-- Entry Time -->
+                            <div class="col-md-4">
+                                <label for="start_time" class="form-label fw-semibold text-secondary small">Entry Time *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-clock"></i></span>
+                                    <input type="time" name="start_time" id="start_time" class="form-control" value="{{ time_str }}" required onchange="updateCalculation()">
+                                </div>
+                            </div>
+
+                            <!-- Duration -->
+                            <div class="col-md-4">
+                                <label for="duration" class="form-label fw-semibold text-secondary small">Duration (Hours) *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-hourglass-split"></i></span>
+                                    <select name="duration" id="duration" class="form-select" onchange="updateCalculation()">
+                                        {% for h in "12345678"|make_list %}
+                                        <option value="{{ h }}" {% if duration|stringformat:"s" == h %}selected{% endif %}>{{ h }} Hour{% if h != '1' %}s{% endif %}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Calculation & Summary Box -->
+                        <div class="p-4 rounded-4 bg-light border mb-4">
+                            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-receipt-cutoff me-2 text-primary"></i>Fee Calculation Summary</h6>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <span class="text-muted small d-block">Slot Rate</span>
+                                    <strong class="text-dark">₹<span id="ratePerHr">{{ slot.price_per_hour }}</span> / hr</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-muted small d-block">Duration</span>
+                                    <strong class="text-dark"><span id="summaryDuration">{{ duration }}</span> hr(s)</strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-muted small d-block">Est. Departure</span>
+                                    <strong class="text-dark"><span id="estDeparture">--:--</span></strong>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <span class="text-muted small d-block text-primary fw-semibold">Total Payable</span>
+                                    <span class="fs-4 fw-bold text-primary">₹<span id="totalFee">{{ fee }}</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info border-info-subtle small d-flex align-items-center gap-2 mb-4">
+                            <i class="bi bi-shield-lock-fill fs-5 text-primary"></i>
+                            <div>
+                                <strong>Double-Booking Prevention Engine Active:</strong> The system verifies zero overlaps before confirming. Your slot is guaranteed exclusively for your chosen time window.
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'location_detail' location.id %}" class="btn btn-outline-secondary py-2 px-4 rounded-3 fw-semibold">
+                                <i class="bi bi-arrow-left me-1"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-primary py-2 px-4 rounded-3 fw-semibold flex-grow-1 shadow-sm">
+                                <i class="bi bi-check-circle-fill me-1"></i> Confirm & Generate QR Gate Pass
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCalculation() {
+        const rate = parseFloat(document.getElementById('ratePerHr').innerText) || 50;
+        const duration = parseInt(document.getElementById('duration').value) || 1;
+        const total = (rate * duration).toFixed(2);
+        document.getElementById('totalFee').innerText = total;
+        document.getElementById('summaryDuration').innerText = duration;
+
+        // Est departure
+        const startTimeVal = document.getElementById('start_time').value;
+        if (startTimeVal) {
+            const [hours, minutes] = startTimeVal.split(':').map(Number);
+            const depHours = (hours + duration) % 24;
+            const period = depHours >= 12 ? 'PM' : 'AM';
+            const displayHours = (depHours % 12) || 12;
+            const padMinutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('estDeparture').innerText = `${displayHours}:${padMinutes} ${period}`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCalculation);
+</script>
+{% endblock %}

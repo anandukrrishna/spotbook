@@ -1,148 +1,225 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Parking Locations
-{% endblock %}
+{% block title %}Parking Locations - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Parking Locations</h1>
-
-<p>
-    Manage all parking locations in the SpotBook system.
-</p>
-
-<hr>
-
-<h2>Location Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Locations</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Parking Locations</h2>
+        <p class="text-muted small mb-0">Manage all parking facilities, capacities, and base hourly tariffs</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Active Locations</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Inactive Locations</p>
-    </div>
-
+    <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#addLocationModal">
+        <i class="bi bi-plus-lg"></i> Add New Location
+    </button>
 </div>
 
-<hr>
-
-<h2>Search Locations</h2>
-
-<div class="card">
-
-    <form method="get">
-
-        <div class="form-group">
-
-            <label for="search">
-                Search Location
-            </label>
-
-            <input
-                type="text"
-                id="search"
-                name="search"
-                class="form-control"
-                placeholder="Location name or address"
-            >
-
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Facilities</span>
+            <h3 class="fw-bold text-primary mb-0">{{ total_locations }}</h3>
         </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Active Facilities</span>
+            <h3 class="fw-bold text-success mb-0">{{ active_locations }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Inactive Facilities</span>
+            <h3 class="fw-bold text-secondary mb-0">{{ inactive_locations }}</h3>
+        </div>
+    </div>
+</div>
 
-        <button type="submit" class="btn btn-primary">
-            Search
-        </button>
-
-        <button type="reset" class="btn btn-secondary">
-            Clear
-        </button>
-
+<!-- Search Bar -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form method="GET" action="{% url 'ParkingLocations' %}" class="row g-2 align-items-center">
+        <div class="col-md-10">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Search by location name, city or address..." value="{{ search_query }}">
+            </div>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 btn-sm">Search</button>
+            {% if search_query %}
+            <a href="{% url 'ParkingLocations' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            {% endif %}
+        </div>
     </form>
-
 </div>
 
-<hr>
+<!-- Locations Table -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Facility Name</th>
+                    <th>City / Address</th>
+                    <th>Rate / Hr</th>
+                    <th>Total Slots</th>
+                    <th>Available</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loc in locations %}
+                <tr>
+                    <td class="text-muted small">{{ forloop.counter }}</td>
+                    <td>
+                        <strong class="text-dark">{{ loc.name }}</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border me-1">{{ loc.city }}</span>
+                        <span class="text-muted small">{{ loc.address }}</span>
+                    </td>
+                    <td class="fw-bold text-primary">₹{{ loc.rate_per_hour }}</td>
+                    <td><strong>{{ loc.total_slots_count }}</strong> slots</td>
+                    <td>
+                        <span class="badge {% if loc.available_slots_count > 0 %}bg-success-subtle text-success border border-success-subtle{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} rounded-pill">
+                            {{ loc.available_slots_count }} available
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {% if loc.is_active %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                            {% if loc.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{% url 'ParkingSlots' %}?location={{ loc.id }}" class="btn btn-sm btn-outline-primary" title="Manage Slots">
+                                <i class="bi bi-grid-3x3-gap"></i> Slots
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{ loc.id }}" title="Edit Facility">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form method="POST" action="{% url 'ParkingLocations' %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="location_id" value="{{ loc.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-warning text-dark" title="Toggle Active">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'ParkingLocations' %}" class="d-inline" onsubmit="return confirm('Delete location \'{{ loc.name }}\' and all its slots?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="location_id" value="{{ loc.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Facility">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
 
-<h2>Registered Parking Locations</h2>
-
-<p>
-    <a href="#" class="btn btn-primary">
-        + Add New Location
-    </a>
-</p>
-
-<table class="table-standard">
-
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Location Name</th>
-            <th>Address</th>
-            <th>Total Slots</th>
-            <th>Available Slots</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <tr>
-            <td>1</td>
-            <td>Example Parking</td>
-            <td>Kozhikode, Kerala</td>
-            <td>50</td>
-            <td>35</td>
-            <td>Active</td>
-
-            <td>
-                <a href="#" class="btn btn-secondary">View</a>
-                <a href="#" class="btn btn-secondary">Edit</a>
-                <a href="#" class="btn btn-secondary js-confirm" data-message="Deactivate this location?">Deactivate</a>
-                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this location?">Delete</a>
-            </td>
-        </tr>
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<h2>Location Management</h2>
-
-<div class="card">
-
-    <p>
-        <strong>Add Location:</strong>
-        Add a new parking location to the system.
-    </p>
-
-    <p>
-        <strong>Edit Location:</strong>
-        Update the details of an existing parking location.
-    </p>
-
-    <p>
-        <strong>Deactivate:</strong>
-        Temporarily disable a parking location.
-    </p>
-
-    <p>
-        <strong>Delete:</strong>
-        Remove a parking location from the system.
-    </p>
-
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="editModal{{ loc.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-start">
+                                <div class="modal-content rounded-4 border-0 shadow">
+                                    <form method="POST" action="{% url 'ParkingLocations' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="edit">
+                                        <input type="hidden" name="location_id" value="{{ loc.id }}">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-heading fw-bold">Edit Location: {{ loc.name }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Facility Name</label>
+                                                <input type="text" name="name" class="form-control" value="{{ loc.name }}" required>
+                                            </div>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">City</label>
+                                                    <input type="text" name="city" class="form-control" value="{{ loc.city }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Rate per Hour (₹)</label>
+                                                    <input type="number" step="0.5" name="rate_per_hour" class="form-control" value="{{ loc.rate_per_hour }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Full Address</label>
+                                                <textarea name="address" class="form-control" rows="2" required>{{ loc.address }}</textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Description</label>
+                                                <textarea name="description" class="form-control" rows="2">{{ loc.description }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No parking locations found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
+<!-- Add Location Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-start">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form method="POST" action="{% url 'ParkingLocations' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-heading fw-bold">Add New Parking Facility</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Facility Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Cyberpark Multi-Level Garage" required>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">City *</label>
+                            <input type="text" name="city" class="form-control" placeholder="e.g. Kozhikode" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Base Rate / Hr (₹) *</label>
+                            <input type="number" step="0.5" name="rate_per_hour" class="form-control" value="50.00" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Auto-generate Initial Slots (Count)</label>
+                        <input type="number" name="total_slots" class="form-control" value="10" min="0" max="100">
+                        <span class="fs-xs text-muted">Automatically creates slot bays S-01, S-02, etc.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Facility Address *</label>
+                        <textarea name="address" class="form-control" rows="2" placeholder="Full street address..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Facility Description</label>
+                        <textarea name="description" class="form-control" rows="2" placeholder="Amenities, security features, EV charging..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Create Facility</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

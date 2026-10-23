@@ -1,160 +1,210 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Parking Charges
-{% endblock %}
+{% block title %}Parking Charges - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Parking Charges</h1>
-
-<p>
-    Manage parking charges for the SpotBook parking system.
-</p>
-
-<hr>
-
-<!-- Charge Overview -->
-
-<h2>Charge Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Charge Rules</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Parking Charges & Fee Configuration</h2>
+        <p class="text-muted small mb-0">Configure base hourly tariffs, vehicle category multipliers, and pricing rules</p>
     </div>
+    <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm" data-bs-toggle="modal" data-bs-target="#addChargeModal">
+        <i class="bi bi-plus-lg"></i> Add New Charge Rule
+    </button>
+</div>
 
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Active Charges</p>
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Fee Rules</span>
+            <h3 class="fw-bold text-dark mb-0">{{ total_charges }}</h3>
+        </div>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Inactive Charges</p>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Active Rules</span>
+            <h3 class="fw-bold text-success mb-0">{{ active_charges }}</h3>
+        </div>
     </div>
-
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Inactive Rules</span>
+            <h3 class="fw-bold text-secondary mb-0">{{ inactive_charges }}</h3>
+        </div>
+    </div>
 </div>
 
-<hr>
+<!-- Charges Table -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Facility Location</th>
+                    <th>Vehicle Type</th>
+                    <th>Billing Model</th>
+                    <th>Rate (₹)</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ch in charges %}
+                <tr>
+                    <td class="text-muted small">{{ forloop.counter }}</td>
+                    <td>
+                        {% if ch.LOCATIONID %}
+                        <strong>{{ ch.LOCATIONID.name }}</strong>
+                        <div class="text-muted fs-xs">{{ ch.LOCATIONID.city }}</div>
+                        {% else %}
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Global Default</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border">
+                            {% if ch.vehicle_type == 'Car' %}<i class="bi bi-car-front text-primary me-1"></i>
+                            {% elif ch.vehicle_type == 'Bike' %}<i class="bi bi-bicycle text-success me-1"></i>
+                            {% elif ch.vehicle_type == 'EV' %}<i class="bi bi-lightning-charge text-warning me-1"></i>{% endif %}
+                            {{ ch.vehicle_type }}
+                        </span>
+                    </td>
+                    <td>{{ ch.charge_type }}</td>
+                    <td class="fw-bold text-primary fs-6">₹{{ ch.rate }}</td>
+                    <td class="text-muted small">{{ ch.description|default:'-' }}</td>
+                    <td>
+                        <span class="badge {% if ch.status == 'Active' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                            {{ ch.status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editChargeModal{{ ch.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form method="POST" action="{% url 'ParkingCharges' %}" class="d-inline" onsubmit="return confirm('Delete this charge rule?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="charge_id" value="{{ ch.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
 
-<!-- Add Charge -->
-
-<h2>Add Parking Charge</h2>
-
-<div class="card">
-
-    <p>
-        Create a new parking charge rule for a parking location or slot.
-    </p>
-
-    <p>
-        <a href="#" class="btn btn-primary">
-            + Add New Charge
-        </a>
-    </p>
-
+                        <!-- Edit Charge Modal -->
+                        <div class="modal fade" id="editChargeModal{{ ch.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered text-start">
+                                <div class="modal-content rounded-4 border-0 shadow">
+                                    <form method="POST" action="{% url 'ParkingCharges' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="edit">
+                                        <input type="hidden" name="charge_id" value="{{ ch.id }}">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-heading fw-bold">Edit Charge Rule</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Vehicle Type</label>
+                                                    <input type="text" name="vehicle_type" class="form-control" value="{{ ch.vehicle_type }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Billing Model</label>
+                                                    <input type="text" name="charge_type" class="form-control" value="{{ ch.charge_type }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Rate (₹)</label>
+                                                    <input type="number" step="0.5" name="rate" class="form-control" value="{{ ch.rate }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small fw-semibold">Status</label>
+                                                    <select name="status" class="form-select">
+                                                        <option value="Active" {% if ch.status == 'Active' %}selected{% endif %}>Active</option>
+                                                        <option value="Inactive" {% if ch.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-semibold">Description</label>
+                                                <input type="text" name="description" class="form-control" value="{{ ch.description }}">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No parking charge rules configured.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<hr>
-
-<!-- View Charges -->
-
-<h2>Parking Charge Rules</h2>
-
-<table class="table-standard">
-
-    <thead>
-
-        <tr>
-            <th>#</th>
-            <th>Parking Location</th>
-            <th>Vehicle Type</th>
-            <th>Charge Type</th>
-            <th>Rate</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        <!-- Temporary sample charge -->
-
-        <tr>
-
-            <td>1</td>
-
-            <td>
-                Example Parking
-            </td>
-
-            <td>
-                Car
-            </td>
-
-            <td>
-                Per Hour
-            </td>
-
-            <td>
-                ₹50 / Hour
-            </td>
-
-            <td>
-                Active
-            </td>
-
-            <td>
-                <a href="#" class="btn btn-secondary">View</a>
-                <a href="#" class="btn btn-secondary">Edit</a>
-                <a href="#" class="btn btn-secondary js-confirm" data-message="Update this charge rule?">Update</a>
-            </td>
-
-        </tr>
-
-        <!-- Django charge records will be displayed here later -->
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<!-- Update Charge -->
-
-<h2>Update Parking Charge</h2>
-
-<div class="card">
-
-    <p>
-        Update the rate or other details of an existing parking charge rule.
-    </p>
-
-    <p>
-        <a href="#" class="btn btn-primary">
-            Manage Charge Updates
-        </a>
-    </p>
-
+<!-- Add Charge Modal -->
+<div class="modal fade" id="addChargeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-start">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form method="POST" action="{% url 'ParkingCharges' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-heading fw-bold">Add Parking Charge Rule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Facility Location</label>
+                        <select name="location_id" class="form-select">
+                            <option value="">Global (All Facilities)</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }} ({{ loc.city }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Vehicle Type *</label>
+                            <input type="text" name="vehicle_type" class="form-control" placeholder="e.g. Car / Bike / EV" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold">Billing Model *</label>
+                            <select name="charge_type" class="form-select">
+                                <option value="Hourly">Hourly</option>
+                                <option value="Daily">Daily</option>
+                                <option value="Flat">Flat Entry</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Rate (₹) *</label>
+                        <input type="number" step="0.5" name="rate" class="form-control" value="50.00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Description</label>
+                        <input type="text" name="description" class="form-control" placeholder="Optional notes regarding this rate...">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Create Rule</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-<hr>
-
-<!-- Charge Information -->
-
-<h2>Charge Management</h2>
-
-<div class="card">
-
-    <ul>
-        <li>View existing parking charges</li>
-        <li>Add new parking charges</li>
-        <li>Update existing parking charges</li>
-    </ul>
-
-</div>
-
 {% endblock %}

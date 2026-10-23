@@ -1,210 +1,173 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - QR Verification
-{% endblock %}
+{% block title %}QR Code Verification - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>QR Verification</h1>
-
-<p>
-    Scan and verify parking booking QR codes before allowing vehicle entry.
-</p>
-
-<hr>
-
-<!-- Verification Overview -->
-
-<h2>Verification Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total QR verification attempts</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Gate QR Code Verification</h2>
+        <p class="text-muted small mb-0">Scan customer QR passes or input Booking IDs to verify valid reservations at security gates</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Successfully verified</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Invalid or expired QR codes</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Awaiting verification</p>
-    </div>
-
 </div>
 
-<hr>
-
-<!-- Scan QR -->
-
-<h2>Scan QR Code</h2>
-
-<div class="card">
-
-    <p>
-        Scan the QR code provided by the user to retrieve the associated
-        parking booking.
-    </p>
-
-    <form method="post">
-
-        {% csrf_token %}
-
-        <div class="form-group">
-
-            <label for="qr_code">
-                QR Code / Booking ID
-            </label>
-
-            <input
-                type="text"
-                id="qr_code"
-                name="qr_code"
-                class="form-control"
-                placeholder="Enter or scan QR code"
-            >
-
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Pass Checks</span>
+            <h3 class="fw-bold text-primary mb-0">{{ total_attempts }}</h3>
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Scan / Verify
-        </button>
-
-    </form>
-
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Gate Processed</span>
+            <h3 class="fw-bold text-success mb-0">{{ verified_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Awaiting Gate Arrival</span>
+            <h3 class="fw-bold text-warning mb-0">{{ awaiting_count }}</h3>
+        </div>
+    </div>
 </div>
 
-<hr>
+<div class="row g-4 mb-4">
+    <!-- QR Scan Input Card -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div class="text-center mb-4">
+                <div class="qr-scanner-icon bg-primary-subtle text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                    <i class="bi bi-qr-code-scan fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Scan or Enter QR Code</h5>
+                <p class="text-muted small mb-0">Use barcode scanner device or manually enter booking reference</p>
+            </div>
 
-<!-- Booking Verification -->
+            <form method="POST" action="{% url 'QRVerification' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="qr_code_input" class="form-label small fw-semibold text-secondary">QR String or Booking ID *</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-upc-scan"></i></span>
+                        <input type="text" id="qr_code_input" name="qr_code" class="form-control bg-light border-start-0 font-monospace" placeholder="e.g. SB-20261023-XXXX or paste QR text" value="{{ query_code }}" required autofocus>
+                    </div>
+                </div>
 
-<h2>Verify Booking</h2>
+                <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold shadow-sm mb-3">
+                    <i class="bi bi-shield-check me-1"></i> Verify Pass & Retrieve Details
+                </button>
+            </form>
 
-<p>
-    Verify the booking details associated with the scanned QR code.
-</p>
+            <div class="p-3 bg-light rounded-3 border small text-muted">
+                <strong class="d-block text-dark mb-1"><i class="bi bi-lightbulb text-warning me-1"></i>Tip:</strong>
+                Scanners automatically submit on scan. You can also paste the raw QR text payload: <code>SPOTBOOK_PASS|BOOKING_ID:...</code> or just the Booking ID.
+            </div>
+        </div>
+    </div>
 
-<table class="table-standard">
+    <!-- Verification Result Card -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
+            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clipboard2-check text-primary me-2"></i>Verification Result</h6>
+                {% if matched_booking %}
+                <span class="badge {% if verification_status == 'Valid' %}bg-success{% elif verification_status == 'Already Entered' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill px-3 py-1">
+                    {{ verification_status }}
+                </span>
+                {% elif query_code %}
+                <span class="badge bg-danger rounded-pill px-3 py-1">Invalid Pass</span>
+                {% else %}
+                <span class="badge bg-light text-muted border rounded-pill px-3 py-1">Ready</span>
+                {% endif %}
+            </div>
 
-    <thead>
+            <div class="card-body p-4">
+                {% if matched_booking %}
+                <!-- Matched Booking Details -->
+                <div class="p-3 rounded-4 {% if verification_status == 'Valid' %}bg-success-subtle border border-success-subtle{% elif verification_status == 'Already Entered' %}bg-warning-subtle border border-warning-subtle{% else %}bg-light border{% endif %} mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi {% if verification_status == 'Valid' %}bi-check-circle-fill text-success{% elif verification_status == 'Already Entered' %}bi-exclamation-circle-fill text-warning-emphasis{% else %}bi-info-circle text-muted{% endif %} fs-1"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1 {% if verification_status == 'Valid' %}text-success{% elif verification_status == 'Already Entered' %}text-warning-emphasis{% else %}text-dark{% endif %}">
+                                {{ verification_status }}: {{ status_message }}
+                            </h5>
+                            <span class="font-monospace fw-semibold">{{ matched_booking.booking_id }}</span> &bull; Status: <strong>{{ matched_booking.status }}</strong>
+                        </div>
+                    </div>
+                </div>
 
-        <tr>
-            <th>Booking ID</th>
-            <th>User</th>
-            <th>Parking Location</th>
-            <th>Slot</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Verification</th>
-        </tr>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Customer</span>
+                        <strong class="text-dark">{{ matched_booking.USERID.name }}</strong>
+                        <div class="text-muted fs-xs">{{ matched_booking.USERID.phone }}</div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Facility Location</span>
+                        <strong class="text-dark">{{ matched_booking.SLOTID.LOCATIONID.name }}</strong>
+                        <div class="text-muted fs-xs">{{ matched_booking.SLOTID.LOCATIONID.city }}</div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Reserved Slot</span>
+                        <span class="badge bg-primary fs-6 px-3 py-1">Slot {{ matched_booking.SLOTID.slot_number }}</span>
+                    </div>
 
-    </thead>
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Vehicle Plate</span>
+                        <strong class="text-dark font-monospace fs-6">{{ matched_booking.vehicle_number }}</strong>
+                        <div class="text-muted fs-xs">{{ matched_booking.vehicle_type }}</div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Booking Date</span>
+                        <strong class="text-dark">{{ matched_booking.date }}</strong>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <span class="text-muted fs-xs text-uppercase d-block">Time Window</span>
+                        <strong class="text-dark">{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
+                    </div>
+                </div>
 
-    <tbody>
+                <!-- Gate Actions -->
+                <div class="pt-3 border-top d-flex gap-2 justify-content-end">
+                    <a href="{% url 'booking_pass' matched_booking.id %}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-eye"></i> View Full Pass
+                    </a>
 
-        <tr>
+                    {% if matched_booking.status == 'Booked' %}
+                    <form method="POST" action="{% url 'VehicleEntry' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
+                        <button type="submit" class="btn btn-success btn-sm px-4 fw-semibold shadow-xs">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Allow & Record Vehicle Entry
+                        </button>
+                    </form>
+                    {% elif matched_booking.status == 'Active' %}
+                    <form method="POST" action="{% url 'VehicleExit' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
+                        <button type="submit" class="btn btn-warning btn-sm px-4 fw-semibold text-dark shadow-xs">
+                            <i class="bi bi-box-arrow-right me-1"></i> Record Vehicle Exit
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
 
-            <td>
-                SB000001
-            </td>
-
-            <td>
-                Example User
-            </td>
-
-            <td>
-                Example Parking
-            </td>
-
-            <td>
-                A-01
-            </td>
-
-            <td>
-                18-09-2026
-            </td>
-
-            <td>
-                10:00 AM - 12:00 PM
-            </td>
-
-            <td>
-                Confirmed
-            </td>
-
-            <td>
-                <a href="#" class="btn btn-primary">
-                    Verify Booking
-                </a>
-            </td>
-
-        </tr>
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<!-- Verification Result -->
-
-<h2>Verification Result</h2>
-
-<div class="card">
-
-    <p>
-        The booking verification result will be displayed here after
-        scanning a QR code.
-    </p>
-
-    <p>
-        <strong>Verification Status:</strong>
-        Not Verified
-    </p>
-
-    <p>
-        <strong>Booking Status:</strong>
-        -
-    </p>
-
-    <p>
-        <strong>Vehicle:</strong>
-        -
-    </p>
-
-    <p>
-        <strong>Parking Slot:</strong>
-        -
-    </p>
-
+                {% elif query_code %}
+                <div class="p-5 text-center text-muted">
+                    <i class="bi bi-shield-x text-danger display-4 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-danger">Invalid QR Code Pass</h5>
+                    <p class="small mb-0">No active reservation found matching input <code>{{ query_code }}</code>. Please check for typos or ask the driver to present a valid SpotBook pass.</p>
+                </div>
+                {% else %}
+                <div class="p-5 text-center text-muted">
+                    <i class="bi bi-qr-code text-secondary display-4 mb-3 d-block opacity-50"></i>
+                    <h5 class="fw-semibold text-dark">Awaiting Pass Scan</h5>
+                    <p class="small mb-0">Scan customer QR pass on the left to verify entry eligibility and vehicle details in real-time.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
-
-<hr>
-
-<!-- Verification Information -->
-
-<h2>QR Verification</h2>
-
-<div class="card">
-
-    <ul>
-        <li>Scan the user's booking QR code.</li>
-        <li>Retrieve the associated booking.</li>
-        <li>Check the booking date and time.</li>
-        <li>Verify the parking slot.</li>
-        <li>Confirm that the booking is valid.</li>
-    </ul>
-
-</div>
-
 {% endblock %}

@@ -1,288 +1,200 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Vehicle Entry
-{% endblock %}
+{% block title %}Vehicle Entry (Gate In) - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Vehicle Entry</h1>
-
-<p>
-    Verify parking bookings and manage vehicle entry records.
-</p>
-
-<hr>
-
-<h2>Entry Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Vehicles entered today</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Vehicle Gate Entry</h2>
+        <p class="text-muted small mb-0">Record vehicle arrivals, verify reservations, and update parking slots to Occupied</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Vehicles currently inside</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Bookings awaiting entry</p>
-    </div>
-
-</div>
-
-<hr>
-
-<h2>Verify Booking</h2>
-
-<div class="card">
-
-    <p>
-        Verify the user's booking before recording vehicle entry.
-    </p>
-
-    <form method="get">
-
-        <div class="form-group">
-
-            <label for="booking_id">
-                Booking ID
-            </label>
-
-            <input
-                type="text"
-                id="booking_id"
-                name="booking_id"
-                class="form-control"
-                placeholder="Enter booking ID"
-            >
-
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Verify Booking
-        </button>
-
-    </form>
-
-</div>
-
-<hr>
-
-<h2>Booking Information</h2>
-
-<table class="table-standard">
-
-    <thead>
-        <tr>
-            <th>Booking ID</th>
-            <th>User</th>
-            <th>Vehicle Number</th>
-            <th>Parking Location</th>
-            <th>Slot</th>
-            <th>Booking Date</th>
-            <th>Booking Time</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <tr>
-
-            <td>
-                SB000001
-            </td>
-
-            <td>
-                Example User
-            </td>
-
-            <td>
-                KL-11-AB-1234
-            </td>
-
-            <td>
-                Example Parking
-            </td>
-
-            <td>
-                A-01
-            </td>
-
-            <td>
-                18-09-2026
-            </td>
-
-            <td>
-                10:00 AM - 12:00 PM
-            </td>
-
-            <td>
-                Confirmed
-            </td>
-
-        </tr>
-
-    </tbody>
-
-</table>
-
-<p>
-    <a href="#" class="btn btn-primary">
-        Verify This Booking
+    <a href="{% url 'QRVerification' %}" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 shadow-xs">
+        <i class="bi bi-qr-code-scan"></i> Open QR Scanner
     </a>
-</p>
-
-<hr>
-
-<h2>Record Vehicle Entry</h2>
-
-<div class="card">
-
-    <p>
-        Record the vehicle's entry after the booking has been verified.
-    </p>
-
-    <form method="post">
-
-        {% csrf_token %}
-
-        <div class="form-group">
-
-            <label for="entry_booking_id">
-                Booking ID
-            </label>
-
-            <input
-                type="text"
-                id="entry_booking_id"
-                name="booking_id"
-                class="form-control"
-                placeholder="Booking ID"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label for="vehicle_number">
-                Vehicle Number
-            </label>
-
-            <input
-                type="text"
-                id="vehicle_number"
-                name="vehicle_number"
-                class="form-control"
-                placeholder="Vehicle registration number"
-            >
-
-        </div>
-
-        <div class="form-group">
-
-            <label for="entry_time">
-                Entry Time
-            </label>
-
-            <input
-                type="datetime-local"
-                id="entry_time"
-                name="entry_time"
-                class="form-control"
-            >
-
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Record Entry
-        </button>
-
-    </form>
-
 </div>
 
-<hr>
-
-<h2>Entry Records</h2>
-
-<table class="table-standard">
-
-    <thead>
-
-        <tr>
-            <th>#</th>
-            <th>Booking ID</th>
-            <th>User</th>
-            <th>Vehicle Number</th>
-            <th>Parking Location</th>
-            <th>Slot</th>
-            <th>Entry Time</th>
-            <th>Status</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        <!-- Temporary sample record -->
-
-        <tr>
-
-            <td>1</td>
-
-            <td>
-                SB000001
-            </td>
-
-            <td>
-                Example User
-            </td>
-
-            <td>
-                KL-11-AB-1234
-            </td>
-
-            <td>
-                Example Parking
-            </td>
-
-            <td>
-                A-01
-            </td>
-
-            <td>
-                10:15 AM
-            </td>
-
-            <td>
-                Entered
-            </td>
-
-        </tr>
-
-        <!-- Django entry records will be displayed here later -->
-
-    </tbody>
-
-</table>
-
-<hr>
-
-<h2>Vehicle Entry</h2>
-
-<div class="card">
-
-    <p>
-        A vehicle can enter the parking area only after its booking
-        has been verified successfully.
-    </p>
-
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Vehicles Entered Today</span>
+            <h3 class="fw-bold text-success mb-0">{{ entered_today }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Vehicles Currently Inside</span>
+            <h3 class="fw-bold text-warning mb-0">{{ vehicles_inside }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Bookings Awaiting Entry</span>
+            <h3 class="fw-bold text-primary mb-0">{{ awaiting_entry }}</h3>
+        </div>
+    </div>
 </div>
 
+<div class="row g-4 mb-4">
+    <!-- Search & Record Card -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-search text-primary me-2"></i>Verify Booking by ID / Plate</h5>
+            <form method="GET" action="{% url 'VehicleEntry' %}">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Booking ID or Vehicle Registration</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-muted"><i class="bi bi-upc-scan"></i></span>
+                        <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX or KL-11-..." value="{{ search_id }}" required autofocus>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm w-100 py-2">
+                    <i class="bi bi-search me-1"></i> Retrieve Booking Details
+                </button>
+            </form>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-box-arrow-in-right text-success me-2"></i>Direct Record Vehicle Entry</h5>
+            <form method="POST" action="{% url 'VehicleEntry' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Booking ID *</label>
+                    <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX" value="{{ matched_booking.booking_id|default:search_id }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Entry Timestamp</label>
+                    <input type="datetime-local" name="entry_time" class="form-control" value="{{ current_time_str }}">
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2 rounded-3 fw-semibold shadow-xs">
+                    <i class="bi bi-check-circle-fill me-1"></i> Record Entry & Mark Occupied
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Matched Verification Preview -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
+            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-success me-2"></i>Booking Gate Check</h6>
+                {% if matched_booking %}
+                <span class="badge {% if matched_booking.status == 'Booked' %}bg-success{% elif matched_booking.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                    {{ matched_booking.status }}
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="card-body p-4">
+                {% if matched_booking %}
+                <div class="p-3 bg-light rounded-4 border mb-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="fs-xs text-muted text-uppercase d-block">Booking Reference</span>
+                            <h4 class="fw-bold font-monospace text-primary mb-1">{{ matched_booking.booking_id }}</h4>
+                            <p class="text-muted small mb-0">{{ matched_booking.SLOTID.LOCATIONID.name }} &bull; {{ matched_booking.SLOTID.LOCATIONID.city }}</p>
+                        </div>
+                        <div class="badge bg-primary fs-5 px-3 py-2 rounded-3 text-center">
+                            <span class="fs-xs d-block text-uppercase">Slot</span>
+                            {{ matched_booking.SLOTID.slot_number }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <span class="text-muted fs-xs text-uppercase d-block">Driver / Customer</span>
+                        <strong class="text-dark">{{ matched_booking.USERID.name }}</strong>
+                        <div class="text-muted fs-xs">{{ matched_booking.USERID.phone }}</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted fs-xs text-uppercase d-block">Vehicle Number</span>
+                        <strong class="font-monospace text-dark fs-6">{{ matched_booking.vehicle_number }}</strong>
+                        <div class="text-muted fs-xs">{{ matched_booking.vehicle_type }}</div>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted fs-xs text-uppercase d-block">Date</span>
+                        <strong>{{ matched_booking.date }}</strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted fs-xs text-uppercase d-block">Reserved Window</span>
+                        <strong>{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
+                    </div>
+                </div>
+
+                {% if matched_booking.status == 'Booked' %}
+                <form method="POST" action="{% url 'VehicleEntry' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
+                    <button type="submit" class="btn btn-success w-100 py-3 rounded-3 fw-bold shadow-xs fs-6">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Approve Vehicle Entry (Slot {{ matched_booking.SLOTID.slot_number }})
+                    </button>
+                </form>
+                {% elif matched_booking.status == 'Active' %}
+                <div class="alert alert-warning mb-0 small">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> This vehicle has already entered the parking bay.
+                </div>
+                {% else %}
+                <div class="alert alert-secondary mb-0 small">
+                    Booking status is <strong>{{ matched_booking.status }}</strong>. Entry cannot be recorded.
+                </div>
+                {% endif %}
+
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-car-front text-muted display-4 opacity-50 mb-3 d-block"></i>
+                    <h6 class="fw-semibold">Search a booking or scan a QR pass</h6>
+                    <p class="small mb-0">Enter the Booking ID or vehicle number on the left to verify entry eligibility.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Entry Records -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="card-header bg-white p-3 px-4 border-bottom">
+        <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Recent Vehicle Entry Logs</h6>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light">
+                <tr>
+                    <th>Ref</th>
+                    <th>Customer</th>
+                    <th>Vehicle Plate</th>
+                    <th>Facility & Slot</th>
+                    <th>Entry Timestamp</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_entries %}
+                <tr>
+                    <td class="font-monospace fw-semibold text-primary">
+                        <a href="{% url 'booking_pass' log.BOOKINGID.id %}" target="_blank" class="text-decoration-none">
+                            {{ log.BOOKINGID.booking_id }}
+                        </a>
+                    </td>
+                    <td>{{ log.BOOKINGID.USERID.name }}</td>
+                    <td class="font-monospace fw-bold">{{ log.BOOKINGID.vehicle_number }}</td>
+                    <td>
+                        {{ log.BOOKINGID.SLOTID.LOCATIONID.name }}
+                        <span class="badge bg-light text-dark border fs-xxs">Slot {{ log.BOOKINGID.SLOTID.slot_number }}</span>
+                    </td>
+                    <td><strong>{{ log.entry_time|date:"Y-m-d H:i" }}</strong></td>
+                    <td>
+                        <span class="badge bg-success rounded-pill">Entered</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No entry logs recorded yet today.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

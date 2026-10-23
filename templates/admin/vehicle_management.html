@@ -1,45 +1,51 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Vehicle Management
-{% endblock %}
+{% block title %}Gate Operations - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Vehicle Management</h1>
-
-<p>
-    Manage vehicle entry and vehicle exit operations.
-</p>
-
-<hr>
-
-<h2>Select an Action</h2>
-
-<div class="stats-grid">
-
-    <div class="card">
-        <p>
-            <a href="{% url 'VehicleEntry' %}" class="btn btn-primary">
-                Vehicle Entry
-            </a>
-        </p>
-        <p>
-            Verify a booking and record the vehicle's entry.
-        </p>
-    </div>
-
-    <div class="card">
-        <p>
-            <a href="{% url 'VehicleExit' %}" class="btn btn-primary">
-                Vehicle Exit
-            </a>
-        </p>
-        <p>
-            Record a vehicle's exit and complete its parking session.
-        </p>
-    </div>
-
+<div class="mb-4">
+    <h2 class="fw-bold text-dark mb-1">Gate & Security Operations</h2>
+    <p class="text-muted small mb-0">Control barrier entry, verify customer digital passes, and record vehicle exits</p>
 </div>
 
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-primary-subtle text-primary rounded-3 d-inline-block mb-3">
+                <i class="bi bi-qr-code-scan fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">QR Pass Verification</h4>
+            <p class="text-muted small mb-4">Fast terminal to scan customer digital passes, check time validity, and verify booking status.</p>
+            <a href="{% url 'QRVerification' %}" class="btn btn-primary btn-sm rounded-3 w-100 py-2">
+                Launch QR Terminal <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-success-subtle text-success rounded-3 d-inline-block mb-3">
+                <i class="bi bi-box-arrow-in-right fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Vehicle Gate Entry</h4>
+            <p class="text-muted small mb-4">Process vehicle arrivals, record entry timestamps, and update slot status to Occupied.</p>
+            <a href="{% url 'VehicleEntry' %}" class="btn btn-success btn-sm rounded-3 w-100 py-2">
+                Process Entry <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-3 d-inline-block mb-3">
+                <i class="bi bi-box-arrow-right fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Vehicle Gate Exit</h4>
+            <p class="text-muted small mb-4">Search parked vehicles, record exit timestamps, and restore slots back to Available.</p>
+            <a href="{% url 'VehicleExit' %}" class="btn btn-warning text-dark btn-sm rounded-3 w-100 py-2">
+                Process Exit <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}

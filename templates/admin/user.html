@@ -1,171 +1,123 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - User Management
-{% endblock %}
+{% block title %}User Management - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>User Management</h1>
-
-<p>
-    Manage and monitor all registered users in the SpotBook system.
-</p>
-
-<hr>
-
-<!-- User Statistics -->
-
-<h2>User Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Users</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Registered Users Management</h2>
+        <p class="text-muted small mb-0">Monitor registered customer accounts, view reservation activity, and manage access</p>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Active Users</p>
-    </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Inactive Users</p>
-    </div>
-
 </div>
 
-<hr>
-
-<!-- Search and Filter -->
-
-<h2>Search & Filter Users</h2>
-
-<div class="card">
-
-    <form method="get">
-
-        <div class="form-group">
-
-            <label for="search">
-                Search User
-            </label>
-
-            <input
-                type="text"
-                id="search"
-                name="search"
-                class="form-control"
-                placeholder="Name, username, email or phone"
-            >
-
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Users</span>
+            <h3 class="fw-bold text-dark mb-0">{{ total_users }}</h3>
         </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Active Accounts</span>
+            <h3 class="fw-bold text-success mb-0">{{ active_users }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Deactivated</span>
+            <h3 class="fw-bold text-secondary mb-0">{{ inactive_users }}</h3>
+        </div>
+    </div>
+</div>
 
-        <div class="form-group">
-
-            <label for="status">
-                Status
-            </label>
-
-            <select id="status" name="status" class="form-control">
-                <option value="">All Users</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+<!-- Search & Filter Card -->
+<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+    <form method="GET" action="{% url 'users' %}" class="row g-2 align-items-center">
+        <div class="col-md-7">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Search by name, username, email or phone..." value="{{ search_query }}">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select bg-light border-0">
+                <option value="">All Account Statuses</option>
+                <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive / Deactivated</option>
             </select>
-
         </div>
-
-        <button type="submit" class="btn btn-primary">
-            Search
-        </button>
-
-        <button type="reset" class="btn btn-secondary">
-            Clear
-        </button>
-
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100 btn-sm">Search</button>
+            {% if search_query or status_filter %}
+            <a href="{% url 'users' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            {% endif %}
+        </div>
     </form>
-
 </div>
-
-<hr>
 
 <!-- Users Table -->
-
-<h2>Registered Users</h2>
-
-<table class="table-standard">
-
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        <!-- Temporary sample row -->
-
-        <tr>
-            <td>1</td>
-            <td>Example User</td>
-            <td>example</td>
-            <td>example@email.com</td>
-            <td>9876543210</td>
-
-            <td>
-                Active
-            </td>
-
-            <td>
-                <a href="#" class="btn btn-secondary">View</a>
-                <a href="#" class="btn btn-secondary">Deactivate</a>
-                <a href="#" class="btn btn-danger js-confirm" data-message="Delete this user?">Delete</a>
-            </td>
-        </tr>
-
-        <!-- Django users will be displayed here later -->
-
-    </tbody>
-
-</table>
-
-<br>
-
-<p>
-    Showing registered users from the SpotBook system.
-</p>
-
-<hr>
-
-<!-- User Actions -->
-
-<h2>User Actions</h2>
-
-<div class="card">
-
-    <p>
-        <strong>View:</strong>
-        View complete information about a selected user.
-    </p>
-
-    <p>
-        <strong>Activate / Deactivate:</strong>
-        Change the account status of a user.
-    </p>
-
-    <p>
-        <strong>Delete:</strong>
-        Permanently remove a user from the system.
-    </p>
-
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Customer Name</th>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td class="text-muted small">{{ forloop.counter }}</td>
+                    <td>
+                        <strong class="text-dark">{{ u.name }}</strong>
+                        {% if u.address %}
+                        <div class="text-muted fs-xs text-truncate" style="max-width: 200px;">{{ u.address }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="font-monospace text-primary">@{{ u.LOGINID.username }}</td>
+                    <td><a href="mailto:{{ u.email }}" class="text-decoration-none">{{ u.email }}</a></td>
+                    <td class="font-monospace">{{ u.phone }}</td>
+                    <td>
+                        <span class="badge {% if u.LOGINID.is_active %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                            {% if u.LOGINID.is_active %}Active{% else %}Deactivated{% endif %}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1">
+                            <form method="POST" action="{% url 'users' %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_status">
+                                <input type="hidden" name="user_id" value="{{ u.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-warning text-dark" title="Toggle Active/Deactivate">
+                                    <i class="bi bi-arrow-repeat"></i> {% if u.LOGINID.is_active %}Deactivate{% else %}Activate{% endif %}
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'users' %}" class="d-inline" onsubmit="return confirm('Permanently delete user {{ u.name }}?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="user_id" value="{{ u.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No registered users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-
 {% endblock %}

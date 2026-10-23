@@ -1,174 +1,174 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Reports
-{% endblock %}
+{% block title %}Reports & Analytics - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Reports</h1>
-
-<p>
-    View parking system statistics and reports.
-</p>
-
-<hr>
-
-<h2>Select a Report</h2>
-
-<div class="stats-grid">
-
-    <div class="card">
-        <p>
-            <a href="#" class="btn btn-primary">
-                Booking Statistics
-            </a>
-        </p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Reports & Financial Analytics</h2>
+        <p class="text-muted small mb-0">System metrics, occupancy statistics, revenue breakdown, and gate activity logs</p>
     </div>
-
-    <div class="card">
-        <p>
-            <a href="#" class="btn btn-primary">
-                Slot Statistics
-            </a>
-        </p>
-    </div>
-
-    <div class="card">
-        <p>
-            <a href="#" class="btn btn-primary">
-                Location Statistics
-            </a>
-        </p>
-    </div>
-
-    <div class="card">
-        <p>
-            <a href="#" class="btn btn-primary">
-                Revenue Statistics
-            </a>
-        </p>
-    </div>
-
+    <button onclick="window.print()" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+        <i class="bi bi-printer"></i> Print Report
+    </button>
 </div>
 
-<hr>
-
-<h2>Report Overview</h2>
-
-<div class="stats-grid">
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Bookings</p>
+<!-- Primary Stats Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Gross Revenue</span>
+            <h3 class="fw-bold text-success mb-0">₹{{ total_revenue }}</h3>
+            <span class="fs-xs text-muted">Across all bookings</span>
+        </div>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Slots</p>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Reservations</span>
+            <h3 class="fw-bold text-primary mb-0">{{ total_bookings }}</h3>
+            <span class="fs-xs text-muted">Zero-overlap bookings</span>
+        </div>
     </div>
-
-    <div class="stat-box">
-        <h2>0</h2>
-        <p>Total Locations</p>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Managed Parking Bays</span>
+            <h3 class="fw-bold text-dark mb-0">{{ total_slots }}</h3>
+            <span class="fs-xs text-muted">In {{ total_locations }} active locations</span>
+        </div>
     </div>
-
-    <div class="stat-box">
-        <h2>₹0</h2>
-        <p>Total Revenue</p>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
+            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Active Locations</span>
+            <h3 class="fw-bold text-info mb-0">{{ total_locations }}</h3>
+            <span class="fs-xs text-muted">Operational facilities</span>
+        </div>
     </div>
-
 </div>
 
-<hr>
+<div class="row g-4 mb-4">
+    <!-- Booking Status Distribution -->
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart-fill text-primary me-2"></i>Booking Status Distribution</h5>
+            <div class="d-flex flex-column gap-3">
+                {% for st in bookings_by_status %}
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-semibold text-secondary small">
+                            <span class="badge {% if st.status == 'Booked' %}bg-success{% elif st.status == 'Active' %}bg-warning text-dark{% elif st.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} me-1">
+                                {{ st.status }}
+                            </span>
+                        </span>
+                        <strong class="text-dark">{{ st.count }} booking(s)</strong>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar {% if st.status == 'Booked' %}bg-success{% elif st.status == 'Active' %}bg-warning{% elif st.status == 'Completed' %}bg-info{% else %}bg-secondary{% endif %}" style="width: {% widthratio st.count total_bookings 100 %}%;"></div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted small">No booking status data available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-<h2>Available Reports</h2>
-
-<table class="table-standard">
-
-    <tr>
-        <th>Report</th>
-        <th>Description</th>
-        <th>Action</th>
-    </tr>
-
-    <tr>
-        <td>
-            Booking Statistics
-        </td>
-
-        <td>
-            View booking activity and booking status statistics.
-        </td>
-
-        <td>
-            <a href="#" class="btn btn-secondary">
-                View Report
-            </a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            Slot Statistics
-        </td>
-
-        <td>
-            View parking slot availability, reservation, and occupancy statistics.
-        </td>
-
-        <td>
-            <a href="#" class="btn btn-secondary">
-                View Report
-            </a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            Location Statistics
-        </td>
-
-        <td>
-            View parking activity and usage statistics by location.
-        </td>
-
-        <td>
-            <a href="#" class="btn btn-secondary">
-                View Report
-            </a>
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            Revenue Statistics
-        </td>
-
-        <td>
-            View parking revenue and charge-related statistics.
-        </td>
-
-        <td>
-            <a href="#" class="btn btn-secondary">
-                View Report
-            </a>
-        </td>
-    </tr>
-
-</table>
-
-<hr>
-
-<h2>Reports</h2>
-
-<div class="card">
-
-    <p>
-        Reports will be generated from the parking, booking, slot,
-        and payment data available in the SpotBook system.
-    </p>
-
+    <!-- Facility Location Utilization & Revenue -->
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
+            <div class="card-header bg-white p-3 px-4 border-bottom">
+                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-line-fill text-success me-2"></i>Location Revenue & Utilization</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Location</th>
+                            <th>City</th>
+                            <th>Bays</th>
+                            <th>Bookings</th>
+                            <th>Total Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in location_stats %}
+                        <tr>
+                            <td><strong>{{ item.location.name }}</strong></td>
+                            <td><span class="badge bg-light text-dark border">{{ item.location.city }}</span></td>
+                            <td>{{ item.slot_count }}</td>
+                            <td>{{ item.booking_count }}</td>
+                            <td class="fw-bold text-success">₹{{ item.revenue }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No location statistics available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Detailed Entry / Exit Logs -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+        <h6 class="fw-bold text-dark mb-0"><i class="bi bi-journal-text text-primary me-2"></i>Gate Entry & Exit Transaction Audit Log</h6>
+        <span class="badge bg-secondary rounded-pill">{{ entry_exit_logs|length }} Recent Logs</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+            <thead class="table-light">
+                <tr>
+                    <th>Log #</th>
+                    <th>Booking Ref</th>
+                    <th>Customer</th>
+                    <th>Vehicle Plate</th>
+                    <th>Facility & Slot</th>
+                    <th>Gate In Time</th>
+                    <th>Gate Out Time</th>
+                    <th>Session Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in entry_exit_logs %}
+                <tr>
+                    <td class="text-muted">{{ forloop.counter }}</td>
+                    <td class="font-monospace fw-semibold text-primary">
+                        <a href="{% url 'booking_pass' log.BOOKINGID.id %}" target="_blank" class="text-decoration-none">
+                            {{ log.BOOKINGID.booking_id }}
+                        </a>
+                    </td>
+                    <td>{{ log.BOOKINGID.USERID.name }}</td>
+                    <td class="font-monospace fw-bold">{{ log.BOOKINGID.vehicle_number }}</td>
+                    <td>
+                        {{ log.BOOKINGID.SLOTID.LOCATIONID.name }} &bull; Slot {{ log.BOOKINGID.SLOTID.slot_number }}
+                    </td>
+                    <td>
+                        {% if log.entry_time %}
+                        <span class="text-success"><i class="bi bi-box-arrow-in-right me-1"></i>{{ log.entry_time|date:"Y-m-d H:i" }}</span>
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        {% if log.exit_time %}
+                        <span class="text-warning-emphasis"><i class="bi bi-box-arrow-right me-1"></i>{{ log.exit_time|date:"Y-m-d H:i" }}</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Parked Inside</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if log.BOOKINGID.status == 'Completed' %}bg-info text-dark{% elif log.BOOKINGID.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                            {{ log.BOOKINGID.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">No entry/exit logs recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -1,45 +1,51 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}
-SpotBook - Parking Management
-{% endblock %}
+{% block title %}Parking Management - SpotBook Admin{% endblock %}
 
 {% block body %}
-
-<h1>Parking Management</h1>
-
-<p>
-    Manage parking locations and parking slots in the SpotBook system.
-</p>
-
-<hr>
-
-<h2>Parking Management Options</h2>
-
-<div class="stats-grid">
-
-    <div class="card">
-        <p>
-            <a href="{% url 'ParkingLocations' %}" class="btn btn-primary">
-                Parking Locations
-            </a>
-        </p>
-        <p>
-            Add, edit, and manage parking locations.
-        </p>
-    </div>
-
-    <div class="card">
-        <p>
-            <a href="{% url 'ParkingSlots' %}" class="btn btn-primary">
-                Parking Slots
-            </a>
-        </p>
-        <p>
-            Add, edit, and manage individual parking slots.
-        </p>
-    </div>
-
+<div class="mb-4">
+    <h2 class="fw-bold text-dark mb-1">Parking Infrastructure Management</h2>
+    <p class="text-muted small mb-0">Direct access to facilities, individual slot bays, and tariff rate settings</p>
 </div>
 
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-primary-subtle text-primary rounded-3 d-inline-block mb-3">
+                <i class="bi bi-geo-alt-fill fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Parking Locations</h4>
+            <p class="text-muted small mb-4">Add, configure, or adjust capacities for multi-level garages, street bays, and parking complexes.</p>
+            <a href="{% url 'ParkingLocations' %}" class="btn btn-primary btn-sm rounded-3 w-100 py-2">
+                Manage Locations <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-success-subtle text-success rounded-3 d-inline-block mb-3">
+                <i class="bi bi-grid-3x3-gap-fill fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Parking Slots</h4>
+            <p class="text-muted small mb-4">View real-time bay status, configure EV/Bike/Car designations, and customize slot prices.</p>
+            <a href="{% url 'ParkingSlots' %}" class="btn btn-success btn-sm rounded-3 w-100 py-2">
+                Manage Slots <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
+            <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-3 d-inline-block mb-3">
+                <i class="bi bi-currency-rupee fs-2"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Tariffs & Charges</h4>
+            <p class="text-muted small mb-4">Configure hourly billing structures, vehicle type multipliers, and facility-specific rules.</p>
+            <a href="{% url 'ParkingCharges' %}" class="btn btn-warning text-dark btn-sm rounded-3 w-100 py-2">
+                Manage Charges <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock %}
