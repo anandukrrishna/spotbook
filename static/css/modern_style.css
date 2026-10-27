@@ -129,15 +129,46 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
    3. Sticky Frosted Glass Navbar & Mobile Toggle
    ========================================================================== */
 .navbar-futuristic,
-.navbar.sticky-top {
+.navbar.sticky-top,
+.admin-navbar {
     position: sticky;
     top: 0;
     z-index: 1040;
-    background: rgba(11, 15, 25, 0.85) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    background: rgba(11, 15, 25, 0.88) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    min-height: 64px;
+}
+
+.navbar > .container,
+.navbar > .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-right: 1.25rem;
+}
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.9rem !important;
+    border-radius: 8px;
+    transition: all 0.25s ease;
 }
 
 /* High-Contrast Mobile Hamburger Toggle */
@@ -148,6 +179,9 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
     border-radius: 10px;
     outline: none !important;
     box-shadow: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 .navbar-toggler:focus {
     border-color: var(--neon-cyan-base) !important;
@@ -157,6 +191,29 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
 .navbar-toggler-icon {
     color: #FFFFFF !important;
     filter: brightness(1.2);
+}
+
+/* Glassmorphism Mobile Drawer on Small Screens */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background: rgba(11, 15, 25, 0.96) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 16px;
+        padding: 1.25rem !important;
+        margin-top: 0.75rem;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+    }
+    .navbar-nav {
+        align-items: stretch !important;
+        width: 100%;
+    }
+    .navbar-nav .nav-link {
+        width: 100%;
+        padding: 0.7rem 1rem !important;
+        border-radius: 10px;
+    }
 }
 
 /* ==========================================================================
@@ -425,6 +482,23 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
     header.admin-navbar {
         padding-left: 0.75rem !important;
         padding-right: 0.75rem !important;
+    }
+
+    /* Admin Sidebar Mobile Offcanvas Drawer */
+    .admin-sidebar {
+        position: fixed !important;
+        top: 60px !important;
+        left: 0 !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        height: calc(100vh - 60px) !important;
+        z-index: 1050 !important;
+        background: rgba(11, 15, 25, 0.98) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.75) !important;
+        overflow-y: auto !important;
     }
 }
 
