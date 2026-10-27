@@ -1,0 +1,299 @@
+/* ==========================================================================
+   SpotBook — Advanced Glassmorphism & Fluid Mobile-First UI Stylesheet
+   Modern Frosted Glass Aesthetics, Neon Borders, and Precision Responsiveness
+   ========================================================================== */
+
+:root {
+    /* Glassmorphism Specification Standards */
+    --glass-bg-primary: rgba(15, 23, 42, 0.75);
+    --glass-bg-secondary: rgba(11, 15, 25, 0.85);
+    --glass-bg-elevated: rgba(30, 41, 59, 0.70);
+    --glass-border-standard: 1px solid rgba(255, 255, 255, 0.10);
+    --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.06);
+    --glass-blur-standard: blur(16px);
+    --glass-shadow-standard: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-shadow-elevated: 0 16px 48px 0 rgba(0, 0, 0, 0.50);
+
+    /* Neon Accent Highlights */
+    --neon-blue-base: #3B82F6;
+    --neon-cyan-base: #06B6D4;
+    --neon-green-base: #10B981;
+    --neon-amber-base: #F59E0B;
+    --neon-rose-base: #F43F5E;
+    --neon-purple-base: #8B5CF6;
+
+    /* Glow Definitions */
+    --glow-available: 0 0 12px rgba(16, 185, 129, 0.45);
+    --glow-reserved: 0 0 12px rgba(245, 158, 11, 0.45);
+    --glow-occupied: 0 0 12px rgba(244, 63, 94, 0.45);
+    --glow-cyan: 0 0 15px rgba(6, 182, 212, 0.50);
+    --glow-blue: 0 0 15px rgba(59, 130, 246, 0.45);
+}
+
+/* ==========================================================================
+   1. Universal Glass Panels & Surface Wrappers
+   ========================================================================== */
+.glass-container,
+.glass-card,
+.glass-panel,
+.card {
+    background: var(--glass-bg-primary) !important;
+    backdrop-filter: var(--glass-blur-standard) !important;
+    -webkit-backdrop-filter: var(--glass-blur-standard) !important;
+    border: var(--glass-border-standard) !important;
+    box-shadow: var(--glass-shadow-standard) !important;
+    border-radius: 16px;
+    color: #F8FAFC;
+}
+
+.glass-card-elevated {
+    background: var(--glass-bg-elevated) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: var(--glass-shadow-elevated) !important;
+}
+
+/* ==========================================================================
+   2. Sticky Frosted Glass Navbar & Mobile Toggle
+   ========================================================================== */
+.navbar-futuristic,
+.navbar.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+    background: rgba(11, 15, 25, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* High-Contrast Mobile Hamburger Toggle */
+.navbar-toggler {
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 0.45rem 0.65rem;
+    border-radius: 10px;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.navbar-toggler:focus {
+    border-color: var(--neon-cyan-base) !important;
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.4) !important;
+}
+.navbar-toggler i,
+.navbar-toggler-icon {
+    color: #FFFFFF !important;
+    filter: brightness(1.2);
+}
+
+/* ==========================================================================
+   3. Search & Filter Bar (Mobile-Full Width & Neon Rings)
+   ========================================================================== */
+.search-filter-card {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow-standard);
+}
+
+.search-filter-card input,
+.search-filter-card select,
+.form-control,
+.form-select {
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #FFFFFF !important;
+    border-radius: 10px;
+    min-height: 46px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.search-filter-card input:focus,
+.search-filter-card select:focus,
+.form-control:focus,
+.form-select:focus {
+    background-color: rgba(20, 30, 50, 0.95) !important;
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
+    color: #FFFFFF !important;
+}
+
+.form-control::placeholder {
+    color: #64748B !important;
+}
+
+/* ==========================================================================
+   4. Location Cards (Smooth Hover Lifts & Glass Glow)
+   ========================================================================== */
+.location-glass-card {
+    background: var(--glass-bg-primary) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    border-radius: 18px;
+    box-shadow: var(--glass-shadow-standard);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.location-glass-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(6, 182, 212, 0.45) !important;
+    box-shadow: 0 16px 40px -10px rgba(6, 182, 212, 0.25), 0 0 20px rgba(6, 182, 212, 0.12) !important;
+}
+
+/* ==========================================================================
+   5. Interactive Slot Grid (Mobile 2-Col, Desktop 5-Col & Neon Badges)
+   ========================================================================== */
+.slot-bay-card {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 1.1rem 0.8rem;
+    text-align: center;
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 145px;
+    text-decoration: none !important;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 🟢 Available Slot Bay */
+.slot-bay-card.bay-available {
+    border-color: rgba(16, 185, 129, 0.45) !important;
+    box-shadow: var(--glow-available);
+    cursor: pointer;
+}
+.slot-bay-card.bay-available:hover {
+    transform: translateY(-6px) scale(1.03);
+    border-color: #10B981 !important;
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.3) !important;
+    background: rgba(16, 185, 129, 0.12) !important;
+}
+.slot-bay-card.bay-available .bay-status-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34D399;
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+/* 🟡 Reserved Slot Bay */
+.slot-bay-card.bay-reserved {
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    box-shadow: var(--glow-reserved);
+    background: rgba(35, 25, 15, 0.75) !important;
+    cursor: not-allowed;
+}
+.slot-bay-card.bay-reserved .bay-status-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FBBF24;
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+/* 🔴 Occupied Slot Bay */
+.slot-bay-card.bay-occupied {
+    border-color: rgba(244, 63, 94, 0.45) !important;
+    box-shadow: var(--glow-occupied);
+    background: rgba(40, 15, 25, 0.75) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.8;
+}
+.slot-bay-card.bay-occupied .bay-status-badge {
+    background: rgba(244, 63, 94, 0.2);
+    color: #FB7185;
+    border: 1px solid rgba(244, 63, 94, 0.5);
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.35);
+}
+
+/* ==========================================================================
+   6. Live Total Fee Estimator (Bold Glowing Text)
+   ========================================================================== */
+.live-fee-counter {
+    font-family: 'Space Grotesk', monospace, sans-serif;
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--neon-cyan-base) !important;
+    text-shadow: var(--glow-cyan);
+    letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   7. Boarding Pass E-Ticket & QR Scaling
+   ========================================================================== */
+.boarding-pass-card {
+    background: linear-gradient(165deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 15, 28, 0.98) 100%) !important;
+    border: 1px solid rgba(6, 182, 212, 0.35) !important;
+    border-radius: 20px;
+    box-shadow: var(--glass-shadow-elevated), 0 0 30px rgba(6, 182, 212, 0.15) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-code-fluid {
+    max-width: 150px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Boarding Pass Divider */
+.pass-divider-dash {
+    border-right: 2px dashed rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   8. Mobile Viewport Refinements & Media Queries
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    /* Full width inputs on mobile */
+    .search-filter-card .col-md-6,
+    .search-filter-card .col-md-3 {
+        width: 100%;
+    }
+
+    /* Convert vertical pass divider to horizontal on mobile */
+    .pass-divider-dash {
+        border-right: none !important;
+        border-bottom: 2px dashed rgba(255, 255, 255, 0.15);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Mobile container padding safe-zone */
+    .container, .container-fluid {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    /* Smaller fee counter for narrow screens */
+    .live-fee-counter {
+        font-size: 1.85rem;
+    }
+
+    /* Admin top nav adjustments */
+    header.admin-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
+
+/* ==========================================================================
+   9. Table Responsiveness Enforcer
+   ========================================================================== */
+.table-responsive {
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}

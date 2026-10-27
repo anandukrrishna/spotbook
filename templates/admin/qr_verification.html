@@ -53,16 +53,16 @@
 
                 <form method="POST" action="{% url 'QRVerification' %}" class="mb-4">
                     {% csrf_token %}
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="qr_code_input" class="form-label fs-xs fw-semibold text-secondary font-tech">PASS SERIAL / RAW QR STRING *</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-upc-scan text-info"></i></span>
-                            <input type="text" id="qr_code_input" name="qr_code" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002" value="{{ query_code }}" required autofocus>
+                            <span class="input-group-text px-3"><i class="bi bi-upc-scan text-info fs-5"></i></span>
+                            <input type="text" id="qr_code_input" name="qr_code" class="form-control form-control-lg font-tech text-white py-3 fs-5" placeholder="e.g. SB-20261027-0002" value="{{ query_code }}" required autofocus style="min-height: 54px; letter-spacing: 0.05em;">
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-cyber-primary btn-pulse-glow w-100 py-2 fw-bold font-tech shadow-sm">
-                        <i class="bi bi-shield-check me-1"></i> Decode & Verify Pass
+                    <button type="submit" class="btn btn-cyber-primary btn-pulse-glow w-100 py-3 fw-bold font-tech fs-5 shadow-sm">
+                        <i class="bi bi-shield-check me-2"></i> Decode & Verify Pass
                     </button>
                 </form>
             </div>

@@ -35,10 +35,10 @@
     <div class="tab-content" id="bookingsTabContent">
         <!-- Active / Upcoming Tab -->
         <div class="tab-pane fade show active" id="active-bookings" role="tabpanel">
-            <div class="row g-4">
+            <div class="row row-cols-1 row-cols-lg-2 g-4">
                 {% for b in active_bookings %}
-                <div class="col-md-6 col-lg-6">
-                    <div class="glass-panel glass-card-interactive p-4 h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                <div class="col">
+                    <div class="glass-panel boarding-pass-card glass-card-interactive p-4 h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
                         <!-- Top Accent Line -->
                         <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #06B6D4, #3B82F6);"></div>
 

@@ -143,9 +143,9 @@
                 {% if item.is_available %}
                 <!-- 🟢 Available Bay -->
                 <a href="{% url 'book_slot' item.slot.id %}?date={{ booking_date }}&start_time={{ start_time }}&duration={{ duration }}" 
-                   class="parking-bay-card slot-available">
+                   class="parking-bay-card slot-bay-card bay-available slot-available">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge badge-cyber-success fs-xxs">FREE</span>
+                        <span class="badge bay-status-badge badge-cyber-success fs-xxs">AVAILABLE</span>
                         <span class="text-muted fs-xxs font-tech">{{ item.slot.slot_type }}</span>
                     </div>
 
@@ -159,17 +159,17 @@
                     
                     <div class="mt-2 pt-2 border-top border-secondary border-opacity-25">
                         <span class="text-success font-tech fs-xs fw-bold">₹{{ item.slot.price_per_hour }}/hr</span>
-                        <div class="fs-xxs text-info fw-semibold mt-1">
+                        <div class="fs-xxs text-info fw-semibold mt-1 font-tech">
                             RESERVE <i class="bi bi-arrow-right-short"></i>
                         </div>
                     </div>
                 </a>
                 {% else %}
                 <!-- 🟡 Reserved or 🔴 Occupied Bay -->
-                <div class="parking-bay-card {% if item.slot.status == 'Occupied' %}slot-occupied{% else %}slot-reserved{% endif %}">
+                <div class="parking-bay-card slot-bay-card {% if item.slot.status == 'Occupied' %}bay-occupied slot-occupied{% else %}bay-reserved slot-reserved{% endif %}">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge {% if item.slot.status == 'Occupied' %}badge-cyber-danger{% else %}badge-cyber-warning{% endif %} fs-xxs">
-                            {% if item.slot.status == 'Occupied' %}OCCUPIED{% else %}BOOKED{% endif %}
+                        <span class="badge bay-status-badge {% if item.slot.status == 'Occupied' %}badge-cyber-danger{% else %}badge-cyber-warning{% endif %} fs-xxs font-tech">
+                            {% if item.slot.status == 'Occupied' %}OCCUPIED{% else %}RESERVED{% endif %}
                         </span>
                         <span class="text-muted fs-xxs font-tech">{{ item.slot.slot_type }}</span>
                     </div>
