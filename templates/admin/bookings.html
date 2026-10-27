@@ -117,7 +117,7 @@
                     </td>
                     <td class="fw-bold text-primary">₹{{ b.fee }}</td>
                     <td>
-                        <span class="badge {% if b.status == 'Booked' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                        <span class="badge {% if b.status == 'Confirmed' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
                             {{ b.status }}
                         </span>
                     </td>
@@ -126,7 +126,7 @@
                             <a href="{% url 'booking_pass' b.id %}" target="_blank" class="btn btn-sm btn-outline-primary" title="View Pass">
                                 <i class="bi bi-qr-code"></i> Pass
                             </a>
-                            {% if b.status == 'Booked' %}
+                            {% if b.status == 'Confirmed' %}
                             <form method="POST" action="{% url 'Bookings' %}" class="d-inline" onsubmit="return confirm('Override & cancel booking {{ b.booking_id }}?');">
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="cancel">

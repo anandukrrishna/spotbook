@@ -134,7 +134,7 @@
                         <i class="bi bi-eye"></i> View Full Pass
                     </a>
 
-                    {% if matched_booking.status == 'Booked' %}
+                    {% if matched_booking.status == 'Confirmed' %}
                     <form method="POST" action="{% url 'VehicleEntry' %}">
                         {% csrf_token %}
                         <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">

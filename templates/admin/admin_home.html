@@ -167,7 +167,7 @@
                             </td>
                             <td class="fw-bold">₹{{ b.fee }}</td>
                             <td>
-                                <span class="badge {% if b.status == 'Booked' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill fs-xxs">
+                                <span class="badge {% if b.status == 'Confirmed' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill fs-xxs">
                                     {{ b.status }}
                                 </span>
                             </td>

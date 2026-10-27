@@ -79,7 +79,7 @@
             <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
                 <h6 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-success me-2"></i>Booking Gate Check</h6>
                 {% if matched_booking %}
-                <span class="badge {% if matched_booking.status == 'Booked' %}bg-success{% elif matched_booking.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                <span class="badge {% if matched_booking.status == 'Confirmed' %}bg-success{% elif matched_booking.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
                     {{ matched_booking.status }}
                 </span>
                 {% endif %}
@@ -122,7 +122,7 @@
                     </div>
                 </div>
 
-                {% if matched_booking.status == 'Booked' %}
+                {% if matched_booking.status == 'Confirmed' %}
                 <form method="POST" action="{% url 'VehicleEntry' %}">
                     {% csrf_token %}
                     <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
