@@ -530,7 +530,8 @@ class QRVerification(View):
 
     def post(self, request):
         qr_code = request.POST.get('qr_code', '').strip()
-        return redirect(f"/admin_app/qr-verification/?qr_code={qr_code}")
+        from django.urls import reverse
+        return redirect(reverse('QRVerification') + f'?qr_code={qr_code}')
 
 
 class VehicleManagement(View):
@@ -762,3 +763,51 @@ class Reports(View):
             'entry_exit_logs': entry_exit_logs,
         }
         return render(request, 'admin/reports.html', context)
+
+
+# ---------------------------------------------------------------------------
+# Semantic Aliases
+# These thin subclasses expose the task-required view names without changing
+# any existing URL names, so all existing `{% url '...' %}` tags keep working.
+# ---------------------------------------------------------------------------
+
+class AdminDashboard(AdminHome):
+    """
+    Alias for AdminHome. Accessible at /admin_app/dashboard/
+    with URL name 'admin_dashboard'. Renders the same aggregated
+    statistics dashboard — Users, Locations, Slots, Revenue, Recent Activity.
+    """
+    pass
+
+
+class GateOperations(View):
+    """
+    Unified Gate Operations terminal.
+    GET  → renders a hub page linking to VehicleEntry and VehicleExit.
+    Staff can choose to record Vehicle Entry or Vehicle Exit from one place.
+    Accessible at /admin_app/gate/ with URL name 'gate_operations'.
+    """
+    def get(self, request):
+        if request.session.get('usertype') != 'admin':
+            return redirect('login')
+
+        today = datetime.date.today()
+        vehicles_inside = BookingTable.objects.filter(status='Active').count()
+        awaiting_entry = BookingTable.objects.filter(
+            booking_date=today, status__in=['Confirmed', 'Booked']
+        ).count()
+        exited_today = EntryExitTable.objects.filter(exit_time__date=today).count()
+        entered_today = EntryExitTable.objects.filter(entry_time__date=today).count()
+
+        recent_activity = EntryExitTable.objects.select_related(
+            'BOOKINGID', 'BOOKINGID__user', 'BOOKINGID__slot', 'BOOKINGID__slot__LOCATIONID'
+        ).order_by('-id')[:12]
+
+        context = {
+            'vehicles_inside': vehicles_inside,
+            'awaiting_entry': awaiting_entry,
+            'exited_today': exited_today,
+            'entered_today': entered_today,
+            'recent_activity': recent_activity,
+        }
+        return render(request, 'admin/gate_operations.html', context)

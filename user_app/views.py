@@ -284,3 +284,29 @@ class CancelBooking(View):
         if is_admin:
             return redirect('Bookings')
         return redirect('my_bookings')
+
+
+# ---------------------------------------------------------------------------
+# Semantic Aliases
+# Thin subclasses that expose the task-required view names as proper classes.
+# URL names remain unchanged so all {% url '...' %} tags keep working.
+# ---------------------------------------------------------------------------
+
+class LocationListView(UserHome):
+    """
+    Alias for UserHome.
+    Lists all active parking locations with search/city filter capabilities.
+    Accessible at the user root (/) with URL name 'user_home'.
+    """
+    pass
+
+
+class SlotListView(LocationDetail):
+    """
+    Alias for LocationDetail.
+    Shows available parking slots for a chosen location with time-window
+    filtering to preview real-time availability before booking.
+    Accessible at /location/<location_id>/ with URL name 'location_detail'.
+    """
+    pass
+
