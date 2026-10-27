@@ -57,7 +57,7 @@
                     <div class="sidebar-heading px-3 text-uppercase fs-xs fw-bold text-muted mb-2">Management</div>
                     <ul class="nav flex-column mb-3">
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}" href="{% url 'admin_home' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' or request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_home' %}">
                                 <i class="bi bi-grid-1x2-fill me-2"></i> Dashboard
                             </a>
                         </li>
@@ -90,6 +90,11 @@
 
                     <div class="sidebar-heading px-3 text-uppercase fs-xs fw-bold text-muted mb-2">Gate & Security</div>
                     <ul class="nav flex-column mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'gate_operations' %}active{% endif %}" href="{% url 'gate_operations' %}">
+                                <i class="bi bi-toggles me-2 text-primary"></i> Gate Hub
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'QRVerification' %}active{% endif %}" href="{% url 'QRVerification' %}">
                                 <i class="bi bi-qr-code-scan me-2 text-primary"></i> QR Verification
