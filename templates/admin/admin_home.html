@@ -1,39 +1,43 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}Dashboard - SpotBook Admin{% endblock %}
+{% block title %}Dashboard HUD — SpotBook Admin Intelligence{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">System Overview & Dashboard</h2>
-        <p class="text-muted small mb-0">Real-time status of parking facilities, active bookings, and gate activity</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="live-dot"></span>
+            <span class="badge badge-cyber-info fs-xxs font-tech">CENTRAL COMMAND</span>
+        </div>
+        <h2 class="fw-bold text-white mb-0 font-tech">Parking Facility Intelligence Dashboard</h2>
+        <p class="text-secondary small mb-0">Real-time gate telemetry, bay allocations, revenue calculations, and barrier activity</p>
     </div>
     <div class="d-flex gap-2">
-        <a href="{% url 'QRVerification' %}" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 shadow-xs">
-            <i class="bi bi-qr-code-scan"></i> Scan QR
+        <a href="{% url 'QRVerification' %}" class="btn btn-outline-cyber btn-sm d-flex align-items-center gap-1 font-tech">
+            <i class="bi bi-qr-code-scan text-info"></i> Scan Pass
         </a>
-        <a href="{% url 'VehicleEntry' %}" class="btn btn-success btn-sm d-flex align-items-center gap-1 shadow-xs">
-            <i class="bi bi-box-arrow-in-right"></i> Gate In
+        <a href="{% url 'VehicleEntry' %}" class="btn btn-cyber-success btn-sm d-flex align-items-center gap-1 font-tech">
+            <i class="bi bi-box-arrow-in-right"></i> Barrier In
         </a>
-        <a href="{% url 'VehicleExit' %}" class="btn btn-warning btn-sm d-flex align-items-center gap-1 shadow-xs text-dark">
-            <i class="bi bi-box-arrow-right"></i> Gate Out
+        <a href="{% url 'VehicleExit' %}" class="btn btn-cyber-warning btn-sm d-flex align-items-center gap-1 font-tech">
+            <i class="bi bi-box-arrow-right"></i> Barrier Out
         </a>
     </div>
 </div>
 
-<!-- Primary Metric Cards -->
+<!-- Primary 3D Metric KPI Cards -->
 <div class="row g-3 mb-4">
     <!-- Total Revenue -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 kpi-card">
+        <div class="kpi-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Revenue</span>
-                    <h3 class="fw-bold text-primary mb-0">₹{{ total_revenue }}</h3>
-                    <span class="fs-xs text-success"><i class="bi bi-arrow-up-right me-1"></i>Automated calculations</span>
+                    <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">GROSS REVENUE</span>
+                    <h2 class="kpi-counter-val text-info mb-0">₹{{ total_revenue }}</h2>
+                    <span class="fs-xxs text-success font-tech"><i class="bi bi-shield-check me-1"></i>Automated tariff engine</span>
                 </div>
-                <div class="kpi-icon-box bg-primary-subtle text-primary rounded-3 p-2">
-                    <i class="bi bi-currency-rupee fs-4"></i>
+                <div class="kpi-icon-box" style="background: rgba(6, 182, 212, 0.15); color: var(--neon-cyan);">
+                    <i class="bi bi-currency-rupee fs-3"></i>
                 </div>
             </div>
         </div>
@@ -41,15 +45,15 @@
 
     <!-- Total Bookings -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 kpi-card">
+        <div class="kpi-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Bookings</span>
-                    <h3 class="fw-bold text-dark mb-0">{{ total_bookings }}</h3>
-                    <span class="fs-xs text-muted">Zero overlaps enforced</span>
+                    <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">TOTAL RESERVATIONS</span>
+                    <h2 class="kpi-counter-val text-white mb-0">{{ total_bookings }}</h2>
+                    <span class="fs-xxs text-info font-tech"><i class="bi bi-lock-fill me-1"></i>Zero overlaps enforced</span>
                 </div>
-                <div class="kpi-icon-box bg-info-subtle text-info rounded-3 p-2">
-                    <i class="bi bi-calendar2-check-fill fs-4"></i>
+                <div class="kpi-icon-box" style="background: rgba(59, 130, 246, 0.15); color: var(--neon-blue);">
+                    <i class="bi bi-calendar2-check-fill fs-3"></i>
                 </div>
             </div>
         </div>
@@ -57,15 +61,15 @@
 
     <!-- Total Slots -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 kpi-card">
+        <div class="kpi-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Slots</span>
-                    <h3 class="fw-bold text-dark mb-0">{{ total_slots }}</h3>
-                    <span class="fs-xs text-muted">Across {{ total_locations }} active facilities</span>
+                    <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">TOTAL BAYS</span>
+                    <h2 class="kpi-counter-val text-white mb-0">{{ total_slots }}</h2>
+                    <span class="fs-xxs text-secondary font-tech">Across {{ total_locations }} active facilities</span>
                 </div>
-                <div class="kpi-icon-box bg-secondary-subtle text-secondary rounded-3 p-2">
-                    <i class="bi bi-grid-3x3-gap-fill fs-4"></i>
+                <div class="kpi-icon-box" style="background: rgba(139, 92, 246, 0.15); color: var(--neon-purple);">
+                    <i class="bi bi-grid-3x3-gap-fill fs-3"></i>
                 </div>
             </div>
         </div>
@@ -73,53 +77,107 @@
 
     <!-- Registered Users -->
     <div class="col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 kpi-card">
+        <div class="kpi-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Registered Users</span>
-                    <h3 class="fw-bold text-dark mb-0">{{ total_users }}</h3>
-                    <span class="fs-xs text-success">Verified customer accounts</span>
+                    <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">REGISTERED DRIVERS</span>
+                    <h2 class="kpi-counter-val text-white mb-0">{{ total_users }}</h2>
+                    <span class="fs-xxs text-success font-tech"><i class="bi bi-person-check-fill me-1"></i>Verified accounts</span>
                 </div>
-                <div class="kpi-icon-box bg-success-subtle text-success rounded-3 p-2">
-                    <i class="bi bi-people-fill fs-4"></i>
+                <div class="kpi-icon-box" style="background: rgba(16, 185, 129, 0.15); color: var(--neon-emerald);">
+                    <i class="bi bi-people-fill fs-3"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Slot Real-Time Breakdown -->
-<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-speedometer2 text-primary me-2"></i>Live Slot Occupancy Breakdown</h5>
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="p-3 rounded-3 bg-success-subtle border border-success-subtle d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-success fw-bold text-uppercase fs-xs d-block">Available Slots</span>
-                    <h2 class="fw-bold text-success mb-0">{{ available_slots }}</h2>
-                    <span class="fs-xs text-muted">Ready for booking</span>
+<!-- Interactive Visual Analytics Section with Chart.js -->
+<div class="row g-4 mb-4">
+    <!-- Donut Chart: Slot Allocation Breakdown -->
+    <div class="col-lg-5">
+        <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-pie-chart-fill text-info me-2"></i>Live Bay Allocation
+                </h5>
+                <span class="badge badge-cyber-info fs-xxs font-tech">CHART.JS TELEMETRY</span>
+            </div>
+
+            <div class="position-relative d-flex align-items-center justify-content-center p-3" style="min-height: 250px;">
+                <canvas id="slotAllocationChart" style="max-height: 240px;"></canvas>
+            </div>
+
+            <div class="row g-2 text-center mt-3 pt-3 border-top border-secondary border-opacity-25 font-tech">
+                <div class="col-4">
+                    <span class="d-block fs-xxs text-success">AVAILABLE</span>
+                    <strong class="text-white fs-5">{{ available_slots }}</strong>
                 </div>
-                <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                <div class="col-4">
+                    <span class="d-block fs-xxs text-warning">RESERVED</span>
+                    <strong class="text-white fs-5">{{ reserved_slots }}</strong>
+                </div>
+                <div class="col-4">
+                    <span class="d-block fs-xxs text-danger">OCCUPIED</span>
+                    <strong class="text-white fs-5">{{ occupied_slots }}</strong>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="p-3 rounded-3 bg-warning-subtle border border-warning-subtle d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-warning-emphasis fw-bold text-uppercase fs-xs d-block">Reserved Slots</span>
-                    <h2 class="fw-bold text-warning-emphasis mb-0">{{ reserved_slots }}</h2>
-                    <span class="fs-xs text-muted">Upcoming confirmed reservations</span>
-                </div>
-                <i class="bi bi-clock-history text-warning-emphasis fs-1"></i>
+    </div>
+
+    <!-- Live Slot Occupancy Status Cards & Bar Telemetry -->
+    <div class="col-lg-7">
+        <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-speedometer2 text-info me-2"></i>Occupancy Status Breakdown
+                </h5>
+                <span class="badge badge-cyber-success fs-xxs font-tech">SENSORS ONLINE</span>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 rounded-3 bg-danger-subtle border border-danger-subtle d-flex align-items-center justify-content-between">
-                <div>
-                    <span class="text-danger fw-bold text-uppercase fs-xs d-block">Occupied Slots</span>
-                    <h2 class="fw-bold text-danger mb-0">{{ occupied_slots }}</h2>
-                    <span class="fs-xs text-muted">Vehicles currently parked inside</span>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <span class="text-success fw-bold text-uppercase fs-xxs d-block font-tech">AVAILABLE BAYS</span>
+                        <h2 class="fw-bold text-success mb-0 font-tech">{{ available_slots }}</h2>
+                        <span class="fs-xxs text-muted">Ready for booking</span>
+                    </div>
                 </div>
-                <i class="bi bi-car-front-fill text-danger fs-1"></i>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);">
+                        <span class="text-warning fw-bold text-uppercase fs-xxs d-block font-tech">RESERVED BAYS</span>
+                        <h2 class="fw-bold text-warning mb-0 font-tech">{{ reserved_slots }}</h2>
+                        <span class="fs-xxs text-muted">Confirmed window</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-4" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3);">
+                        <span class="text-danger fw-bold text-uppercase fs-xxs d-block font-tech">OCCUPIED BAYS</span>
+                        <h2 class="fw-bold text-danger mb-0 font-tech">{{ occupied_slots }}</h2>
+                        <span class="fs-xxs text-muted">Parked inside</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 rounded-3" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);">
+                <div class="d-flex justify-content-between align-items-center mb-2 font-tech fs-xs">
+                    <span class="text-secondary">Overall Facility Capacity Usage:</span>
+                    <span class="text-info fw-bold">
+                        {% if total_slots > 0 %}
+                            {% widthratio occupied_slots total_slots 100 %}% Occupied
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="progress" style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 999px;">
+                    <div class="progress-bar bg-success" role="progressbar" 
+                         style="width: {% if total_slots > 0 %}{% widthratio available_slots total_slots 100 %}{% else %}0{% endif %}%;" title="Available"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" 
+                         style="width: {% if total_slots > 0 %}{% widthratio reserved_slots total_slots 100 %}{% else %}0{% endif %}%;" title="Reserved"></div>
+                    <div class="progress-bar bg-danger" role="progressbar" 
+                         style="width: {% if total_slots > 0 %}{% widthratio occupied_slots total_slots 100 %}{% else %}0{% endif %}%;" title="Occupied"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,53 +186,55 @@
 <div class="row g-4 mb-4">
     <!-- Recent Bookings Table -->
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
-            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-calendar2-check text-primary me-2"></i>Recent Booking Transactions</h6>
-                <a href="{% url 'Bookings' %}" class="btn btn-outline-secondary btn-sm">View All</a>
+        <div class="glass-panel overflow-hidden h-100">
+            <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-calendar2-check text-info me-2"></i>Recent Reservation Transactions
+                </h6>
+                <a href="{% url 'Bookings' %}" class="btn btn-outline-cyber btn-sm font-tech">View All</a>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 small">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Ref</th>
-                            <th>User</th>
-                            <th>Location / Slot</th>
-                            <th>Date & Time</th>
-                            <th>Fee</th>
-                            <th>Status</th>
+                <table class="table table-hover align-middle mb-0 small font-tech">
+                    <thead>
+                        <tr class="text-secondary fs-xs">
+                            <th>PASS REF</th>
+                            <th>DRIVER</th>
+                            <th>FACILITY / BAY</th>
+                            <th>WINDOW</th>
+                            <th>TARIFF</th>
+                            <th>STATUS</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for b in recent_bookings %}
                         <tr>
-                            <td class="font-monospace fw-semibold text-primary">
-                                <a href="{% url 'booking_pass' b.id %}" target="_blank" class="text-decoration-none">
+                            <td class="text-info fw-bold">
+                                <a href="{% url 'booking_pass' b.id %}" target="_blank" class="text-info text-decoration-none">
                                     {{ b.booking_id }}
                                 </a>
                             </td>
                             <td>
-                                <strong class="text-dark">{{ b.USERID.name }}</strong>
+                                <strong class="text-white">{{ b.USERID.name }}</strong>
                                 <div class="text-muted fs-xxs font-monospace">{{ b.vehicle_number }}</div>
                             </td>
                             <td>
-                                <div>{{ b.SLOTID.LOCATIONID.name }}</div>
-                                <span class="badge bg-light text-dark border fs-xxs">Slot {{ b.SLOTID.slot_number }}</span>
+                                <div class="text-white">{{ b.SLOTID.LOCATIONID.name }}</div>
+                                <span class="badge badge-cyber-info fs-xxs">Bay {{ b.SLOTID.slot_number }}</span>
                             </td>
                             <td>
-                                <div>{{ b.date }}</div>
+                                <div class="text-white">{{ b.date }}</div>
                                 <div class="text-muted fs-xxs">{{ b.start_time }} - {{ b.end_time }}</div>
                             </td>
-                            <td class="fw-bold">₹{{ b.fee }}</td>
+                            <td class="fw-bold text-success">₹{{ b.fee }}</td>
                             <td>
-                                <span class="badge {% if b.status == 'Confirmed' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill fs-xxs">
-                                    {{ b.status }}
+                                <span class="badge {% if b.status == 'Confirmed' %}badge-cyber-success{% elif b.status == 'Active' %}badge-cyber-warning{% elif b.status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill px-2 py-1">
+                                    {{ b.status|upper }}
                                 </span>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">No bookings recorded yet.</td>
+                            <td colspan="6" class="text-center py-4 text-muted">No reservations recorded yet.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -183,30 +243,45 @@
         </div>
     </div>
 
-    <!-- Currently Parked Vehicles -->
+    <!-- Live Gate Security Feed -->
     <div class="col-lg-4">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
-            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-car-front-fill text-danger me-2"></i>Vehicles Parked Inside</h6>
-                <span class="badge bg-danger rounded-pill">{{ currently_parked|length }}</span>
+        <div class="glass-panel overflow-hidden h-100">
+            <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-toggles text-warning me-2"></i>Live Barrier Stream
+                </h6>
+                <span class="live-dot"></span>
             </div>
-            <div class="card-body p-3">
-                <div class="list-group list-group-flush">
-                    {% for p in currently_parked %}
-                    <div class="list-group-item px-2 py-3 border-bottom d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="badge bg-dark font-monospace mb-1">{{ p.vehicle_number }}</span>
-                            <div class="small fw-bold text-dark">{{ p.SLOTID.LOCATIONID.name }}</div>
-                            <div class="fs-xs text-muted">Slot: <strong>{{ p.SLOTID.slot_number }}</strong> &bull; User: {{ p.USERID.name }}</div>
+            <div class="p-3">
+                <div class="gate-activity-feed">
+                    {% for entry in recent_activity %}
+                    <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom border-secondary border-opacity-10">
+                        <div class="p-2 rounded-3 text-center" style="min-width: 42px; background: {% if entry.exit_time %}rgba(245, 158, 11, 0.15){% else %}rgba(16, 185, 129, 0.15){% endif %};">
+                            {% if entry.exit_time %}
+                            <i class="bi bi-box-arrow-right text-warning fs-5"></i>
+                            {% else %}
+                            <i class="bi bi-box-arrow-in-right text-success fs-5"></i>
+                            {% endif %}
                         </div>
-                        <a href="{% url 'VehicleExit' %}?booking_id={{ p.booking_id }}" class="btn btn-outline-warning btn-sm fs-xs text-dark">
-                            Record Exit
-                        </a>
+                        <div class="flex-grow-1 font-tech">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-white fs-xs">{{ entry.BOOKINGID.vehicle_number }}</strong>
+                                <span class="fs-xxs text-muted">
+                                    {% if entry.exit_time %}{{ entry.exit_time|time:"H:i" }}{% else %}{{ entry.entry_time|time:"H:i" }}{% endif %}
+                                </span>
+                            </div>
+                            <div class="text-secondary fs-xxs">
+                                Bay {{ entry.BOOKINGID.slot.slot_number }} &bull; {{ entry.BOOKINGID.slot.LOCATIONID.name }}
+                            </div>
+                            <span class="badge {% if entry.exit_time %}badge-cyber-warning{% else %}badge-cyber-success{% endif %} fs-xxs mt-1">
+                                {% if entry.exit_time %}BARRIER EXIT{% else %}BARRIER ENTRY{% endif %}
+                            </span>
+                        </div>
                     </div>
                     {% empty %}
-                    <div class="text-center py-4 text-muted small">
-                        <i class="bi bi-check2-circle fs-3 d-block text-success mb-1"></i>
-                        No vehicles currently parked inside.
+                    <div class="text-center py-4 text-muted font-tech">
+                        <i class="bi bi-clock-history fs-3 d-block mb-1"></i>
+                        No barrier movements recorded today.
                     </div>
                     {% endfor %}
                 </div>
@@ -214,4 +289,56 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('slotAllocationChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Available', 'Reserved', 'Occupied'],
+                    datasets: [{
+                        data: [
+                            parseInt('{{ available_slots|default:0 }}'),
+                            parseInt('{{ reserved_slots|default:0 }}'),
+                            parseInt('{{ occupied_slots|default:0 }}')
+                        ],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(245, 158, 11, 0.85)',
+                            'rgba(244, 63, 94, 0.85)'
+                        ],
+                        borderColor: [
+                            '#10B981',
+                            '#F59E0B',
+                            '#F43F5E'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { family: 'Space Grotesk' },
+                            bodyFont: { family: 'Space Grotesk' },
+                            borderColor: 'rgba(6, 182, 212, 0.4)',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

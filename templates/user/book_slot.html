@@ -1,86 +1,92 @@
 {% extends 'user/base.html' %}
 
-{% block title %}Book Slot {{ slot.slot_number }} - {{ location.name }} | SpotBook{% endblock %}
+{% block title %}Reserve Bay {{ slot.slot_number }} — {{ location.name }} | SpotBook{% endblock %}
 
 {% block body %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-3 small">
-                    <li class="breadcrumb-item"><a href="{% url 'user_home' %}" class="text-decoration-none">Locations</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'location_detail' location.id %}" class="text-decoration-none">{{ location.name }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Book Slot {{ slot.slot_number }}</li>
+                <ol class="breadcrumb mb-3 small font-tech">
+                    <li class="breadcrumb-item"><a href="{% url 'user_home' %}" class="text-secondary text-decoration-none">Hubs</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'location_detail' location.id %}" class="text-secondary text-decoration-none">{{ location.name }}</a></li>
+                    <li class="breadcrumb-item active text-info" aria-current="page">Lock Bay {{ slot.slot_number }}</li>
                 </ol>
             </nav>
 
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white mb-4">
-                <div class="card-header bg-primary text-white p-4 border-0">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="glass-panel rounded-4 overflow-hidden shadow-lg mb-4 position-relative border-info border-opacity-25">
+                <!-- Glowing Top Accent Line -->
+                <div style="height: 3px; background: linear-gradient(90deg, #06B6D4, #3B82F6, #10B981);"></div>
+
+                <!-- Header -->
+                <div class="p-4 p-md-5 border-bottom border-secondary border-opacity-25" style="background: rgba(11, 15, 25, 0.85);">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div>
-                            <span class="badge bg-white text-primary fw-bold mb-2">Slot Reservation</span>
-                            <h3 class="fw-bold mb-1">Confirm Parking Reservation</h3>
-                            <p class="text-white-50 small mb-0">{{ location.name }} &bull; Slot {{ slot.slot_number }}</p>
+                            <span class="badge badge-cyber-info fs-xxs font-tech mb-2">
+                                <i class="bi bi-shield-lock-fill me-1"></i> PROTOCOL OVERLAP-LOCK
+                            </span>
+                            <h2 class="fw-bold text-white mb-1 font-tech">Confirm Bay Reservation</h2>
+                            <p class="text-secondary small mb-0"><i class="bi bi-geo-alt text-info me-1"></i>{{ location.name }} &bull; {{ location.city }}</p>
                         </div>
-                        <div class="slot-badge-big bg-white text-dark rounded-4 p-3 text-center shadow-sm">
-                            <span class="fs-xs text-muted text-uppercase d-block fw-bold">Slot</span>
-                            <span class="fs-2 fw-bold text-primary">{{ slot.slot_number }}</span>
+                        <div class="p-3 rounded-4 glass-panel text-center border-info border-opacity-50" style="min-width: 100px; box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);">
+                            <span class="fs-xxs text-info text-uppercase d-block font-tech fw-bold">BAY ID</span>
+                            <span class="fs-2 fw-bold text-white font-tech">{{ slot.slot_number }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-body p-4 p-md-5">
+                <div class="p-4 p-md-5">
                     <!-- Reservation Form -->
                     <form method="POST" action="{% url 'book_slot' slot.id %}" id="bookingForm">
                         {% csrf_token %}
                         <div class="row g-4 mb-4">
                             <!-- Vehicle Number -->
                             <div class="col-md-6">
-                                <label for="vehicle_number" class="form-label fw-semibold text-secondary small">Vehicle Registration Number *</label>
+                                <label for="vehicle_number" class="form-label fw-semibold text-secondary small font-tech">VEHICLE REGISTRATION NUMBER *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-car-front-fill"></i></span>
-                                    <input type="text" name="vehicle_number" id="vehicle_number" class="form-control" placeholder="e.g. KL-11-AB-1234" required autofocus style="text-transform: uppercase;">
+                                    <span class="input-group-text"><i class="bi bi-car-front-fill text-info"></i></span>
+                                    <input type="text" name="vehicle_number" id="vehicle_number" class="form-control font-tech text-white" placeholder="e.g. KL-11-AB-1234" required autofocus style="text-transform: uppercase;">
                                 </div>
-                                <span class="fs-xs text-muted">Enter vehicle license plate number for verification</span>
+                                <span class="fs-xxs text-muted font-tech">Vehicle number will be scanned and verified by gate camera</span>
                             </div>
 
                             <!-- Vehicle Type -->
                             <div class="col-md-6">
-                                <label for="vehicle_type" class="form-label fw-semibold text-secondary small">Vehicle Type *</label>
+                                <label for="vehicle_type" class="form-label fw-semibold text-secondary small font-tech">VEHICLE CATEGORY *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-truck"></i></span>
-                                    <select name="vehicle_type" id="vehicle_type" class="form-select">
-                                        <option value="Car" {% if slot.slot_type == 'Car' %}selected{% endif %}>Car (4-Wheeler)</option>
-                                        <option value="Bike" {% if slot.slot_type == 'Bike' %}selected{% endif %}>Bike / Motorcycle (2-Wheeler)</option>
-                                        <option value="EV" {% if slot.slot_type == 'EV' %}selected{% endif %}>Electric Vehicle (EV)</option>
+                                    <span class="input-group-text"><i class="bi bi-truck text-info"></i></span>
+                                    <select name="vehicle_type" id="vehicle_type" class="form-select font-tech">
+                                        <option value="Car" {% if slot.slot_type == 'Car' %}selected{% endif %}>Car (4-Wheeler Passenger)</option>
+                                        <option value="Bike" {% if slot.slot_type == 'Bike' %}selected{% endif %}>Motorcycle / Scooter (2-Wheeler)</option>
+                                        <option value="EV" {% if slot.slot_type == 'EV' %}selected{% endif %}>Electric Vehicle (EV Charging Priority)</option>
                                     </select>
                                 </div>
                             </div>
 
                             <!-- Date -->
                             <div class="col-md-4">
-                                <label for="date" class="form-label fw-semibold text-secondary small">Reservation Date *</label>
+                                <label for="date" class="form-label fw-semibold text-secondary small font-tech">RESERVATION DATE *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-calendar3"></i></span>
-                                    <input type="date" name="date" id="date" class="form-control" value="{{ date_str }}" min="{{ min_date }}" required onchange="updateCalculation()">
+                                    <span class="input-group-text"><i class="bi bi-calendar3 text-info"></i></span>
+                                    <input type="date" name="date" id="date" class="form-control font-tech" value="{{ date_str }}" min="{{ min_date }}" required onchange="updateCalculation()">
                                 </div>
                             </div>
 
                             <!-- Entry Time -->
                             <div class="col-md-4">
-                                <label for="start_time" class="form-label fw-semibold text-secondary small">Entry Time *</label>
+                                <label for="start_time" class="form-label fw-semibold text-secondary small font-tech">ENTRY TIME *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-clock"></i></span>
-                                    <input type="time" name="start_time" id="start_time" class="form-control" value="{{ time_str }}" required onchange="updateCalculation()">
+                                    <span class="input-group-text"><i class="bi bi-clock text-info"></i></span>
+                                    <input type="time" name="start_time" id="start_time" class="form-control font-tech" value="{{ time_str }}" required onchange="updateCalculation()">
                                 </div>
                             </div>
 
                             <!-- Duration -->
                             <div class="col-md-4">
-                                <label for="duration" class="form-label fw-semibold text-secondary small">Duration (Hours) *</label>
+                                <label for="duration" class="form-label fw-semibold text-secondary small font-tech">DURATION (HOURS) *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-hourglass-split"></i></span>
-                                    <select name="duration" id="duration" class="form-select" onchange="updateCalculation()">
+                                    <span class="input-group-text"><i class="bi bi-hourglass-split text-info"></i></span>
+                                    <select name="duration" id="duration" class="form-select font-tech" onchange="updateCalculation()">
                                         {% for h in "12345678"|make_list %}
                                         <option value="{{ h }}" {% if duration|stringformat:"s" == h %}selected{% endif %}>{{ h }} Hour{% if h != '1' %}s{% endif %}</option>
                                         {% endfor %}
@@ -89,42 +95,51 @@
                             </div>
                         </div>
 
-                        <!-- Price Calculation & Summary Box -->
-                        <div class="p-4 rounded-4 bg-light border mb-4">
-                            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-receipt-cutoff me-2 text-primary"></i>Fee Calculation Summary</h6>
-                            <div class="row g-2">
+                        <!-- High-Tech Fee Calculation & Estimator Box -->
+                        <div class="p-4 rounded-4 mb-4 position-relative overflow-hidden" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(6, 182, 212, 0.3); box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.08);">
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                                <h6 class="fw-bold text-white mb-0 font-tech">
+                                    <i class="bi bi-calculator text-info me-2"></i>Automated Tariff Breakdown
+                                </h6>
+                                <span class="badge badge-cyber-success fs-xxs font-tech">NO HIDDEN FEES</span>
+                            </div>
+
+                            <div class="row g-3 text-start">
                                 <div class="col-6 col-md-3">
-                                    <span class="text-muted small d-block">Slot Rate</span>
-                                    <strong class="text-dark">₹<span id="ratePerHr">{{ slot.price_per_hour }}</span> / hr</strong>
+                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">Base Rate</span>
+                                    <strong class="text-white font-tech fs-6">₹<span id="ratePerHr">{{ slot.price_per_hour }}</span> / hr</strong>
                                 </div>
                                 <div class="col-6 col-md-3">
-                                    <span class="text-muted small d-block">Duration</span>
-                                    <strong class="text-dark"><span id="summaryDuration">{{ duration }}</span> hr(s)</strong>
+                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">Selected Duration</span>
+                                    <strong class="text-white font-tech fs-6"><span id="summaryDuration">{{ duration }}</span> Hour(s)</strong>
                                 </div>
                                 <div class="col-6 col-md-3">
-                                    <span class="text-muted small d-block">Est. Departure</span>
-                                    <strong class="text-dark"><span id="estDeparture">--:--</span></strong>
+                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">Estimated Exit</span>
+                                    <strong class="text-info font-tech fs-6"><span id="estDeparture">--:--</span></strong>
                                 </div>
                                 <div class="col-6 col-md-3">
-                                    <span class="text-muted small d-block text-primary fw-semibold">Total Payable</span>
-                                    <span class="fs-4 fw-bold text-primary">₹<span id="totalFee">{{ fee }}</span></span>
+                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech text-info">Total Payable</span>
+                                    <span class="fs-3 fw-bold text-info font-tech" style="text-shadow: 0 0 15px rgba(6, 182, 212, 0.5);">₹<span id="totalFee">{{ fee }}</span></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="alert alert-info border-info-subtle small d-flex align-items-center gap-2 mb-4">
-                            <i class="bi bi-shield-lock-fill fs-5 text-primary"></i>
-                            <div>
-                                <strong>Double-Booking Prevention Engine Active:</strong> The system verifies zero overlaps before confirming. Your slot is guaranteed exclusively for your chosen time window.
+                        <!-- Engine Guarantee Notice -->
+                        <div class="p-3 rounded-3 mb-4 d-flex align-items-center gap-3" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25);">
+                            <i class="bi bi-shield-lock-fill fs-3 text-info"></i>
+                            <div class="fs-xs text-secondary">
+                                <strong class="text-white font-tech">Instant Digital QR Guarantee:</strong> Submitting this reservation locks Bay <span class="text-info">{{ slot.slot_number }}</span> exclusively for your selected time window. Overlapping reservation requests from other drivers will be automatically denied.
                             </div>
                         </div>
 
+                        <!-- Action Controls -->
                         <div class="d-flex gap-3">
-                            <a href="{% url 'location_detail' location.id %}" class="btn btn-outline-secondary py-2 px-4 rounded-3 fw-semibold">
-                                <i class="bi bi-arrow-left me-1"></i> Back
+                            <a href="{% url 'location_detail' location.id %}" class="btn btn-outline-cyber py-2 px-4 rounded-3 fw-semibold">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Map
                             </a>
-                            <button type="submit" class="btn btn-primary py-2 px-4 rounded-3 fw-semibold flex-grow-1 shadow-sm">
-                                <i class="bi bi-check-circle-fill me-1"></i> Confirm & Generate QR Gate Pass
+                            <button type="submit" class="btn btn-cyber-primary btn-pulse-glow py-3 px-4 rounded-3 fw-bold flex-grow-1 font-tech fs-6 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-qr-code-scan"></i>
+                                <span>Confirm & Generate Digital Gate Pass</span>
                             </button>
                         </div>
                     </form>
@@ -133,7 +148,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block js %}
 <script>
     function updateCalculation() {
         const rate = parseFloat(document.getElementById('ratePerHr').innerText) || 50;
@@ -142,7 +159,7 @@
         document.getElementById('totalFee').innerText = total;
         document.getElementById('summaryDuration').innerText = duration;
 
-        // Est departure
+        // Est departure calculation
         const startTimeVal = document.getElementById('start_time').value;
         if (startTimeVal) {
             const [hours, minutes] = startTimeVal.split(':').map(Number);

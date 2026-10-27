@@ -4,40 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SpotBook Smart Parking</title>
+    <title>Sign In — SpotBook Smart Parking System</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="auth-body d-flex align-items-center justify-content-center min-vh-100 py-5">
-    <div class="container">
+<body class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="container position-relative z-1">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-5">
-                <div class="card auth-card border-0 shadow-lg rounded-4 overflow-hidden">
-                    <div class="card-header bg-primary text-white text-center py-4 border-0">
-                        <div class="auth-icon-circle bg-white text-primary rounded-circle mx-auto mb-2 d-flex align-items-center justify-content-center shadow-sm">
+                <div class="glass-panel p-0 rounded-4 overflow-hidden shadow-lg border-info border-opacity-25">
+                    <!-- Glowing Top Header -->
+                    <div class="p-4 text-center border-bottom border-secondary border-opacity-25" style="background: rgba(11, 15, 25, 0.9);">
+                        <div class="brand-badge text-white rounded-3 mx-auto mb-2 d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                             <i class="bi bi-p-square-fill fs-2"></i>
                         </div>
-                        <h3 class="fw-bold mb-1">Spot<span class="text-warning">Book</span></h3>
-                        <p class="small text-white-50 mb-0">Smart Parking Slot Booking System</p>
+                        <h3 class="fw-bold mb-0 text-white font-tech">Spot<span class="brand-glow-text">Book</span></h3>
+                        <span class="badge badge-cyber-info fs-xxs font-tech mt-1">SECURE ACCESS GATEWAY</span>
                     </div>
 
-                    <div class="card-body p-4 p-md-5">
+                    <div class="p-4 p-md-5">
                         <div class="text-center mb-4">
-                            <h4 class="fw-bold text-dark">Welcome Back</h4>
-                            <p class="text-muted small">Sign in to manage your bookings or access admin tools</p>
+                            <h4 class="fw-bold text-white font-tech mb-1">Driver & Staff Access</h4>
+                            <p class="text-secondary small mb-0">Sign in to manage parking passes or execute barrier controls</p>
                         </div>
 
                         <!-- Messages -->
                         {% if messages %}
                         {% for message in messages %}
-                        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show small" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show small font-tech p-3 mb-4" role="alert">
+                            <i class="bi bi-info-circle me-1"></i> {{ message }}
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
                         </div>
                         {% endfor %}
                         {% endif %}
@@ -45,54 +46,55 @@
                         <form method="POST" action="{% url 'login' %}">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="username" class="form-label fw-semibold text-secondary small">Username</label>
+                                <label for="username" class="form-label fw-semibold text-secondary small font-tech">USERNAME / IDENTIFIER</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person"></i></span>
-                                    <input type="text" id="username" name="username" class="form-control bg-light border-start-0" placeholder="Enter username" required autofocus>
+                                    <span class="input-group-text"><i class="bi bi-person-fill text-info"></i></span>
+                                    <input type="text" id="username" name="username" class="form-control font-tech text-white" placeholder="Enter username" required autofocus>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="password" class="form-label fw-semibold text-secondary small">Password</label>
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold text-secondary small font-tech">PASSWORD</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
-                                    <input type="password" id="password" name="password" class="form-control bg-light border-start-0" placeholder="Enter password" required>
-                                    <button class="btn btn-light border border-start-0 text-muted" type="button" onclick="togglePasswordVisibility('password')">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill text-info"></i></span>
+                                    <input type="password" id="password" name="password" class="form-control font-tech text-white" placeholder="Enter password" required>
+                                    <button class="btn btn-outline-cyber" type="button" onclick="togglePasswordVisibility('password')">
                                         <i class="bi bi-eye" id="password-toggle-icon"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm mb-3">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                            <button type="submit" class="btn btn-cyber-primary btn-pulse-glow w-100 py-3 fw-bold font-tech rounded-3 mb-4">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Terminal
                             </button>
                         </form>
 
                         <!-- Quick Demo Credentials Selector -->
-                        <div class="demo-box p-3 rounded-3 bg-light border mb-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <span class="fs-xs text-uppercase fw-bold text-muted"><i class="bi bi-key-fill text-warning me-1"></i> Quick Demo Fill:</span>
-                            </div>
+                        <div class="p-3 rounded-3 mb-4 font-tech" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <span class="fs-xxs text-uppercase fw-bold text-muted d-block mb-2">
+                                <i class="bi bi-key-fill text-warning me-1"></i> Quick Demo Autocomplete:
+                            </span>
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-outline-primary btn-sm flex-fill" onclick="fillCredentials('admin', 'Admin@12345')">
+                                <button type="button" class="btn btn-outline-cyber btn-sm flex-fill" onclick="fillCredentials('admin', 'Admin@12345')">
                                     <i class="bi bi-shield-lock me-1"></i> Admin
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="fillCredentials('john_doe', 'User@12345')">
-                                    <i class="bi bi-person me-1"></i> User
+                                <button type="button" class="btn btn-outline-cyber btn-sm flex-fill" onclick="fillCredentials('john_doe', 'User@12345')">
+                                    <i class="bi bi-person me-1"></i> Driver
                                 </button>
                             </div>
                         </div>
 
-                        <div class="text-center pt-2 border-top">
-                            <p class="text-muted small mb-0">Don't have an account yet? 
-                                <a href="{% url 'register' %}" class="text-primary fw-semibold text-decoration-none">Create User Account</a>
+                        <div class="text-center pt-3 border-top border-secondary border-opacity-25 font-tech">
+                            <p class="text-secondary small mb-0">New driver? 
+                                <a href="{% url 'register' %}" class="text-info fw-semibold text-decoration-none">Create SpotBook Account</a>
                             </p>
                         </div>
                     </div>
                 </div>
-                <div class="text-center mt-3">
-                    <a href="{% url 'user_home' %}" class="text-muted small text-decoration-none hover-primary">
-                        <i class="bi bi-arrow-left me-1"></i> Return to Public Parking Directory
+
+                <div class="text-center mt-3 font-tech">
+                    <a href="{% url 'user_home' %}" class="text-secondary small text-decoration-none hover-white">
+                        <i class="bi bi-arrow-left me-1"></i> Return to Facility Directory
                     </a>
                 </div>
             </div>

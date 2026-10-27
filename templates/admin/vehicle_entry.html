@@ -1,36 +1,40 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}Vehicle Entry (Gate In) - SpotBook Admin{% endblock %}
+{% block title %}Vehicle Entry (Gate In) — SpotBook Admin{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Vehicle Gate Entry</h2>
-        <p class="text-muted small mb-0">Record vehicle arrivals, verify reservations, and update parking slots to Occupied</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="live-dot"></span>
+            <span class="badge badge-cyber-success fs-xxs font-tech">BARRIER INGRESS</span>
+        </div>
+        <h2 class="fw-bold text-white mb-0 font-tech">Vehicle Gate Ingress Controller</h2>
+        <p class="text-secondary small mb-0">Record vehicle arrivals, inspect reservation validity, and switch parking bay status to Occupied</p>
     </div>
-    <a href="{% url 'QRVerification' %}" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 shadow-xs">
-        <i class="bi bi-qr-code-scan"></i> Open QR Scanner
+    <a href="{% url 'QRVerification' %}" class="btn btn-outline-cyber btn-sm d-flex align-items-center gap-1 font-tech">
+        <i class="bi bi-qr-code-scan text-info"></i> Optical Scanner
     </a>
 </div>
 
 <!-- Stats Grid -->
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 font-tech">
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Vehicles Entered Today</span>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">ENTERED TODAY</span>
             <h3 class="fw-bold text-success mb-0">{{ entered_today }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Vehicles Currently Inside</span>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">CURRENTLY INSIDE</span>
             <h3 class="fw-bold text-warning mb-0">{{ vehicles_inside }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Bookings Awaiting Entry</span>
-            <h3 class="fw-bold text-primary mb-0">{{ awaiting_entry }}</h3>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">AWAITING ARRIVAL</span>
+            <h3 class="fw-bold text-info mb-0">{{ awaiting_entry }}</h3>
         </div>
     </div>
 </div>
@@ -38,36 +42,36 @@
 <div class="row g-4 mb-4">
     <!-- Search & Record Card -->
     <div class="col-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-search text-primary me-2"></i>Verify Booking by ID / Plate</h5>
+        <div class="glass-panel p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3 font-tech"><i class="bi bi-search text-info me-2"></i>Verify Booking by ID / Plate</h5>
             <form method="GET" action="{% url 'VehicleEntry' %}">
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Booking ID or Vehicle Registration</label>
+                    <label class="form-label small fw-semibold text-secondary font-tech">PASS ID OR LICENSE PLATE</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-upc-scan"></i></span>
-                        <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX or KL-11-..." value="{{ search_id }}" required autofocus>
+                        <span class="input-group-text"><i class="bi bi-upc-scan text-info"></i></span>
+                        <input type="text" name="booking_id" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002 or KL-11-..." value="{{ search_id }}" required autofocus>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm w-100 py-2">
+                <button type="submit" class="btn btn-cyber-primary btn-sm w-100 py-2 font-tech fw-bold">
                     <i class="bi bi-search me-1"></i> Retrieve Booking Details
                 </button>
             </form>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-box-arrow-in-right text-success me-2"></i>Direct Record Vehicle Entry</h5>
+        <div class="glass-panel p-4">
+            <h5 class="fw-bold text-white mb-3 font-tech"><i class="bi bi-box-arrow-in-right text-success me-2"></i>Direct Record Vehicle Entry</h5>
             <form method="POST" action="{% url 'VehicleEntry' %}">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Booking ID *</label>
-                    <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX" value="{{ matched_booking.booking_id|default:search_id }}" required>
+                    <label class="form-label small fw-semibold text-secondary font-tech">PASS SERIAL *</label>
+                    <input type="text" name="booking_id" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002" value="{{ matched_booking.booking_id|default:search_id }}" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Entry Timestamp</label>
-                    <input type="datetime-local" name="entry_time" class="form-control" value="{{ current_time_str }}">
+                    <label class="form-label small fw-semibold text-secondary font-tech">ENTRY TIMESTAMP</label>
+                    <input type="datetime-local" name="entry_time" class="form-control font-tech text-white" value="{{ current_time_str }}">
                 </div>
-                <button type="submit" class="btn btn-success w-100 py-2 rounded-3 fw-semibold shadow-xs">
-                    <i class="bi bi-check-circle-fill me-1"></i> Record Entry & Mark Occupied
+                <button type="submit" class="btn btn-cyber-success w-100 py-2 rounded-3 fw-bold font-tech shadow-sm">
+                    <i class="bi bi-check-circle-fill me-1"></i> Authorize Ingress & Mark Bay Occupied
                 </button>
             </form>
         </div>
@@ -75,50 +79,52 @@
 
     <!-- Matched Verification Preview -->
     <div class="col-lg-7">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
-            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-shield-check text-success me-2"></i>Booking Gate Check</h6>
+        <div class="glass-panel overflow-hidden h-100 d-flex flex-column justify-content-between">
+            <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-shield-check text-success me-2"></i>Barrier Gate Telemetry Check
+                </h6>
                 {% if matched_booking %}
-                <span class="badge {% if matched_booking.status == 'Confirmed' %}bg-success{% elif matched_booking.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
-                    {{ matched_booking.status }}
+                <span class="badge {% if matched_booking.status == 'Confirmed' %}badge-cyber-success{% elif matched_booking.status == 'Active' %}badge-cyber-warning{% else %}badge-cyber-info{% endif %} rounded-pill font-tech">
+                    {{ matched_booking.status|upper }}
                 </span>
                 {% endif %}
             </div>
 
-            <div class="card-body p-4">
+            <div class="p-4 flex-grow-1">
                 {% if matched_booking %}
-                <div class="p-3 bg-light rounded-4 border mb-4">
+                <div class="p-3 rounded-4 mb-4" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.08);">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <span class="fs-xs text-muted text-uppercase d-block">Booking Reference</span>
-                            <h4 class="fw-bold font-monospace text-primary mb-1">{{ matched_booking.booking_id }}</h4>
-                            <p class="text-muted small mb-0">{{ matched_booking.SLOTID.LOCATIONID.name }} &bull; {{ matched_booking.SLOTID.LOCATIONID.city }}</p>
+                            <span class="fs-xxs text-muted text-uppercase d-block font-tech">PASS SERIAL</span>
+                            <h4 class="fw-bold text-info mb-1 font-tech">{{ matched_booking.booking_id }}</h4>
+                            <p class="text-secondary small mb-0">{{ matched_booking.SLOTID.LOCATIONID.name }} &bull; {{ matched_booking.SLOTID.LOCATIONID.city }}</p>
                         </div>
-                        <div class="badge bg-primary fs-5 px-3 py-2 rounded-3 text-center">
-                            <span class="fs-xs d-block text-uppercase">Slot</span>
+                        <div class="badge badge-cyber-info fs-5 px-3 py-2 rounded-3 text-center font-tech">
+                            <span class="fs-xxs d-block text-uppercase">BAY</span>
                             {{ matched_booking.SLOTID.slot_number }}
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
+                <div class="row g-3 mb-4 font-tech">
                     <div class="col-6">
-                        <span class="text-muted fs-xs text-uppercase d-block">Driver / Customer</span>
-                        <strong class="text-dark">{{ matched_booking.USERID.name }}</strong>
-                        <div class="text-muted fs-xs">{{ matched_booking.USERID.phone }}</div>
+                        <span class="text-muted fs-xxs text-uppercase d-block">DRIVER NAME</span>
+                        <strong class="text-white">{{ matched_booking.USERID.name }}</strong>
+                        <div class="text-muted fs-xxs">{{ matched_booking.USERID.phone }}</div>
                     </div>
                     <div class="col-6">
-                        <span class="text-muted fs-xs text-uppercase d-block">Vehicle Number</span>
-                        <strong class="font-monospace text-dark fs-6">{{ matched_booking.vehicle_number }}</strong>
-                        <div class="text-muted fs-xs">{{ matched_booking.vehicle_type }}</div>
+                        <span class="text-muted fs-xxs text-uppercase d-block">VEHICLE PLATE</span>
+                        <strong class="text-info fs-5">{{ matched_booking.vehicle_number }}</strong>
+                        <div class="text-muted fs-xxs">{{ matched_booking.vehicle_type }}</div>
                     </div>
                     <div class="col-6">
-                        <span class="text-muted fs-xs text-uppercase d-block">Date</span>
-                        <strong>{{ matched_booking.date }}</strong>
+                        <span class="text-muted fs-xxs text-uppercase d-block">DATE</span>
+                        <strong class="text-white">{{ matched_booking.date }}</strong>
                     </div>
                     <div class="col-6">
-                        <span class="text-muted fs-xs text-uppercase d-block">Reserved Window</span>
-                        <strong>{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
+                        <span class="text-muted fs-xxs text-uppercase d-block">RESERVED WINDOW</span>
+                        <strong class="text-white">{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
                     </div>
                 </div>
 
@@ -126,75 +132,29 @@
                 <form method="POST" action="{% url 'VehicleEntry' %}">
                     {% csrf_token %}
                     <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
-                    <button type="submit" class="btn btn-success w-100 py-3 rounded-3 fw-bold shadow-xs fs-6">
-                        <i class="bi bi-box-arrow-in-right me-2"></i> Approve Vehicle Entry (Slot {{ matched_booking.SLOTID.slot_number }})
+                    <button type="submit" class="btn btn-cyber-success btn-pulse-glow w-100 py-3 rounded-3 fw-bold font-tech fs-6">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Approve Vehicle Entry (Bay {{ matched_booking.SLOTID.slot_number }})
                     </button>
                 </form>
                 {% elif matched_booking.status == 'Active' %}
-                <div class="alert alert-warning mb-0 small">
-                    <i class="bi bi-exclamation-triangle-fill me-1"></i> This vehicle has already entered the parking bay.
+                <div class="alert alert-warning mb-0 small font-tech">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> This vehicle has already entered the parking facility.
                 </div>
                 {% else %}
-                <div class="alert alert-secondary mb-0 small">
-                    Booking status is <strong>{{ matched_booking.status }}</strong>. Entry cannot be recorded.
+                <div class="alert alert-secondary mb-0 small font-tech">
+                    Pass status is <strong>{{ matched_booking.status }}</strong>. Ingress cannot be approved.
                 </div>
                 {% endif %}
 
                 {% else %}
-                <div class="text-center py-5 text-muted">
-                    <i class="bi bi-car-front text-muted display-4 opacity-50 mb-3 d-block"></i>
-                    <h6 class="fw-semibold">Search a booking or scan a QR pass</h6>
-                    <p class="small mb-0">Enter the Booking ID or vehicle number on the left to verify entry eligibility.</p>
+                <div class="text-center py-5 text-muted font-tech">
+                    <i class="bi bi-car-front text-info display-4 opacity-50 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-white font-tech">Awaiting Vehicle Look-Up</h5>
+                    <p class="small mb-0 text-secondary">Enter the Booking ID or vehicle license plate on the left console to verify entry clearance.</p>
                 </div>
                 {% endif %}
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Recent Entry Records -->
-<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
-    <div class="card-header bg-white p-3 px-4 border-bottom">
-        <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Recent Vehicle Entry Logs</h6>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 small">
-            <thead class="table-light">
-                <tr>
-                    <th>Ref</th>
-                    <th>Customer</th>
-                    <th>Vehicle Plate</th>
-                    <th>Facility & Slot</th>
-                    <th>Entry Timestamp</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for log in recent_entries %}
-                <tr>
-                    <td class="font-monospace fw-semibold text-primary">
-                        <a href="{% url 'booking_pass' log.BOOKINGID.id %}" target="_blank" class="text-decoration-none">
-                            {{ log.BOOKINGID.booking_id }}
-                        </a>
-                    </td>
-                    <td>{{ log.BOOKINGID.USERID.name }}</td>
-                    <td class="font-monospace fw-bold">{{ log.BOOKINGID.vehicle_number }}</td>
-                    <td>
-                        {{ log.BOOKINGID.SLOTID.LOCATIONID.name }}
-                        <span class="badge bg-light text-dark border fs-xxs">Slot {{ log.BOOKINGID.SLOTID.slot_number }}</span>
-                    </td>
-                    <td><strong>{{ log.entry_time|date:"Y-m-d H:i" }}</strong></td>
-                    <td>
-                        <span class="badge bg-success rounded-pill">Entered</span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center py-4 text-muted">No entry logs recorded yet today.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 {% endblock %}

@@ -1,29 +1,33 @@
 {% extends 'user/base.html' %}
 
-{% block title %}My Bookings - SpotBook{% endblock %}
+{% block title %}My Digital Parking Passes — SpotBook{% endblock %}
 
 {% block body %}
 <div class="container py-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-            <h3 class="fw-bold text-dark mb-1">My Parking Bookings</h3>
-            <p class="text-muted small mb-0">View your active reservations, digital passes, and booking history</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="live-dot"></span>
+                <span class="badge badge-cyber-info fs-xxs font-tech">DRIVER TERMINAL</span>
+            </div>
+            <h3 class="fw-bold text-white mb-0 font-tech">My Parking Passes & History</h3>
+            <p class="text-secondary small mb-0">Active barrier passes, digital QR codes, and previous receipts</p>
         </div>
-        <a href="{% url 'user_home' %}" class="btn btn-primary btn-sm rounded-3 px-3">
-            <i class="bi bi-plus-circle me-1"></i> Book New Slot
+        <a href="{% url 'user_home' %}" class="btn btn-cyber-primary btn-sm rounded-3 px-3 d-flex align-items-center gap-2 font-tech">
+            <i class="bi bi-plus-circle"></i> Reserve New Bay
         </a>
     </div>
 
-    <!-- Bookings Tabs -->
-    <ul class="nav nav-pills mb-4 gap-2" id="bookingsTab" role="tablist">
+    <!-- Cyber Bookings Tabs -->
+    <ul class="nav nav-pills mb-4 gap-2 font-tech" id="bookingsTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active rounded-pill px-4" id="active-tab" data-bs-toggle="pill" data-bs-target="#active-bookings" type="button" role="tab">
-                <i class="bi bi-clock-history me-1"></i> Active & Upcoming ({{ active_bookings|length }})
+            <button class="nav-link active rounded-pill px-4 btn-outline-cyber" id="active-tab" data-bs-toggle="pill" data-bs-target="#active-bookings" type="button" role="tab">
+                <i class="bi bi-broadcast me-1 text-info"></i> Active & Upcoming ({{ active_bookings|length }})
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill px-4" id="past-tab" data-bs-toggle="pill" data-bs-target="#past-bookings" type="button" role="tab">
-                <i class="bi bi-archive me-1"></i> Past History ({{ past_bookings|length }})
+            <button class="nav-link rounded-pill px-4 btn-outline-cyber" id="past-tab" data-bs-toggle="pill" data-bs-target="#past-bookings" type="button" role="tab">
+                <i class="bi bi-archive me-1 text-warning"></i> Past History ({{ past_bookings|length }})
             </button>
         </li>
     </ul>
@@ -34,72 +38,76 @@
             <div class="row g-4">
                 {% for b in active_bookings %}
                 <div class="col-md-6 col-lg-6">
-                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white h-100 position-relative">
-                        <div class="card-header bg-light p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                            <span class="font-monospace text-muted small fw-semibold">#{{ b.booking_id }}</span>
-                            <span class="badge {% if b.status == 'Confirmed' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill px-3 py-1">
-                                {{ b.status }}
-                            </span>
-                        </div>
-                        <div class="card-body p-4">
+                    <div class="glass-panel glass-card-interactive p-4 h-100 position-relative overflow-hidden d-flex flex-column justify-content-between">
+                        <!-- Top Accent Line -->
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #06B6D4, #3B82F6);"></div>
+
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="font-tech text-info small fw-bold">#{{ b.booking_id }}</span>
+                                <span class="badge {% if b.status == 'Confirmed' %}badge-cyber-success{% elif b.status == 'Active' %}badge-cyber-warning{% else %}badge-cyber-info{% endif %} rounded-pill px-3 py-1 font-tech">
+                                    <span class="live-dot me-1" style="width: 6px; height: 6px;"></span>{{ b.status|upper }}
+                                </span>
+                            </div>
+
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-bold text-dark mb-1">{{ b.SLOTID.LOCATIONID.name }}</h5>
-                                    <p class="text-muted small mb-0"><i class="bi bi-geo-alt me-1 text-danger"></i>{{ b.SLOTID.LOCATIONID.city }} &bull; {{ b.SLOTID.LOCATIONID.address }}</p>
+                                    <h4 class="fw-bold text-white mb-1 font-tech">{{ b.SLOTID.LOCATIONID.name }}</h4>
+                                    <p class="text-secondary small mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ b.SLOTID.LOCATIONID.city }} &bull; {{ b.SLOTID.LOCATIONID.address }}</p>
                                 </div>
-                                <div class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-3 text-center">
-                                    <span class="fs-xs d-block text-uppercase">Slot</span>
-                                    <strong class="fs-5">{{ b.SLOTID.slot_number }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="p-3 bg-light rounded-3 mb-3">
-                                <div class="row g-2 small">
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">Date</span>
-                                        <strong>{{ b.date }}</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">Time Window</span>
-                                        <strong>{{ b.start_time }} &mdash; {{ b.end_time }}</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">Vehicle</span>
-                                        <strong class="font-monospace">{{ b.vehicle_number }}</strong> ({{ b.vehicle_type }})
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">Total Paid</span>
-                                        <strong class="text-success">₹{{ b.fee }}</strong> ({{ b.duration_hours }} hr)
-                                    </div>
+                                <div class="p-2 rounded-3 text-center glass-panel border-info border-opacity-25" style="min-width: 75px;">
+                                    <span class="fs-xxs text-info text-uppercase font-tech d-block">BAY</span>
+                                    <strong class="fs-4 text-white font-tech">{{ b.SLOTID.slot_number }}</strong>
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between align-items-center pt-2">
-                                <a href="{% url 'booking_pass' b.id %}" class="btn btn-primary btn-sm rounded-3 px-3">
-                                    <i class="bi bi-qr-code me-1"></i> View QR Pass
-                                </a>
-
-                                {% if b.status == 'Confirmed' %}
-                                <form method="POST" action="{% url 'cancel_booking' b.id %}" onsubmit="return confirm('Cancel this booking and free up the slot?');">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-3">
-                                        <i class="bi bi-x-circle me-1"></i> Cancel
-                                    </button>
-                                </form>
-                                {% endif %}
+                            <!-- Pass Details Box -->
+                            <div class="p-3 rounded-3 mb-4" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08);">
+                                <div class="row g-2 small font-tech">
+                                    <div class="col-6">
+                                        <span class="text-muted d-block fs-xxs">DATE</span>
+                                        <strong class="text-white">{{ b.date }}</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted d-block fs-xxs">TIME WINDOW</span>
+                                        <strong class="text-info">{{ b.start_time }} &mdash; {{ b.end_time }}</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted d-block fs-xxs">VEHICLE PLATE</span>
+                                        <strong class="text-white">{{ b.vehicle_number }}</strong> <span class="text-muted">({{ b.vehicle_type }})</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted d-block fs-xxs">TOTAL PAID</span>
+                                        <strong class="text-success fs-6">₹{{ b.fee }}</strong> <span class="text-muted">({{ b.duration_hours }} hr)</span>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-25">
+                            <a href="{% url 'booking_pass' b.id %}" class="btn btn-cyber-primary btn-sm rounded-3 px-3 d-flex align-items-center gap-2 font-tech">
+                                <i class="bi bi-qr-code"></i> Launch Gate Pass
+                            </a>
+
+                            {% if b.status == 'Confirmed' %}
+                            <form method="POST" action="{% url 'cancel_booking' b.id %}" onsubmit="return confirm('Cancel this reservation and immediately release Bay {{ b.SLOTID.slot_number }}?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-3 font-tech">
+                                    <i class="bi bi-x-circle me-1"></i> Cancel
+                                </button>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-12 text-center py-5">
-                    <div class="card border-0 shadow-sm rounded-4 p-5 bg-white">
-                        <i class="bi bi-calendar2-x text-muted display-4 mb-3"></i>
-                        <h5 class="fw-bold text-dark">No Active or Upcoming Bookings</h5>
-                        <p class="text-muted small">You don't have any pending parking reservations at the moment.</p>
-                        <div>
-                            <a href="{% url 'user_home' %}" class="btn btn-primary btn-sm px-4">Find & Book a Slot</a>
-                        </div>
+                <div class="col-12">
+                    <div class="glass-panel p-5 text-center">
+                        <i class="bi bi-calendar2-x text-warning display-4 mb-3 d-block"></i>
+                        <h4 class="fw-bold text-white font-tech">No Active Reservations</h4>
+                        <p class="text-secondary small mb-4">You have no active barrier passes at this moment. Reserve a verified parking bay to get started.</p>
+                        <a href="{% url 'user_home' %}" class="btn btn-cyber-primary px-4">Find & Lock Bay</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -108,51 +116,51 @@
 
         <!-- Past History Tab -->
         <div class="tab-pane fade" id="past-bookings" role="tabpanel">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+            <div class="glass-panel rounded-4 overflow-hidden">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Booking Ref</th>
-                                <th>Location & Slot</th>
-                                <th>Vehicle</th>
-                                <th>Date & Time</th>
-                                <th>Fee</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                    <table class="table table-hover align-middle mb-0 font-tech">
+                        <thead>
+                            <tr class="text-secondary fs-xs">
+                                <th>PASS SERIAL</th>
+                                <th>LOCATION & BAY</th>
+                                <th>VEHICLE</th>
+                                <th>SCHEDULE</th>
+                                <th>TARIFF</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for b in past_bookings %}
                             <tr>
-                                <td class="font-monospace fw-semibold small text-primary">{{ b.booking_id }}</td>
+                                <td class="text-info fw-bold">{{ b.booking_id }}</td>
                                 <td>
-                                    <strong>{{ b.SLOTID.LOCATIONID.name }}</strong>
-                                    <div class="text-muted small">Slot: {{ b.SLOTID.slot_number }} ({{ b.SLOTID.slot_type }})</div>
+                                    <strong class="text-white">{{ b.SLOTID.LOCATIONID.name }}</strong>
+                                    <div class="text-muted small">Bay: {{ b.SLOTID.slot_number }} ({{ b.SLOTID.slot_type }})</div>
                                 </td>
                                 <td>
-                                    <span class="font-monospace fw-semibold">{{ b.vehicle_number }}</span>
+                                    <span class="text-white">{{ b.vehicle_number }}</span>
                                 </td>
                                 <td class="small">
-                                    <div>{{ b.date }}</div>
+                                    <div class="text-white">{{ b.date }}</div>
                                     <div class="text-muted">{{ b.start_time }} - {{ b.end_time }}</div>
                                 </td>
-                                <td class="fw-bold">₹{{ b.fee }}</td>
+                                <td class="fw-bold text-success">₹{{ b.fee }}</td>
                                 <td>
-                                    <span class="badge {% if b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill px-2 py-1">
-                                        {{ b.status }}
+                                    <span class="badge {% if b.status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill px-2 py-1">
+                                        {{ b.status|upper }}
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{% url 'booking_pass' b.id %}" class="btn btn-outline-secondary btn-sm">
-                                        Pass Details
+                                    <a href="{% url 'booking_pass' b.id %}" class="btn btn-outline-cyber btn-sm">
+                                        <i class="bi bi-eye me-1"></i> Pass Details
                                     </a>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-muted small">
-                                    No past booking history found.
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    No completed or cancelled passes recorded in your history.
                                 </td>
                             </tr>
                             {% endfor %}

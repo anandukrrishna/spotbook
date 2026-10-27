@@ -1,144 +1,155 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}QR Code Verification - SpotBook Admin{% endblock %}
+{% block title %}Optical QR Scanner HUD — SpotBook Gate Terminal{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Gate QR Code Verification</h2>
-        <p class="text-muted small mb-0">Scan customer QR passes or input Booking IDs to verify valid reservations at security gates</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="live-dot"></span>
+            <span class="badge badge-cyber-info fs-xxs font-tech">OPTICAL PASS VERIFIER</span>
+        </div>
+        <h2 class="fw-bold text-white mb-0 font-tech">Gate QR Pass Terminal & Barrier Controller</h2>
+        <p class="text-secondary small mb-0">High-speed optical scanner input for contactless pass authentication and vehicle authorization</p>
     </div>
 </div>
 
-<!-- Stats Grid -->
+<!-- Quick Stats Row -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Pass Checks</span>
-            <h3 class="fw-bold text-primary mb-0">{{ total_attempts }}</h3>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">TOTAL PASS INSPECTIONS</span>
+            <h3 class="fw-bold text-info mb-0 font-tech">{{ total_attempts }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Gate Processed</span>
-            <h3 class="fw-bold text-success mb-0">{{ verified_count }}</h3>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">AUTHORIZED INGRESS</span>
+            <h3 class="fw-bold text-success mb-0 font-tech">{{ verified_count }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Awaiting Gate Arrival</span>
-            <h3 class="fw-bold text-warning mb-0">{{ awaiting_count }}</h3>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1 font-tech">AWAITING ARRIVAL TODAY</span>
+            <h3 class="fw-bold text-warning mb-0 font-tech">{{ awaiting_count }}</h3>
         </div>
     </div>
 </div>
 
 <div class="row g-4 mb-4">
-    <!-- QR Scan Input Card -->
+    <!-- QR Scan Input Console with Scanner HUD & Beam -->
     <div class="col-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
-            <div class="text-center mb-4">
-                <div class="qr-scanner-icon bg-primary-subtle text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
-                    <i class="bi bi-qr-code-scan fs-2"></i>
+        <div class="scanner-hud-container h-100 d-flex flex-column justify-content-between">
+            <div class="scanner-beam"></div>
+
+            <div>
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 72px; height: 72px; background: rgba(6, 182, 212, 0.15); border: 2px solid var(--neon-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);">
+                        <i class="bi bi-qr-code-scan fs-1 text-info"></i>
+                    </div>
+                    <h4 class="fw-bold text-white mb-1 font-tech">Optical Terminal Scanner</h4>
+                    <p class="text-secondary small mb-0">Aim hardware barcode scanner or input booking ID / QR string</p>
                 </div>
-                <h5 class="fw-bold text-dark mb-1">Scan or Enter QR Code</h5>
-                <p class="text-muted small mb-0">Use barcode scanner device or manually enter booking reference</p>
+
+                <form method="POST" action="{% url 'QRVerification' %}" class="mb-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="qr_code_input" class="form-label fs-xs fw-semibold text-secondary font-tech">PASS SERIAL / RAW QR STRING *</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-upc-scan text-info"></i></span>
+                            <input type="text" id="qr_code_input" name="qr_code" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002" value="{{ query_code }}" required autofocus>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-cyber-primary btn-pulse-glow w-100 py-2 fw-bold font-tech shadow-sm">
+                        <i class="bi bi-shield-check me-1"></i> Decode & Verify Pass
+                    </button>
+                </form>
             </div>
 
-            <form method="POST" action="{% url 'QRVerification' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="qr_code_input" class="form-label small fw-semibold text-secondary">QR String or Booking ID *</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-upc-scan"></i></span>
-                        <input type="text" id="qr_code_input" name="qr_code" class="form-control bg-light border-start-0 font-monospace" placeholder="e.g. SB-20261023-XXXX or paste QR text" value="{{ query_code }}" required autofocus>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold shadow-sm mb-3">
-                    <i class="bi bi-shield-check me-1"></i> Verify Pass & Retrieve Details
-                </button>
-            </form>
-
-            <div class="p-3 bg-light rounded-3 border small text-muted">
-                <strong class="d-block text-dark mb-1"><i class="bi bi-lightbulb text-warning me-1"></i>Tip:</strong>
-                Scanners automatically submit on scan. You can also paste the raw QR text payload: <code>SPOTBOOK_PASS|BOOKING_ID:...</code> or just the Booking ID.
+            <div class="p-3 rounded-3 font-tech fs-xxs text-secondary" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);">
+                <strong class="d-block text-white mb-1"><i class="bi bi-cpu text-info me-1"></i>AUTO-DISPATCH PROTOCOL:</strong>
+                Handheld 2D laser readers send an enter keystroke upon read. The system auto-resolves raw payload strings like <code>SPOTBOOK_PASS|BOOKING_ID:...</code> or license plates instantly.
             </div>
         </div>
     </div>
 
-    <!-- Verification Result Card -->
+    <!-- Verification Result & Barrier Control Card -->
     <div class="col-lg-7">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
-            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clipboard2-check text-primary me-2"></i>Verification Result</h6>
+        <div class="glass-panel overflow-hidden h-100 d-flex flex-column justify-content-between">
+            <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-shield-check text-info me-2"></i>Pass Authentication Telemetry
+                </h6>
                 {% if matched_booking %}
-                <span class="badge {% if verification_status == 'Valid' %}bg-success{% elif verification_status == 'Already Entered' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill px-3 py-1">
-                    {{ verification_status }}
+                <span class="badge {% if verification_status == 'Valid' %}badge-cyber-success{% elif verification_status == 'Already Entered' %}badge-cyber-warning{% elif verification_status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill px-3 py-1 font-tech">
+                    {{ verification_status|upper }}
                 </span>
                 {% elif query_code %}
-                <span class="badge bg-danger rounded-pill px-3 py-1">Invalid Pass</span>
+                <span class="badge badge-cyber-danger rounded-pill px-3 py-1 font-tech">INVALID PASS</span>
                 {% else %}
-                <span class="badge bg-light text-muted border rounded-pill px-3 py-1">Ready</span>
+                <span class="badge badge-cyber-info rounded-pill px-3 py-1 font-tech">AWAITING SCAN</span>
                 {% endif %}
             </div>
 
-            <div class="card-body p-4">
+            <div class="p-4 flex-grow-1">
                 {% if matched_booking %}
-                <!-- Matched Booking Details -->
-                <div class="p-3 rounded-4 {% if verification_status == 'Valid' %}bg-success-subtle border border-success-subtle{% elif verification_status == 'Already Entered' %}bg-warning-subtle border border-warning-subtle{% else %}bg-light border{% endif %} mb-4">
+                <!-- Matched Booking Result Box -->
+                <div class="p-3 rounded-4 mb-4" style="background: {% if verification_status == 'Valid' %}rgba(16, 185, 129, 0.12){% elif verification_status == 'Already Entered' %}rgba(245, 158, 11, 0.12){% else %}rgba(15, 23, 42, 0.85){% endif %}; border: 1px solid {% if verification_status == 'Valid' %}rgba(16, 185, 129, 0.35){% elif verification_status == 'Already Entered' %}rgba(245, 158, 11, 0.35){% else %}rgba(255, 255, 255, 0.1){% endif %};">
                     <div class="d-flex align-items-center gap-3">
-                        <i class="bi {% if verification_status == 'Valid' %}bi-check-circle-fill text-success{% elif verification_status == 'Already Entered' %}bi-exclamation-circle-fill text-warning-emphasis{% else %}bi-info-circle text-muted{% endif %} fs-1"></i>
+                        <i class="bi {% if verification_status == 'Valid' %}bi-check-circle-fill text-success{% elif verification_status == 'Already Entered' %}bi-exclamation-circle-fill text-warning{% else %}bi-info-circle text-info{% endif %} fs-1"></i>
                         <div>
-                            <h5 class="fw-bold mb-1 {% if verification_status == 'Valid' %}text-success{% elif verification_status == 'Already Entered' %}text-warning-emphasis{% else %}text-dark{% endif %}">
+                            <h5 class="fw-bold mb-1 font-tech text-white">
                                 {{ verification_status }}: {{ status_message }}
                             </h5>
-                            <span class="font-monospace fw-semibold">{{ matched_booking.booking_id }}</span> &bull; Status: <strong>{{ matched_booking.status }}</strong>
+                            <span class="font-tech text-info fw-bold">{{ matched_booking.booking_id }}</span> &bull; Current System State: <strong class="text-white">{{ matched_booking.status }}</strong>
                         </div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4">
+                <!-- Driver & Bay Metadata Grid -->
+                <div class="row g-3 mb-4 font-tech">
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Customer</span>
-                        <strong class="text-dark">{{ matched_booking.USERID.name }}</strong>
-                        <div class="text-muted fs-xs">{{ matched_booking.USERID.phone }}</div>
+                        <span class="text-muted fs-xxs text-uppercase d-block">DRIVER NAME</span>
+                        <strong class="text-white">{{ matched_booking.USERID.name }}</strong>
+                        <div class="text-muted fs-xxs">{{ matched_booking.USERID.phone }}</div>
                     </div>
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Facility Location</span>
-                        <strong class="text-dark">{{ matched_booking.SLOTID.LOCATIONID.name }}</strong>
-                        <div class="text-muted fs-xs">{{ matched_booking.SLOTID.LOCATIONID.city }}</div>
+                        <span class="text-muted fs-xxs text-uppercase d-block">FACILITY HUB</span>
+                        <strong class="text-white">{{ matched_booking.SLOTID.LOCATIONID.name }}</strong>
+                        <div class="text-muted fs-xxs">{{ matched_booking.SLOTID.LOCATIONID.city }}</div>
                     </div>
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Reserved Slot</span>
-                        <span class="badge bg-primary fs-6 px-3 py-1">Slot {{ matched_booking.SLOTID.slot_number }}</span>
+                        <span class="text-muted fs-xxs text-uppercase d-block">ALLOCATED BAY</span>
+                        <span class="badge badge-cyber-info fs-6 px-3 py-1 font-tech">Bay {{ matched_booking.SLOTID.slot_number }}</span>
                     </div>
 
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Vehicle Plate</span>
-                        <strong class="text-dark font-monospace fs-6">{{ matched_booking.vehicle_number }}</strong>
-                        <div class="text-muted fs-xs">{{ matched_booking.vehicle_type }}</div>
+                        <span class="text-muted fs-xxs text-uppercase d-block">VEHICLE PLATE</span>
+                        <strong class="text-info fs-5">{{ matched_booking.vehicle_number }}</strong>
+                        <div class="text-muted fs-xxs">{{ matched_booking.vehicle_type }}</div>
                     </div>
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Booking Date</span>
-                        <strong class="text-dark">{{ matched_booking.date }}</strong>
+                        <span class="text-muted fs-xxs text-uppercase d-block">RESERVATION DATE</span>
+                        <strong class="text-white">{{ matched_booking.date }}</strong>
                     </div>
                     <div class="col-6 col-md-4">
-                        <span class="text-muted fs-xs text-uppercase d-block">Time Window</span>
-                        <strong class="text-dark">{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
+                        <span class="text-muted fs-xxs text-uppercase d-block">TIME WINDOW</span>
+                        <strong class="text-white">{{ matched_booking.start_time }} &mdash; {{ matched_booking.end_time }}</strong>
                     </div>
                 </div>
 
                 <!-- Gate Actions -->
-                <div class="pt-3 border-top d-flex gap-2 justify-content-end">
-                    <a href="{% url 'booking_pass' matched_booking.id %}" target="_blank" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-eye"></i> View Full Pass
+                <div class="pt-3 border-top border-secondary border-opacity-25 d-flex gap-2 justify-content-end flex-wrap">
+                    <a href="{% url 'booking_pass' matched_booking.id %}" target="_blank" class="btn btn-outline-cyber btn-sm font-tech">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Full Hologram Pass
                     </a>
 
                     {% if matched_booking.status == 'Confirmed' %}
                     <form method="POST" action="{% url 'VehicleEntry' %}">
                         {% csrf_token %}
                         <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
-                        <button type="submit" class="btn btn-success btn-sm px-4 fw-semibold shadow-xs">
+                        <button type="submit" class="btn btn-cyber-success btn-sm px-4 fw-bold font-tech shadow-sm">
                             <i class="bi bi-box-arrow-in-right me-1"></i> Allow & Record Vehicle Entry
                         </button>
                     </form>
@@ -146,7 +157,7 @@
                     <form method="POST" action="{% url 'VehicleExit' %}">
                         {% csrf_token %}
                         <input type="hidden" name="booking_id" value="{{ matched_booking.booking_id }}">
-                        <button type="submit" class="btn btn-warning btn-sm px-4 fw-semibold text-dark shadow-xs">
+                        <button type="submit" class="btn btn-cyber-warning btn-sm px-4 fw-bold font-tech text-dark shadow-sm">
                             <i class="bi bi-box-arrow-right me-1"></i> Record Vehicle Exit
                         </button>
                     </form>
@@ -155,15 +166,15 @@
 
                 {% elif query_code %}
                 <div class="p-5 text-center text-muted">
-                    <i class="bi bi-shield-x text-danger display-4 mb-3 d-block"></i>
-                    <h5 class="fw-bold text-danger">Invalid QR Code Pass</h5>
-                    <p class="small mb-0">No active reservation found matching input <code>{{ query_code }}</code>. Please check for typos or ask the driver to present a valid SpotBook pass.</p>
+                    <i class="bi bi-shield-x text-danger display-3 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-danger font-tech">Invalid / Unrecognized QR Pass</h5>
+                    <p class="small mb-0 text-secondary">No active reservation record matched input query <code>{{ query_code }}</code>. Check for scanning errors or prompt the driver for their digital pass.</p>
                 </div>
                 {% else %}
                 <div class="p-5 text-center text-muted">
-                    <i class="bi bi-qr-code text-secondary display-4 mb-3 d-block opacity-50"></i>
-                    <h5 class="fw-semibold text-dark">Awaiting Pass Scan</h5>
-                    <p class="small mb-0">Scan customer QR pass on the left to verify entry eligibility and vehicle details in real-time.</p>
+                    <i class="bi bi-radar text-info display-3 mb-3 d-block opacity-50"></i>
+                    <h5 class="fw-bold text-white font-tech">Awaiting Scanner Input</h5>
+                    <p class="small mb-0 text-secondary">Present optical QR pass to laser scanner or type serial code on the left terminal to verify entry eligibility.</p>
                 </div>
                 {% endif %}
             </div>

@@ -1,37 +1,38 @@
 {% extends 'user/base.html' %}
 
-{% block title %}{{ location.name }} - Slot Map & Booking | SpotBook{% endblock %}
+{% block title %}{{ location.name }} — Interactive Parking Bay Map | SpotBook{% endblock %}
 
 {% block body %}
-<div class="bg-white border-bottom py-4 mb-4">
+<!-- Location Header & Telemetry -->
+<div class="py-4 mb-4 border-bottom border-secondary border-opacity-25" style="background: rgba(11, 15, 25, 0.95);">
     <div class="container">
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-2 small">
-                <li class="breadcrumb-item"><a href="{% url 'user_home' %}" class="text-decoration-none">Locations</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ location.name }}</li>
+            <ol class="breadcrumb mb-2 small font-tech">
+                <li class="breadcrumb-item"><a href="{% url 'user_home' %}" class="text-secondary text-decoration-none"><i class="bi bi-chevron-left me-1"></i>All Hubs</a></li>
+                <li class="breadcrumb-item active text-info" aria-current="page">{{ location.name }}</li>
             </ol>
         </nav>
         <div class="row align-items-center gy-3">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-pill">
-                        <i class="bi bi-geo-alt-fill me-1 text-danger"></i> {{ location.city }}
+                    <span class="badge badge-cyber-info fs-xxs font-tech">
+                        <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ location.city }}
                     </span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">
-                        Active Facility
+                    <span class="badge badge-cyber-success fs-xxs font-tech">
+                        <i class="bi bi-broadcast me-1"></i> SENSOR GRID ACTIVE
                     </span>
                 </div>
-                <h2 class="fw-bold text-dark mb-1">{{ location.name }}</h2>
-                <p class="text-muted small mb-0"><i class="bi bi-pin-map text-muted me-1"></i>{{ location.address }}</p>
+                <h2 class="fw-bold text-white mb-1 font-tech">{{ location.name }}</h2>
+                <p class="text-secondary small mb-0"><i class="bi bi-pin-map text-info me-1"></i>{{ location.address }}</p>
                 {% if location.description %}
-                <p class="text-secondary small mt-2 mb-0">{{ location.description }}</p>
+                <p class="text-muted small mt-2 mb-0">{{ location.description }}</p>
                 {% endif %}
             </div>
             <div class="col-lg-4 text-lg-end">
-                <div class="d-inline-block p-3 bg-light rounded-4 border text-center text-lg-end">
-                    <span class="text-muted small d-block">Base Parking Rate</span>
-                    <span class="fw-bold text-primary fs-3">₹{{ location.rate_per_hour }}</span>
-                    <span class="text-muted small"> / Hour</span>
+                <div class="d-inline-block p-3 rounded-4 glass-panel text-center text-lg-end border-info border-opacity-25">
+                    <span class="text-muted fs-xs text-uppercase d-block font-tech">Standard Rate</span>
+                    <span class="fw-bold text-info fs-2 font-tech">₹{{ location.rate_per_hour }}</span>
+                    <span class="text-secondary small font-tech"> / Hour</span>
                 </div>
             </div>
         </div>
@@ -40,144 +41,191 @@
 
 <div class="container mb-5">
     <!-- Time Window Selector Card -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden">
-        <div class="card-header bg-dark text-white p-3 px-4 border-0 d-flex align-items-center justify-content-between">
+    <div class="glass-panel p-4 mb-4 rounded-4 position-relative overflow-hidden">
+        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
             <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-funnel-fill text-warning"></i>
-                <span class="fw-semibold">Filter Slots by Desired Date & Time Window</span>
+                <i class="bi bi-sliders text-info fs-5"></i>
+                <h5 class="fw-bold text-white mb-0 font-tech">Time-Window Overlap Validator</h5>
             </div>
-            <span class="badge bg-secondary small text-light">Real-Time Overlap Detection</span>
+            <span class="badge badge-cyber-info fs-xxs font-tech">LIVE RE-CHECK</span>
         </div>
-        <div class="card-body p-4">
-            <form method="GET" action="{% url 'location_detail' location.id %}" class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold text-secondary small">Parking Date</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-calendar3"></i></span>
-                        <input type="date" name="date" class="form-control" value="{{ booking_date }}" min="{{ min_date }}" required>
-                    </div>
+
+        <form method="GET" action="{% url 'location_detail' location.id %}" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold text-secondary small font-tech">RESERVATION DATE</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-calendar3 text-info"></i></span>
+                    <input type="date" name="date" class="form-control font-tech" value="{{ booking_date }}" min="{{ min_date }}" required>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold text-secondary small">Entry Time</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-clock"></i></span>
-                        <input type="time" name="start_time" class="form-control" value="{{ start_time }}" required>
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold text-secondary small font-tech">ENTRY TIME</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-clock text-info"></i></span>
+                    <input type="time" name="start_time" class="form-control font-tech" value="{{ start_time }}" required>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold text-secondary small">Duration (Hours)</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-hourglass-split"></i></span>
-                        <select name="duration" class="form-select">
-                            {% for h in "12345678"|make_list %}
-                            <option value="{{ h }}" {% if duration|stringformat:"s" == h %}selected{% endif %}>{{ h }} Hour{% if h != '1' %}s{% endif %}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold text-secondary small font-tech">DURATION</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-hourglass-split text-info"></i></span>
+                    <select name="duration" class="form-select font-tech">
+                        {% for h in "12345678"|make_list %}
+                        <option value="{{ h }}" {% if duration|stringformat:"s" == h %}selected{% endif %}>{{ h }} Hour{% if h != '1' %}s{% endif %}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm">
-                        <i class="bi bi-search me-1"></i> Check Available Slots
-                    </button>
-                </div>
-            </form>
-            <div class="mt-3 pt-3 border-top d-flex flex-wrap align-items-center justify-content-between small text-muted">
-                <div>
-                    <i class="bi bi-info-circle text-primary me-1"></i>
-                    Displaying slot availability for: <strong>{{ booking_date }}</strong> from <strong>{{ start_time }}</strong> (Est. departure: <strong>{{ end_time }}</strong>).
-                </div>
-                <!-- Legend -->
-                <div class="d-flex align-items-center gap-3">
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot bg-success"></span> Available</span>
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot bg-warning"></span> Reserved / Booked</span>
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot bg-danger"></span> Occupied</span>
-                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-cyber-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-radar"></i>
+                    <span>Verify Time Window</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-3 pt-3 border-top border-secondary border-opacity-25 d-flex flex-wrap align-items-center justify-content-between gap-3 text-secondary small font-tech">
+            <div>
+                <i class="bi bi-shield-check text-success me-1"></i>
+                Active window: <strong class="text-white">{{ booking_date }}</strong> from <strong class="text-white">{{ start_time }}</strong> (Est. departure: <strong class="text-info">{{ end_time }}</strong>).
+            </div>
+
+            <!-- Real-Time Interactive Filter Toggle -->
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted fs-xs">FILTER:</span>
+                <button type="button" class="btn btn-sm btn-outline-cyber active filter-btn" onclick="filterBays('all', this)">All</button>
+                <button type="button" class="btn btn-sm btn-outline-cyber filter-btn" onclick="filterBays('available', this)">
+                    <span class="bay-indicator-dot" style="background: var(--neon-emerald);"></span> Available
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-cyber filter-btn" onclick="filterBays('reserved', this)">
+                    <span class="bay-indicator-dot" style="background: var(--neon-amber);"></span> Reserved
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-cyber filter-btn" onclick="filterBays('occupied', this)">
+                    <span class="bay-indicator-dot" style="background: var(--neon-rose);"></span> Occupied
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Interactive Parking Lot Slot Grid -->
-    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+    <!-- Realistic Visual Parking Blueprint Map -->
+    <div class="parking-blueprint-canvas mb-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h4 class="fw-bold text-dark mb-1">Interactive Parking Bay Layout</h4>
-                <p class="text-muted small mb-0">Click any available slot to proceed to booking</p>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="live-dot"></span>
+                    <h4 class="fw-bold text-white mb-0 font-tech">FACILITY BAY MATRIX</h4>
+                </div>
+                <p class="text-muted small mb-0">Select any green glowing bay to initiate guaranteed reservation</p>
             </div>
-            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
-                Total Bays: {{ slots_with_status|length }}
-            </span>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge badge-cyber-info font-tech px-3 py-2">
+                    TOTAL CAPACITY: {{ slots_with_status|length }} BAYS
+                </span>
+            </div>
         </div>
 
-        <div class="parking-lot-floor p-3 p-md-4 rounded-4 bg-light border">
-            <div class="row g-3">
-                {% for item in slots_with_status %}
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                    {% if item.is_available %}
-                    <!-- Available Slot -->
-                    <a href="{% url 'book_slot' item.slot.id %}?date={{ booking_date }}&start_time={{ start_time }}&duration={{ duration }}" class="slot-bay slot-available text-decoration-none d-block p-3 text-center rounded-3 shadow-xs">
-                        <div class="slot-roof mb-2">
-                            {% if item.slot.slot_type == 'EV' %}<i class="bi bi-lightning-charge-fill text-success fs-5"></i>
-                            {% elif item.slot.slot_type == 'Bike' %}<i class="bi bi-bicycle text-success fs-5"></i>
-                            {% else %}<i class="bi bi-car-front-fill text-success fs-5"></i>{% endif %}
-                        </div>
-                        <div class="slot-number fw-bold fs-5 text-dark">{{ item.slot.slot_number }}</div>
-                        <div class="slot-type fs-xs text-muted text-uppercase mb-2">{{ item.slot.slot_type }}</div>
-                        <div class="badge bg-success w-100 py-1 fs-xs">
-                            Reserve (₹{{ item.slot.price_per_hour }}/h)
-                        </div>
-                    </a>
-                    {% else %}
-                    <!-- Reserved or Occupied Slot -->
-                    <div class="slot-bay {% if item.slot.status == 'Occupied' %}slot-occupied{% else %}slot-reserved{% endif %} p-3 text-center rounded-3 opacity-75">
-                        <div class="slot-roof mb-2">
-                            {% if item.slot.slot_type == 'EV' %}<i class="bi bi-lightning-charge-fill {% if item.slot.status == 'Occupied' %}text-danger{% else %}text-warning{% endif %} fs-5"></i>
-                            {% elif item.slot.slot_type == 'Bike' %}<i class="bi bi-bicycle {% if item.slot.status == 'Occupied' %}text-danger{% else %}text-warning{% endif %} fs-5"></i>
-                            {% else %}<i class="bi bi-car-front-fill {% if item.slot.status == 'Occupied' %}text-danger{% else %}text-warning{% endif %} fs-5"></i>{% endif %}
-                        </div>
-                        <div class="slot-number fw-bold fs-5 text-dark">{{ item.slot.slot_number }}</div>
-                        <div class="slot-type fs-xs text-muted text-uppercase mb-2">{{ item.slot.slot_type }}</div>
-                        <div class="badge {% if item.slot.status == 'Occupied' %}bg-danger{% else %}bg-warning text-dark{% endif %} w-100 py-1 fs-xs">
-                            {% if item.slot.status == 'Occupied' %}Occupied{% else %}Booked{% endif %}
+        <!-- Driving Lane Marking -->
+        <div class="parking-lane">
+            <div class="parking-lane-marking">
+                <div class="lane-dash"></div>
+                <div class="lane-dash"></div>
+                <div class="lane-dash"></div>
+                <div class="lane-dash"></div>
+                <div class="lane-dash"></div>
+            </div>
+        </div>
+
+        <!-- Visual Bay Grid -->
+        <div class="row g-3" id="parkingBayGrid">
+            {% for item in slots_with_status %}
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 bay-col" 
+                 data-status="{% if item.is_available %}available{% elif item.slot.status == 'Occupied' %}occupied{% else %}reserved{% endif %}">
+                {% if item.is_available %}
+                <!-- 🟢 Available Bay -->
+                <a href="{% url 'book_slot' item.slot.id %}?date={{ booking_date }}&start_time={{ start_time }}&duration={{ duration }}" 
+                   class="parking-bay-card slot-available">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge badge-cyber-success fs-xxs">FREE</span>
+                        <span class="text-muted fs-xxs font-tech">{{ item.slot.slot_type }}</span>
+                    </div>
+
+                    <div class="bay-vehicle-icon my-2">
+                        {% if item.slot.slot_type == 'EV' %}<i class="bi bi-lightning-charge-fill fs-3 text-info"></i>
+                        {% elif item.slot.slot_type == 'Bike' %}<i class="bi bi-bicycle fs-3 text-success"></i>
+                        {% else %}<i class="bi bi-car-front-fill fs-3 text-success"></i>{% endif %}
+                    </div>
+
+                    <div class="bay-number text-white">{{ item.slot.slot_number }}</div>
+                    
+                    <div class="mt-2 pt-2 border-top border-secondary border-opacity-25">
+                        <span class="text-success font-tech fs-xs fw-bold">₹{{ item.slot.price_per_hour }}/hr</span>
+                        <div class="fs-xxs text-info fw-semibold mt-1">
+                            RESERVE <i class="bi bi-arrow-right-short"></i>
                         </div>
                     </div>
-                    {% endif %}
+                </a>
+                {% else %}
+                <!-- 🟡 Reserved or 🔴 Occupied Bay -->
+                <div class="parking-bay-card {% if item.slot.status == 'Occupied' %}slot-occupied{% else %}slot-reserved{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge {% if item.slot.status == 'Occupied' %}badge-cyber-danger{% else %}badge-cyber-warning{% endif %} fs-xxs">
+                            {% if item.slot.status == 'Occupied' %}OCCUPIED{% else %}BOOKED{% endif %}
+                        </span>
+                        <span class="text-muted fs-xxs font-tech">{{ item.slot.slot_type }}</span>
+                    </div>
+
+                    <div class="bay-vehicle-icon my-2">
+                        {% if item.slot.slot_type == 'EV' %}<i class="bi bi-lightning-charge-fill fs-3"></i>
+                        {% elif item.slot.slot_type == 'Bike' %}<i class="bi bi-bicycle fs-3"></i>
+                        {% else %}<i class="bi bi-car-front-fill fs-3"></i>{% endif %}
+                    </div>
+
+                    <div class="bay-number text-white opacity-75">{{ item.slot.slot_number }}</div>
+
+                    <div class="mt-2 pt-2 border-top border-secondary border-opacity-25">
+                        <span class="text-muted font-tech fs-xs">
+                            {% if item.slot.status == 'Occupied' %}Parked Inside{% else %}Time Window Locked{% endif %}
+                        </span>
+                    </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center py-5">
-                    <p class="text-muted">No parking slots configured for this location yet.</p>
-                </div>
-                {% endfor %}
+                {% endif %}
             </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-exclamation-circle text-warning fs-1 mb-2"></i>
+                <p class="text-secondary font-tech">No parking bays configured for this facility.</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Pricing & Charges Info Table -->
+    <!-- Parking Fee Structure Table -->
     {% if charges %}
-    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-tags-fill text-primary me-2"></i>Parking Fee Structure</h5>
+    <div class="glass-panel p-4 rounded-4">
+        <h5 class="fw-bold text-white mb-3 font-tech"><i class="bi bi-tags-fill text-info me-2"></i>Tariff Schedule & Vehicle Categories</h5>
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Vehicle Type</th>
-                        <th>Billing Model</th>
-                        <th>Standard Rate</th>
-                        <th>Description</th>
+            <table class="table table-hover align-middle mb-0 font-tech">
+                <thead>
+                    <tr class="text-secondary fs-xs">
+                        <th>VEHICLE CLASSIFICATION</th>
+                        <th>BILLING MODEL</th>
+                        <th>STANDARD HOURLY TARIFF</th>
+                        <th>SPECIFICATIONS</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ch in charges %}
                     <tr>
-                        <td class="fw-semibold">
-                            {% if ch.vehicle_type == 'Car' %}<i class="bi bi-car-front text-primary me-2"></i>
+                        <td class="fw-semibold text-white">
+                            {% if ch.vehicle_type == 'Car' %}<i class="bi bi-car-front text-info me-2"></i>
                             {% elif ch.vehicle_type == 'Bike' %}<i class="bi bi-bicycle text-success me-2"></i>
                             {% elif ch.vehicle_type == 'EV' %}<i class="bi bi-lightning-charge text-warning me-2"></i>
                             {% endif %}
                             {{ ch.vehicle_type }}
                         </td>
-                        <td>{{ ch.charge_type }}</td>
-                        <td class="fw-bold text-primary">₹{{ ch.rate }} / hr</td>
-                        <td class="text-muted small">{{ ch.description|default:'Standard tariff' }}</td>
+                        <td class="text-secondary">{{ ch.charge_type }}</td>
+                        <td class="fw-bold text-info fs-5">₹{{ ch.rate }} / hr</td>
+                        <td class="text-muted small">{{ ch.description|default:'Standard automated gate fee' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -186,4 +234,23 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    // Real-Time Slot Filter Function
+    function filterBays(status, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const cards = document.querySelectorAll('.bay-col');
+        cards.forEach(card => {
+            if (status === 'all' || card.getAttribute('data-status') === status) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
 {% endblock %}

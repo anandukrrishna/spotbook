@@ -1,32 +1,36 @@
 {% extends 'admin/base.html' %}
 
-{% block title %}Vehicle Exit (Gate Out) - SpotBook Admin{% endblock %}
+{% block title %}Vehicle Exit (Gate Out) — SpotBook Admin{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Vehicle Gate Exit</h2>
-        <p class="text-muted small mb-0">Record vehicle departures, finalize parking sessions, and restore slots back to Available</p>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="live-dot"></span>
+            <span class="badge badge-cyber-warning fs-xxs font-tech">BARRIER EGRESS</span>
+        </div>
+        <h2 class="fw-bold text-white mb-0 font-tech">Vehicle Gate Egress Controller</h2>
+        <p class="text-secondary small mb-0">Record vehicle departures, finalize parking sessions, and immediately restore bays back to Available</p>
     </div>
 </div>
 
 <!-- Stats Grid -->
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 font-tech">
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Vehicles Exited Today</span>
-            <h3 class="fw-bold text-primary mb-0">{{ exited_today }}</h3>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">VEHICLES EXITED TODAY</span>
+            <h3 class="fw-bold text-info mb-0">{{ exited_today }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Currently Inside</span>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">CURRENTLY INSIDE</span>
             <h3 class="fw-bold text-warning mb-0">{{ vehicles_inside }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Completed Sessions</span>
+        <div class="kpi-card p-3 text-center">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">COMPLETED SESSIONS</span>
             <h3 class="fw-bold text-success mb-0">{{ completed_sessions }}</h3>
         </div>
     </div>
@@ -35,36 +39,36 @@
 <div class="row g-4 mb-4">
     <!-- Search / Record Form -->
     <div class="col-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-search text-warning me-2"></i>Search Parked Vehicle</h5>
+        <div class="glass-panel p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3 font-tech"><i class="bi bi-search text-warning me-2"></i>Search Parked Vehicle</h5>
             <form method="GET" action="{% url 'VehicleExit' %}">
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Booking ID or Vehicle Registration</label>
+                    <label class="form-label small fw-semibold text-secondary font-tech">PASS ID OR LICENSE PLATE</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="bi bi-car-front"></i></span>
-                        <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX or KL-11-..." value="{{ search_id }}" required autofocus>
+                        <span class="input-group-text"><i class="bi bi-car-front text-warning"></i></span>
+                        <input type="text" name="booking_id" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002 or KL-11-..." value="{{ search_id }}" required autofocus>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-warning w-100 py-2 text-dark fw-semibold btn-sm">
-                    <i class="bi bi-search me-1"></i> Find Parked Vehicle
+                <button type="submit" class="btn btn-cyber-warning w-100 py-2 text-dark fw-bold btn-sm font-tech">
+                    <i class="bi bi-search me-1"></i> Retrieve Parked Vehicle
                 </button>
             </form>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-box-arrow-right text-danger me-2"></i>Record Vehicle Exit</h5>
+        <div class="glass-panel p-4">
+            <h5 class="fw-bold text-white mb-3 font-tech"><i class="bi bi-box-arrow-right text-danger me-2"></i>Direct Record Vehicle Exit</h5>
             <form method="POST" action="{% url 'VehicleExit' %}">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Booking ID *</label>
-                    <input type="text" name="booking_id" class="form-control font-monospace" placeholder="e.g. SB-20261023-XXXX" value="{{ matched_booking.booking_id|default:search_id }}" required>
+                    <label class="form-label small fw-semibold text-secondary font-tech">PASS ID *</label>
+                    <input type="text" name="booking_id" class="form-control font-tech text-white" placeholder="e.g. SB-20261027-0002" value="{{ matched_booking.booking_id|default:search_id }}" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold text-secondary">Exit Timestamp</label>
-                    <input type="datetime-local" name="exit_time" class="form-control" value="{{ current_time_str }}">
+                    <label class="form-label small fw-semibold text-secondary font-tech">EXIT TIMESTAMP</label>
+                    <input type="datetime-local" name="exit_time" class="form-control font-tech text-white" value="{{ current_time_str }}">
                 </div>
-                <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold shadow-xs">
-                    <i class="bi bi-check2-circle me-1"></i> Confirm Exit & Restore Slot to Available
+                <button type="submit" class="btn btn-cyber-primary w-100 py-2 rounded-3 fw-bold font-tech shadow-sm">
+                    <i class="bi bi-check2-circle me-1"></i> Confirm Egress & Free Bay to Available
                 </button>
             </form>
         </div>
@@ -72,53 +76,58 @@
 
     <!-- Vehicles Currently Inside -->
     <div class="col-lg-7">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden h-100">
-            <div class="card-header bg-white p-3 px-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-p-square-fill text-warning me-2"></i>Vehicles Parked Inside Bays</h6>
-                <span class="badge bg-warning text-dark rounded-pill">{{ parked_vehicles|length }} Inside</span>
+        <div class="glass-panel overflow-hidden h-100 d-flex flex-column justify-content-between">
+            <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-white mb-0 font-tech">
+                    <i class="bi bi-p-square-fill text-warning me-2"></i>Vehicles Currently Parked Inside
+                </h6>
+                <span class="badge badge-cyber-warning rounded-pill font-tech">{{ parked_vehicles|length }} Inside</span>
             </div>
 
-            <div class="card-body p-0">
+            <div class="p-0 flex-grow-1">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 small">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Vehicle Plate</th>
-                                <th>Facility / Slot</th>
-                                <th>Driver</th>
-                                <th>Booking Ref</th>
-                                <th class="text-end">Action</th>
+                    <table class="table table-hover align-middle mb-0 small font-tech">
+                        <thead>
+                            <tr class="text-secondary fs-xs">
+                                <th>VEHICLE PLATE</th>
+                                <th>FACILITY / BAY</th>
+                                <th>DRIVER</th>
+                                <th>PASS SERIAL</th>
+                                <th class="text-end">BARRIER ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for pv in parked_vehicles %}
                             <tr>
                                 <td>
-                                    <strong class="font-monospace fs-6 text-dark">{{ pv.vehicle_number }}</strong>
+                                    <strong class="font-tech fs-6 text-white">{{ pv.vehicle_number }}</strong>
                                     <div class="text-muted fs-xxs">{{ pv.vehicle_type }}</div>
                                 </td>
                                 <td>
-                                    <div>{{ pv.SLOTID.LOCATIONID.name }}</div>
-                                    <span class="badge bg-danger fs-xxs">Slot {{ pv.SLOTID.slot_number }}</span>
+                                    <div class="text-white">{{ pv.slot.LOCATIONID.name }}</div>
+                                    <span class="badge badge-cyber-info fs-xxs">Bay {{ pv.slot.slot_number }}</span>
                                 </td>
                                 <td>
-                                    <strong>{{ pv.USERID.name }}</strong>
-                                    <div class="text-muted fs-xxs">{{ pv.USERID.phone }}</div>
+                                    <span class="text-white">{{ pv.user.first_name|default:pv.user.username }}</span>
                                 </td>
-                                <td class="font-monospace text-primary">{{ pv.booking_id }}</td>
+                                <td>
+                                    <span class="text-info">{{ pv.booking_id }}</span>
+                                </td>
                                 <td class="text-end">
                                     <form method="POST" action="{% url 'VehicleExit' %}" class="d-inline">
                                         {% csrf_token %}
                                         <input type="hidden" name="booking_id" value="{{ pv.booking_id }}">
-                                        <button type="submit" class="btn btn-sm btn-outline-warning text-dark fw-semibold" title="Record Exit">
-                                            <i class="bi bi-box-arrow-right"></i> Exit
+                                        <button type="submit" class="btn btn-cyber-warning btn-sm py-1 px-3 text-dark fw-bold font-tech">
+                                            <i class="bi bi-box-arrow-right me-1"></i> Exit Gate
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">No vehicles currently inside parking facilities.</td>
+                                <td colspan="5" class="text-center py-5 text-muted font-tech">
+                                    No vehicles currently recorded inside parking bays.
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -126,54 +135,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Recent Exit Records -->
-<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
-    <div class="card-header bg-white p-3 px-4 border-bottom">
-        <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Recent Completed Departure Logs</h6>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 small">
-            <thead class="table-light">
-                <tr>
-                    <th>Ref</th>
-                    <th>Customer</th>
-                    <th>Vehicle Plate</th>
-                    <th>Facility & Slot</th>
-                    <th>Entry Time</th>
-                    <th>Exit Time</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for log in recent_exits %}
-                <tr>
-                    <td class="font-monospace fw-semibold text-primary">
-                        <a href="{% url 'booking_pass' log.BOOKINGID.id %}" target="_blank" class="text-decoration-none">
-                            {{ log.BOOKINGID.booking_id }}
-                        </a>
-                    </td>
-                    <td>{{ log.BOOKINGID.USERID.name }}</td>
-                    <td class="font-monospace fw-bold">{{ log.BOOKINGID.vehicle_number }}</td>
-                    <td>
-                        {{ log.BOOKINGID.SLOTID.LOCATIONID.name }}
-                        <span class="badge bg-light text-dark border fs-xxs">Slot {{ log.BOOKINGID.SLOTID.slot_number }}</span>
-                    </td>
-                    <td>{{ log.entry_time|date:"Y-m-d H:i"|default:'-' }}</td>
-                    <td><strong>{{ log.exit_time|date:"Y-m-d H:i" }}</strong></td>
-                    <td>
-                        <span class="badge bg-info text-dark rounded-pill">Completed</span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">No exit logs recorded yet today.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 {% endblock %}

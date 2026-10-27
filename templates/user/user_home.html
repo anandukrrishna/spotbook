@@ -1,79 +1,121 @@
 {% extends 'user/base.html' %}
 
-{% block title %}SpotBook - Find & Book Smart Parking Slots{% endblock %}
+{% block title %}SpotBook — Smart Parking Slot Booking System & Gate Pass{% endblock %}
 
 {% block body %}
-<!-- Hero Section -->
+<!-- Futuristic Hero Section -->
 <section class="hero-section text-white py-5 position-relative overflow-hidden">
     <div class="container py-4 position-relative z-1">
         <div class="row align-items-center gy-4">
             <div class="col-lg-7">
-                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill mb-3">
-                    <i class="bi bi-shield-check me-1"></i> 100% Guaranteed Spot & Zero Overlaps
-                </span>
-                <h1 class="display-4 fw-bold mb-3 tracking-tight">Smart Parking Slot Booking System</h1>
-                <p class="lead text-white-50 mb-4">
-                    Reserve parking in advance, avoid the parking hassle, and enter seamlessly with your instant digital QR pass.
+                <!-- Status Badge -->
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3 border border-info border-opacity-25" style="background: rgba(6, 182, 212, 0.1);">
+                    <span class="live-dot"></span>
+                    <span class="text-info font-tech fs-xs fw-semibold">REAL-TIME OVERLAP PREVENTION ENGINE</span>
+                </div>
+
+                <h1 class="display-4 fw-bold mb-3 tracking-tight hero-title-gradient">
+                    Autonomous Smart Parking Slot Reservation
+                </h1>
+                <p class="lead text-secondary mb-4">
+                    Instantly reserve verified parking bays in advance. Eliminate search congestion and gain instant contactless entry via holographic QR passes.
                 </p>
 
-                <!-- Search & City Filter Bar -->
-                <div class="card p-2 border-0 shadow-lg rounded-4 bg-white">
+                <!-- Live Metrics Ticker -->
+                <div class="live-metrics-bar mb-4">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-shield-check text-success fs-5"></i>
+                        <div>
+                            <div class="fs-xxs text-muted text-uppercase">Overlap Engine</div>
+                            <strong class="font-tech text-white fs-xs">100% Guaranteed</strong>
+                        </div>
+                    </div>
+                    <div class="vr bg-secondary opacity-25"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+                        <div>
+                            <div class="fs-xxs text-muted text-uppercase">QR Generation</div>
+                            <strong class="font-tech text-white fs-xs">Instant &lt; 0.2s</strong>
+                        </div>
+                    </div>
+                    <div class="vr bg-secondary opacity-25"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-geo-alt-fill text-info fs-5"></i>
+                        <div>
+                            <div class="fs-xxs text-muted text-uppercase">Live Facilities</div>
+                            <strong class="font-tech text-white fs-xs">{{ locations|length }} Active Hubs</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- High-Tech Search & City Filter Bar -->
+                <div class="glass-panel p-2 p-md-3 rounded-4 shadow-lg mb-2">
                     <form method="GET" action="{% url 'user_home' %}" class="row g-2 align-items-center">
                         <div class="col-md-6">
                             <div class="input-group">
-                                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-search"></i></span>
-                                <input type="text" name="q" class="form-control border-0 ps-0" placeholder="Search location or area..." value="{{ search_query }}">
+                                <span class="input-group-text bg-transparent border-0 text-info"><i class="bi bi-search"></i></span>
+                                <input type="text" name="q" class="form-control border-0 ps-0 text-white" placeholder="Search facility name, street, or area..." value="{{ search_query }}">
                             </div>
                         </div>
-                        <div class="col-md-4 border-start-md">
+                        <div class="col-md-3 border-start-md">
                             <div class="input-group">
-                                <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-geo-alt"></i></span>
-                                <select name="city" class="form-select border-0 ps-0">
-                                    <option value="">All Cities</option>
+                                <span class="input-group-text bg-transparent border-0 text-info"><i class="bi bi-geo-alt"></i></span>
+                                <select name="city" class="form-select border-0 ps-0 text-white">
+                                    <option value="" class="bg-dark">All Cities</option>
                                     {% for city in cities %}
-                                    <option value="{{ city }}" {% if city_filter == city %}selected{% endif %}>{{ city }}</option>
+                                    <option value="{{ city }}" class="bg-dark" {% if city_filter == city %}selected{% endif %}>{{ city }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100 rounded-3 py-2 fw-semibold">
-                                Search
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-cyber-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-radar"></i>
+                                <span>Find Spots</span>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Visual Hologram Illustration -->
             <div class="col-lg-5 text-center text-lg-end">
-                <div class="hero-illustration p-4 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 backdrop-blur shadow">
+                <div class="p-4 rounded-4 glass-panel border border-info border-opacity-25 shadow-lg position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="live-dot"></span>
+                            <span class="font-tech fs-xs text-white">FACILITY RADAR TELEMETRY</span>
+                        </div>
+                        <span class="badge badge-cyber-info fs-xxs">AI SENSOR GRID</span>
+                    </div>
+
                     <div class="row g-3 text-start">
                         <div class="col-6">
-                            <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
-                                <i class="bi bi-qr-code text-warning fs-3 mb-2 d-block"></i>
-                                <h6 class="fw-bold text-white mb-1">Instant QR Pass</h6>
-                                <p class="text-white-50 small mb-0">Fast contactless entry</p>
+                            <div class="p-3 rounded-3" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);">
+                                <i class="bi bi-qr-code text-info fs-3 mb-1 d-block"></i>
+                                <h6 class="fw-bold text-white font-tech mb-0">Hologram Pass</h6>
+                                <span class="text-muted fs-xxs">Encrypted dynamic QR</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
-                                <i class="bi bi-clock-history text-info fs-3 mb-2 d-block"></i>
-                                <h6 class="fw-bold text-white mb-1">Strict Time Check</h6>
-                                <p class="text-white-50 small mb-0">Double-booking block</p>
+                            <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
+                                <i class="bi bi-clock-history text-success fs-3 mb-1 d-block"></i>
+                                <h6 class="fw-bold text-white font-tech mb-0">Strict Windows</h6>
+                                <span class="text-muted fs-xxs">Zero double-bookings</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
-                                <i class="bi bi-currency-rupee text-success fs-3 mb-2 d-block"></i>
-                                <h6 class="fw-bold text-white mb-1">Transparent Rates</h6>
-                                <p class="text-white-50 small mb-0">Exact hourly pricing</p>
+                            <div class="p-3 rounded-3" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2);">
+                                <i class="bi bi-currency-rupee text-warning fs-3 mb-1 d-block"></i>
+                                <h6 class="fw-bold text-white font-tech mb-0">Transparent Rate</h6>
+                                <span class="text-muted fs-xxs">Exact per-hour fees</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
-                                <i class="bi bi-shield-lock-fill text-danger fs-3 mb-2 d-block"></i>
-                                <h6 class="fw-bold text-white mb-1">24/7 Gate Verification</h6>
-                                <p class="text-white-50 small mb-0">Secure entry and exit</p>
+                            <div class="p-3 rounded-3" style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.2);">
+                                <i class="bi bi-shield-check text-primary fs-3 mb-1 d-block"></i>
+                                <h6 class="fw-bold text-white font-tech mb-0">Gate Verification</h6>
+                                <span class="text-muted fs-xxs">Automatic entry & exit</span>
                             </div>
                         </div>
                     </div>
@@ -83,17 +125,20 @@
     </div>
 </section>
 
-<!-- Locations Section -->
-<section class="py-5 bg-light">
+<!-- Locations Section with Translucent Glass Cards -->
+<section class="py-5" style="background: rgba(11, 15, 25, 0.9);">
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
             <div>
-                <h3 class="fw-bold text-dark mb-1">Available Parking Locations</h3>
-                <p class="text-muted small mb-0">Select a verified location to view real-time slot layout and book your time window</p>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge badge-cyber-info fs-xxs">AVAILABLE HUBS</span>
+                    <span class="text-muted fs-xs font-tech">{{ locations|length }} FACILITIES REGISTERED</span>
+                </div>
+                <h3 class="fw-bold text-white mb-0 font-tech">Verified Smart Parking Facilities</h3>
             </div>
             {% if search_query or city_filter %}
-            <a href="{% url 'user_home' %}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-x-circle me-1"></i> Clear Filters
+            <a href="{% url 'user_home' %}" class="btn btn-outline-cyber btn-sm">
+                <i class="bi bi-x-circle me-1"></i> Reset Search Filter
             </a>
             {% endif %}
         </div>
@@ -101,40 +146,58 @@
         <div class="row g-4">
             {% for loc in locations %}
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm rounded-4 location-card overflow-hidden transition-all">
-                    <div class="location-card-header p-4 bg-white border-bottom position-relative">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-secondary-subtle text-secondary border px-2 py-1 rounded-pill">
+                <div class="glass-panel glass-card-interactive h-100 d-flex flex-column justify-content-between p-4 position-relative overflow-hidden">
+                    <!-- Top Ribbon -->
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-dark bg-opacity-75 border border-secondary border-opacity-25 text-info rounded-pill px-3 py-1 fs-xs font-tech">
                                 <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ loc.city }}
                             </span>
-                            <span class="badge {% if loc.available_slots_count > 0 %}bg-success-subtle text-success border border-success-subtle{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} px-2 py-1 rounded-pill">
-                                <i class="bi bi-circle-fill fs-xxs me-1"></i> {{ loc.available_slots_count }} Available Slots
+                            <span class="badge {% if loc.available_slots_count > 0 %}badge-cyber-success{% else %}badge-cyber-danger{% endif %} rounded-pill px-2 py-1 fs-xs font-tech">
+                                <i class="bi bi-circle-fill fs-xxs me-1"></i> {{ loc.available_slots_count }} Free Bays
                             </span>
                         </div>
-                        <h5 class="fw-bold text-dark mb-1">{{ loc.name }}</h5>
-                        <p class="text-muted small mb-0 text-truncate-2">
-                            <i class="bi bi-pin-map text-muted me-1"></i>{{ loc.address }}
+
+                        <h4 class="fw-bold text-white mb-1 font-tech">{{ loc.name }}</h4>
+                        <p class="text-secondary small mb-3">
+                            <i class="bi bi-pin-map text-info me-1"></i>{{ loc.address }}
+                        </p>
+
+                        <p class="text-muted small mb-4 line-clamp-2">
+                            {{ loc.description|default:"Equipped with 24/7 automated barrier controls, CCTV surveillance, and designated EV/Car bays." }}
                         </p>
                     </div>
 
-                    <div class="card-body p-4 bg-white d-flex flex-column justify-content-between">
-                        <p class="text-secondary small mb-3 text-truncate-3">
-                            {{ loc.description|default:"Well-maintained and fully monitored parking facility equipped with automated entry and exit gate controls." }}
-                        </p>
-
-                        <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <span class="text-muted small d-block">Hourly Rate</span>
-                                <span class="fw-bold text-primary fs-5">₹{{ loc.rate_per_hour }}</span><span class="text-muted small"> / hr</span>
+                    <!-- Pricing & Capacity Box -->
+                    <div>
+                        <!-- Capacity Progress Bar -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between fs-xs mb-1 font-tech">
+                                <span class="text-muted">Bay Allocation</span>
+                                <span class="text-info">{{ loc.available_slots_count }} / {{ loc.total_slots_count }} Available</span>
                             </div>
-                            <div class="text-end">
-                                <span class="text-muted small d-block">Total Capacity</span>
-                                <span class="fw-bold text-dark">{{ loc.total_slots_count }} Slots</span>
+                            <div class="progress" style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px;">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: {% if loc.total_slots_count > 0 %}{% widthratio loc.available_slots_count loc.total_slots_count 100 %}{% else %}0{% endif %}%;">
+                                </div>
                             </div>
                         </div>
 
-                        <a href="{% url 'location_detail' loc.id %}" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-2">
-                            <span>Check Slots & Reserve</span>
+                        <div class="p-3 rounded-3 d-flex justify-content-between align-items-center mb-3" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <div>
+                                <span class="text-muted fs-xs text-uppercase d-block">Hourly Tariff</span>
+                                <span class="fw-bold text-info fs-4 font-tech">₹{{ loc.rate_per_hour }}</span>
+                                <span class="text-muted fs-xs"> / hour</span>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-muted fs-xs text-uppercase d-block">Total Bays</span>
+                                <span class="fw-bold text-white font-tech fs-5">{{ loc.total_slots_count }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <a href="{% url 'location_detail' loc.id %}" class="btn btn-cyber-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                            <span>Open Bay Map & Book</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -142,13 +205,11 @@
             </div>
             {% empty %}
             <div class="col-12">
-                <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
-                    <div class="text-muted mb-3"><i class="bi bi-geo-alt-fill display-4 text-warning"></i></div>
-                    <h5 class="fw-bold text-dark">No Parking Locations Found</h5>
-                    <p class="text-muted small">Try searching with a different keyword or resetting your city filter.</p>
-                    <div>
-                        <a href="{% url 'user_home' %}" class="btn btn-primary btn-sm px-4">View All Locations</a>
-                    </div>
+                <div class="glass-panel p-5 text-center">
+                    <div class="mb-3"><i class="bi bi-radar display-3 text-warning"></i></div>
+                    <h4 class="fw-bold text-white font-tech">No Parking Facilities Matched</h4>
+                    <p class="text-secondary small">Try adjusting your query or resetting city filters to locate other active parking hubs.</p>
+                    <a href="{% url 'user_home' %}" class="btn btn-cyber-primary px-4 mt-2">View All Facilities</a>
                 </div>
             </div>
             {% endfor %}
@@ -156,41 +217,41 @@
     </div>
 </section>
 
-<!-- How It Works Section -->
-<section class="py-5 bg-white border-top">
+<!-- Cyber How It Works Blueprint Section -->
+<section class="py-5 border-top border-secondary border-opacity-25" style="background: var(--bg-darkest);">
     <div class="container py-3">
         <div class="text-center mb-5">
-            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill mb-2">Simplicity First</span>
-            <h3 class="fw-bold text-dark">How SpotBook Works in 3 Steps</h3>
-            <p class="text-muted small">From booking to gate exit with zero paperwork</p>
+            <span class="badge badge-cyber-info px-3 py-1 rounded-pill mb-2">AUTONOMOUS PARKING WORKFLOW</span>
+            <h3 class="fw-bold text-white font-tech">How SpotBook Operates in 3 Steps</h3>
+            <p class="text-secondary small">Zero waiting, zero overlaps, and instant QR verification at security barriers</p>
         </div>
 
         <div class="row g-4 text-center">
             <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light h-100 border step-card">
-                    <div class="step-icon-bubble bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
-                        <span class="fw-bold fs-5">1</span>
+                <div class="glass-panel p-4 h-100">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 56px; height: 56px; background: rgba(6, 182, 212, 0.15); border: 2px solid var(--neon-cyan); box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);">
+                        <span class="fw-bold font-tech fs-4 text-white">01</span>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Select Time & Slot</h5>
-                    <p class="text-muted small mb-0">Browse slots for your location. Our engine validates zero overlaps in real-time.</p>
+                    <h5 class="fw-bold text-white font-tech mb-2">Select Bay & Time Window</h5>
+                    <p class="text-muted small mb-0">Browse the visual parking blueprint. Our engine verifies time-window availability in real-time, preventing double-bookings.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light h-100 border step-card">
-                    <div class="step-icon-bubble bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
-                        <span class="fw-bold fs-5">2</span>
+                <div class="glass-panel p-4 h-100">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 56px; height: 56px; background: rgba(16, 185, 129, 0.15); border: 2px solid var(--neon-emerald); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+                        <span class="fw-bold font-tech fs-4 text-white">02</span>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Get Instant QR Pass</h5>
-                    <p class="text-muted small mb-0">Confirmation generates a unique digital pass with vehicle details and encrypted QR code.</p>
+                    <h5 class="fw-bold text-white font-tech mb-2">Instant QR Pass Dispatch</h5>
+                    <p class="text-muted small mb-0">Get your dynamic digital boarding pass with vehicle license plate details, reserved bay number, and high-contrast gate barcode.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="p-4 rounded-4 bg-light h-100 border step-card">
-                    <div class="step-icon-bubble bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
-                        <span class="fw-bold fs-5">3</span>
+                <div class="glass-panel p-4 h-100">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 56px; height: 56px; background: rgba(245, 158, 11, 0.15); border: 2px solid var(--neon-amber); box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);">
+                        <span class="fw-bold font-tech fs-4 text-white">03</span>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Scan & Park</h5>
-                    <p class="text-muted small mb-0">Security gate verifies your QR pass at entry and exit, updating status seamlessly.</p>
+                    <h5 class="fw-bold text-white font-tech mb-2">Scan & Enter Gate</h5>
+                    <p class="text-muted small mb-0">Scan at the barrier scanner terminal. Gate records vehicle entry, marks bay Occupied, and releases slot on exit automatically.</p>
                 </div>
             </div>
         </div>
