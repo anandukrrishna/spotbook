@@ -14,6 +14,13 @@
     --glass-shadow-standard: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     --glass-shadow-elevated: 0 16px 48px 0 rgba(0, 0, 0, 0.50);
 
+    /* High-Contrast Text Color Tokens */
+    --text-high-contrast: #FFFFFF;
+    --text-body-bright: #F8FAFC;
+    --text-muted-bright: #94A3B8;
+    --text-label-bright: #E2E8F0;
+    --text-highlight-cyan: #38BDF8;
+
     /* Neon Accent Highlights */
     --neon-blue-base: #3B82F6;
     --neon-cyan-base: #06B6D4;
@@ -31,7 +38,71 @@
 }
 
 /* ==========================================================================
-   1. Universal Glass Panels & Surface Wrappers
+   1. High-Contrast Typography & Global Readability Enforcement
+   ========================================================================== */
+body, p, span, div {
+    color: var(--text-body-bright);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-high-contrast) !important;
+    font-weight: 700;
+}
+
+/* High-Contrast overrides for default Bootstrap muted classes */
+.text-muted,
+small.text-muted,
+span.text-muted,
+p.text-muted {
+    color: var(--text-muted-bright) !important;
+}
+
+.text-secondary {
+    color: #CBD5E1 !important;
+}
+
+/* Form Label & Input Prompt Clarity */
+label,
+.form-label {
+    color: var(--text-label-bright) !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.45rem;
+}
+
+.form-text {
+    color: var(--text-muted-bright) !important;
+}
+
+/* Hyperlinks with Neon Glow on Hover */
+a:not(.btn):not(.nav-link):not(.dropdown-item) {
+    color: var(--text-highlight-cyan);
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
+    color: #FFFFFF;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+/* High-Contrast Breadcrumb Navigation */
+.breadcrumb-item,
+.breadcrumb-item a {
+    color: var(--text-muted-bright) !important;
+    text-decoration: none;
+}
+.breadcrumb-item.active {
+    color: #FFFFFF !important;
+    font-weight: 600;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #64748B !important;
+}
+
+/* ==========================================================================
+   2. Universal Glass Panels & Surface Wrappers
    ========================================================================== */
 .glass-container,
 .glass-card,
@@ -55,7 +126,7 @@
 }
 
 /* ==========================================================================
-   2. Sticky Frosted Glass Navbar & Mobile Toggle
+   3. Sticky Frosted Glass Navbar & Mobile Toggle
    ========================================================================== */
 .navbar-futuristic,
 .navbar.sticky-top {
@@ -89,7 +160,7 @@
 }
 
 /* ==========================================================================
-   3. Search & Filter Bar (Mobile-Full Width & Neon Rings)
+   4. Search & Filter Bar (Mobile-Full Width & Neon Rings)
    ========================================================================== */
 .search-filter-card {
     background: rgba(15, 23, 42, 0.8) !important;
@@ -123,12 +194,14 @@
     color: #FFFFFF !important;
 }
 
-.form-control::placeholder {
-    color: #64748B !important;
+.form-control::placeholder,
+.form-select::placeholder {
+    color: var(--text-muted-bright) !important;
+    opacity: 0.85;
 }
 
 /* ==========================================================================
-   4. Location Cards (Smooth Hover Lifts & Glass Glow)
+   5. Location Cards (Smooth Hover Lifts & Glass Glow)
    ========================================================================== */
 .location-glass-card {
     background: var(--glass-bg-primary) !important;
@@ -147,7 +220,7 @@
 }
 
 /* ==========================================================================
-   5. Interactive Slot Grid (Mobile 2-Col, Desktop 5-Col & Neon Badges)
+   6. Interactive Slot Grid (Mobile 2-Col, Desktop 5-Col & Neon Badges)
    ========================================================================== */
 .slot-bay-card {
     background: rgba(15, 23, 42, 0.8) !important;
@@ -182,6 +255,7 @@
     color: #34D399;
     border: 1px solid rgba(16, 185, 129, 0.5);
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    font-weight: 700;
 }
 
 /* 🟡 Reserved Slot Bay */
@@ -196,6 +270,7 @@
     color: #FBBF24;
     border: 1px solid rgba(245, 158, 11, 0.5);
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+    font-weight: 700;
 }
 
 /* 🔴 Occupied Slot Bay */
@@ -212,10 +287,11 @@
     color: #FB7185;
     border: 1px solid rgba(244, 63, 94, 0.5);
     box-shadow: 0 0 10px rgba(244, 63, 94, 0.35);
+    font-weight: 700;
 }
 
 /* ==========================================================================
-   6. Live Total Fee Estimator (Bold Glowing Text)
+   7. Live Total Fee Estimator (Bold Glowing Text)
    ========================================================================== */
 .live-fee-counter {
     font-family: 'Space Grotesk', monospace, sans-serif;
@@ -227,7 +303,7 @@
 }
 
 /* ==========================================================================
-   7. Boarding Pass E-Ticket & QR Scaling
+   8. Boarding Pass E-Ticket & QR Scaling
    ========================================================================== */
 .boarding-pass-card {
     background: linear-gradient(165deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 15, 28, 0.98) 100%) !important;
@@ -254,7 +330,70 @@
 }
 
 /* ==========================================================================
-   8. Mobile Viewport Refinements & Media Queries
+   9. High-Contrast Tables & Data Displays
+   ========================================================================== */
+.table-responsive {
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table th {
+    color: var(--text-muted-bright) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.table td {
+    color: #F1F5F9 !important;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+/* ==========================================================================
+   10. Glassmorphism Dropdowns & Modals
+   ========================================================================== */
+.dropdown-menu {
+    background: rgba(15, 23, 42, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 12px;
+}
+.dropdown-item {
+    color: #E2E8F0 !important;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background: rgba(6, 182, 212, 0.15) !important;
+    color: #FFFFFF !important;
+}
+
+.modal-content {
+    background: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75) !important;
+    color: #F8FAFC !important;
+    border-radius: 20px;
+}
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   11. Mobile Viewport Refinements & Media Queries
    ========================================================================== */
 @media (max-width: 767.98px) {
     /* Full width inputs on mobile */
@@ -289,11 +428,3 @@
     }
 }
 
-/* ==========================================================================
-   9. Table Responsiveness Enforcer
-   ========================================================================== */
-.table-responsive {
-    border-radius: 12px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
