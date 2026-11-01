@@ -4,46 +4,52 @@
 
 {% block body %}
 <div class="mb-4">
-    <h2 class="fw-bold text-dark mb-1">Parking Infrastructure Management</h2>
-    <p class="text-muted small mb-0">Direct access to facilities, individual slot bays, and tariff rate settings</p>
+    <h2 class="fw-bold mb-1">Parking Infrastructure Management</h2>
+    <p class="text-secondary small mb-0">Direct access to facilities, individual slot bays, and tariff rate settings</p>
 </div>
 
 <div class="row g-4">
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
-            <div class="p-3 bg-primary-subtle text-primary rounded-3 d-inline-block mb-3">
-                <i class="bi bi-geo-alt-fill fs-2"></i>
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
+            <div>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(0, 113, 227, 0.12); color: var(--apple-primary);">
+                    <i class="bi bi-geo-alt-fill fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Parking Locations</h4>
+                <p class="text-secondary small mb-4">Add, configure, or adjust capacities for multi-level garages, street bays, and parking complexes.</p>
             </div>
-            <h4 class="fw-bold text-dark mb-2">Parking Locations</h4>
-            <p class="text-muted small mb-4">Add, configure, or adjust capacities for multi-level garages, street bays, and parking complexes.</p>
-            <a href="{% url 'ParkingLocations' %}" class="btn btn-primary btn-sm rounded-3 w-100 py-2">
-                Manage Locations <i class="bi bi-arrow-right ms-1"></i>
+            <a href="{% url 'ParkingLocations' %}" class="btn btn-cyber-primary btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <span>Manage Locations</span> <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
-            <div class="p-3 bg-success-subtle text-success rounded-3 d-inline-block mb-3">
-                <i class="bi bi-grid-3x3-gap-fill fs-2"></i>
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
+            <div>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(52, 199, 89, 0.12); color: var(--apple-emerald);">
+                    <i class="bi bi-grid-3x3-gap-fill fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Parking Slots</h4>
+                <p class="text-secondary small mb-4">View real-time bay status, configure EV/Bike/Car designations, and customize slot prices.</p>
             </div>
-            <h4 class="fw-bold text-dark mb-2">Parking Slots</h4>
-            <p class="text-muted small mb-4">View real-time bay status, configure EV/Bike/Car designations, and customize slot prices.</p>
-            <a href="{% url 'ParkingSlots' %}" class="btn btn-success btn-sm rounded-3 w-100 py-2">
-                Manage Slots <i class="bi bi-arrow-right ms-1"></i>
+            <a href="{% url 'ParkingSlots' %}" class="btn btn-cyber-success btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <span>Manage Slots</span> <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 transition-all hover-shadow">
-            <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-3 d-inline-block mb-3">
-                <i class="bi bi-currency-rupee fs-2"></i>
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
+            <div>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(255, 159, 10, 0.12); color: var(--apple-amber);">
+                    <i class="bi bi-currency-rupee fs-2"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Tariffs & Charges</h4>
+                <p class="text-secondary small mb-4">Configure hourly billing structures, vehicle type multipliers, and facility-specific rules.</p>
             </div>
-            <h4 class="fw-bold text-dark mb-2">Tariffs & Charges</h4>
-            <p class="text-muted small mb-4">Configure hourly billing structures, vehicle type multipliers, and facility-specific rules.</p>
-            <a href="{% url 'ParkingCharges' %}" class="btn btn-warning text-dark btn-sm rounded-3 w-100 py-2">
-                Manage Charges <i class="bi bi-arrow-right ms-1"></i>
+            <a href="{% url 'ParkingCharges' %}" class="btn btn-cyber-warning btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                <span>Manage Charges</span> <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>

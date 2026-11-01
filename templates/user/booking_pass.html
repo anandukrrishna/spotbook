@@ -1,6 +1,6 @@
 {% extends 'user/base.html' %}
 
-{% block title %}Parking Pass #{{ booking.booking_id }} | SpotBook Hologram Pass{% endblock %}
+{% block title %}Parking Pass #{{ booking.booking_id }} | SpotBook Apple Wallet Pass{% endblock %}
 
 {% block body %}
 <div class="container py-5">
@@ -8,37 +8,37 @@
         <div class="col-md-9 col-lg-7">
             <!-- Top Navigation Controls -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="{% url 'my_bookings' %}" class="btn btn-sm btn-outline-cyber">
+                <a href="{% url 'my_bookings' %}" class="btn btn-sm btn-outline-cyber rounded-pill px-3">
                     <i class="bi bi-chevron-left me-1"></i> All My Bookings
                 </a>
-                <button onclick="window.print()" class="btn btn-sm btn-cyber-primary d-flex align-items-center gap-1 font-tech">
+                <button onclick="window.print()" class="btn btn-sm btn-cyber-primary rounded-pill px-3 d-flex align-items-center gap-1">
                     <i class="bi bi-printer-fill"></i> Print / Save Pass
                 </button>
             </div>
 
-            <!-- High-Tech Digital Boarding Pass / Cyber E-Ticket -->
-            <div class="digital-pass-card boarding-pass-card print-area">
+            <!-- Apple Wallet Digital Pass / Event E-Ticket -->
+            <div class="digital-pass-card boarding-pass-card shadow-lg print-area">
                 <!-- Pass Header -->
-                <div class="pass-header p-4 p-md-5">
+                <div class="p-4 p-md-5 border-bottom border-secondary border-opacity-25" style="background: rgba(120, 120, 128, 0.05);">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge badge-cyber-info fs-xxs font-tech">SMART PARKING PASS</span>
-                                <span class="badge {% if booking.status == 'Confirmed' %}badge-cyber-success{% elif booking.status == 'Active' %}badge-cyber-warning{% elif booking.status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill font-tech">
+                                <span class="badge badge-cyber-info fs-xxs">SMART PARKING PASS</span>
+                                <span class="badge {% if booking.status == 'Confirmed' %}badge-cyber-success{% elif booking.status == 'Active' %}badge-cyber-warning{% elif booking.status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill">
                                     <span class="live-dot me-1" style="width: 6px; height: 6px;"></span>{{ booking.status|upper }}
                                 </span>
                             </div>
-                            <h3 class="fw-bold mb-1 text-white font-tech">{{ location.name }}</h3>
+                            <h3 class="fw-bold mb-1">{{ location.name }}</h3>
                             <p class="text-secondary small mb-0"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ location.address }}, {{ location.city }}</p>
                         </div>
                         <div class="text-end">
-                            <span class="fs-xxs text-muted text-uppercase d-block font-tech">PASS SERIAL</span>
-                            <span class="fw-bold text-info font-tech fs-6">{{ booking.booking_id }}</span>
+                            <span class="fs-xxs text-muted text-uppercase d-block fw-semibold">PASS SERIAL</span>
+                            <span class="fw-bold text-info fs-6">{{ booking.booking_id }}</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Perforation Notch Line -->
+                <!-- Apple Wallet Perforation Notch Line -->
                 <div class="pass-perforation">
                     <div class="perforation-notch-left"></div>
                     <div class="perforation-dash"></div>
@@ -48,54 +48,54 @@
                 <!-- Pass Body -->
                 <div class="p-4 p-md-5">
                     <div class="row align-items-center gy-4 mb-4">
-                        <!-- Centered QR Code with High-Contrast Cyber Frame -->
-                        <div class="col-md-5 text-center pass-divider-dash">
-                            <div class="qr-cyber-frame mb-3">
+                        <!-- Centered High-Contrast QR Code Pass Display -->
+                        <div class="col-md-5 text-center">
+                            <div class="qr-wallet-frame mb-3">
                                 {% if booking.qr_code_image %}
-                                <img src="{{ booking.qr_code_image.url }}" alt="Booking QR Pass" class="img-fluid rounded-2 qr-pass-image qr-code-fluid" style="max-width: 150px; height: auto;">
+                                <img src="{{ booking.qr_code_image.url }}" alt="Booking QR Pass" class="img-fluid rounded-2 qr-pass-image" style="max-width: 155px; height: auto;">
                                 {% else %}
                                 <div class="p-4 bg-white text-center rounded-2">
                                     <i class="bi bi-qr-code display-4 text-dark"></i>
                                 </div>
                                 {% endif %}
                             </div>
-                            <span class="d-block fs-xs text-info font-tech fw-bold">{{ booking.booking_id }}</span>
-                            <span class="fs-xxs text-success font-tech"><i class="bi bi-shield-check me-1"></i>GATE SCAN ENCRYPTED</span>
+                            <span class="d-block fs-xs text-info fw-bold">{{ booking.booking_id }}</span>
+                            <span class="fs-xxs text-success"><i class="bi bi-shield-check me-1"></i>GATE SCAN ENCRYPTED</span>
                         </div>
 
                         <!-- Ticket Metrics -->
                         <div class="col-md-7 ps-md-4">
                             <div class="row g-3">
                                 <div class="col-6">
-                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">ALLOCATED BAY</span>
-                                    <h2 class="fw-bold text-white mb-0 font-tech">{{ slot.slot_number }}</h2>
-                                    <span class="badge badge-cyber-info fs-xxs font-tech">{{ slot.slot_type }} Bay</span>
+                                    <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">ALLOCATED BAY</span>
+                                    <h2 class="fw-bold mb-0 text-white">{{ slot.slot_number }}</h2>
+                                    <span class="badge badge-cyber-info fs-xxs">{{ slot.slot_type }} Bay</span>
                                 </div>
                                 <div class="col-6">
-                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">VEHICLE PLATE</span>
-                                    <h5 class="fw-bold text-info font-tech mb-0">{{ booking.vehicle_number }}</h5>
+                                    <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">VEHICLE PLATE</span>
+                                    <h5 class="fw-bold text-info mb-0">{{ booking.vehicle_number }}</h5>
                                     <span class="text-muted fs-xxs">{{ booking.vehicle_type }}</span>
                                 </div>
 
                                 <div class="col-6">
-                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">BOOKING DATE</span>
-                                    <strong class="text-white font-tech">{{ booking.date }}</strong>
+                                    <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">BOOKING DATE</span>
+                                    <strong class="text-white">{{ booking.date }}</strong>
                                 </div>
                                 <div class="col-6">
-                                    <span class="text-muted fs-xxs text-uppercase d-block font-tech">DURATION</span>
-                                    <strong class="text-white font-tech">{{ booking.duration_hours }} Hour(s)</strong>
+                                    <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">DURATION</span>
+                                    <strong class="text-white">{{ booking.duration_hours }} Hour(s)</strong>
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="p-3 rounded-3" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);">
+                                    <div class="p-3 rounded-4 glass-panel border border-opacity-25">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <span class="text-muted fs-xxs text-uppercase d-block font-tech">RESERVED TIME WINDOW</span>
-                                                <strong class="text-white font-tech fs-6">{{ booking.start_time }} &mdash; {{ booking.end_time }}</strong>
+                                                <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">RESERVED TIME WINDOW</span>
+                                                <strong class="text-white fs-6">{{ booking.start_time }} &mdash; {{ booking.end_time }}</strong>
                                             </div>
                                             <div class="text-end">
-                                                <span class="text-muted fs-xxs text-uppercase d-block font-tech">TOTAL TARIFF</span>
-                                                <strong class="text-success font-tech fs-5">₹{{ booking.fee }}</strong>
+                                                <span class="text-muted fs-xxs text-uppercase d-block fw-semibold">TOTAL TARIFF</span>
+                                                <strong class="text-success fs-5">₹{{ booking.fee }}</strong>
                                             </div>
                                         </div>
                                     </div>
@@ -104,32 +104,57 @@
                         </div>
                     </div>
 
-                    <!-- Barcode Aesthetic Lines -->
+                    <!-- Apple Wallet Barcode Lines Aesthetic -->
                     <div class="barcode-aesthetic mb-4"></div>
 
                     <!-- Gate Instructions -->
-                    <div class="p-3 rounded-3 d-flex align-items-center gap-3 mb-4" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);">
+                    <div class="p-3 rounded-4 d-flex align-items-center gap-3 mb-4 glass-panel border border-opacity-25" style="background: rgba(0, 113, 227, 0.06);">
                         <i class="bi bi-info-circle-fill fs-4 text-info"></i>
                         <p class="fs-xs text-secondary mb-0">
-                            <strong>Gate Scan Instructions:</strong> Hold this digital QR pass up to the optical reader at the entry barrier. The system will automatically log entry, mark Bay {{ slot.slot_number }} as occupied, and open the arm.
+                            <strong>Gate Scan Instructions:</strong> Hold this digital QR pass up to the optical reader at the entry barrier. The system will automatically log entry, mark Bay {{ slot.slot_number }} as occupied, and open the barrier arm.
                         </p>
                     </div>
 
                     <!-- Pass Controls -->
-                    <div class="d-flex justify-content-between align-items-center pt-2 no-print">
+                    <div class="d-flex justify-content-between align-items-center pt-2 no-print gap-2">
                         {% if booking.qr_code_image %}
-                        <a href="{{ booking.qr_code_image.url }}" download="SpotBook_Pass_{{ booking.booking_id }}.png" class="btn btn-outline-cyber btn-sm font-tech">
+                        <a href="{{ booking.qr_code_image.url }}" download="SpotBook_Pass_{{ booking.booking_id }}.png" class="btn btn-outline-cyber btn-sm rounded-pill px-4">
                             <i class="bi bi-download me-1"></i> Download Pass PNG
                         </a>
                         {% endif %}
 
                         {% if booking.status == 'Confirmed' %}
-                        <form method="POST" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Cancel this reservation? Your slot will be immediately made available for other drivers.');">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm font-tech">
-                                <i class="bi bi-x-circle me-1"></i> Cancel Reservation
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#cancelPassModal">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Reservation
+                        </button>
+
+                        <!-- Cancel Modal Confirmation -->
+                        <div class="modal fade" id="cancelPassModal" tabindex="-1" aria-labelledby="cancelPassModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content glass-panel border border-opacity-25 rounded-4 shadow-lg p-3">
+                                    <div class="modal-header border-0 pb-0">
+                                        <h5 class="modal-title fw-bold" id="cancelPassModalLabel">
+                                            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Cancel Reservation?
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body py-3">
+                                        <p class="text-secondary small mb-0">
+                                            Are you sure you want to cancel your reservation for Bay <strong>{{ slot.slot_number }}</strong>? Your slot will be released for other drivers immediately.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0 gap-2">
+                                        <button type="button" class="btn btn-outline-cyber btn-sm rounded-pill px-3" data-bs-dismiss="modal">Keep Reservation</button>
+                                        <form method="POST" action="{% url 'cancel_booking' booking.id %}" class="m-0">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3">
+                                                Confirm Cancellation
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                 </div>

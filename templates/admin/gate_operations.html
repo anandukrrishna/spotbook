@@ -3,112 +3,113 @@
 {% block title %}Gate Operations Terminal — SpotBook Staff Hub{% endblock %}
 
 {% block body %}
+<!-- Page Header -->
 <div class="mb-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
         <div class="d-flex align-items-center gap-2 mb-1">
             <span class="live-dot"></span>
-            <span class="badge badge-cyber-info fs-xxs font-tech">GATE TELEMETRY TERMINAL</span>
+            <span class="badge badge-cyber-info fs-xxs">GATE TELEMETRY TERMINAL</span>
         </div>
-        <h2 class="fw-bold text-white mb-0 font-tech">Unified Gate Barrier Operations</h2>
+        <h2 class="fw-bold mb-0">Unified Gate Barrier Operations</h2>
         <p class="text-secondary small mb-0">Unified hub to process vehicle ingress/egress, inspect digital QR passes, and oversee barrier activity</p>
     </div>
-    <div class="text-secondary small font-tech">
-        <div class="p-2 px-3 rounded-pill glass-panel border-info border-opacity-25 d-flex align-items-center gap-2">
+    <div>
+        <div class="p-2 px-3 rounded-pill glass-panel border border-opacity-25 d-flex align-items-center gap-2 small">
             <i class="bi bi-clock text-info"></i>
-            <span>GATE CLOCK:</span>
+            <span class="text-secondary">GATE CLOCK:</span>
             <span class="text-white fw-bold" id="liveClock">--:--:--</span>
         </div>
     </div>
 </div>
 
-<!-- Live Stats Row with Neon Cyber Counters -->
+<!-- Live Stats Row with macOS Metric Cards -->
 <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
     <div class="col">
-        <div class="kpi-card p-3 text-center h-100">
-            <div class="fs-1 fw-bold text-info font-tech">{{ vehicles_inside }}</div>
-            <div class="fs-xs text-secondary font-tech fw-semibold">Vehicles Inside Now</div>
+        <div class="kpi-card p-4 text-center h-100 shadow-sm">
+            <div class="fs-1 fw-bold text-info mb-1">{{ vehicles_inside }}</div>
+            <div class="small text-secondary fw-semibold">Vehicles Inside Now</div>
         </div>
     </div>
     <div class="col">
-        <div class="kpi-card p-3 text-center h-100">
-            <div class="fs-1 fw-bold text-warning font-tech">{{ awaiting_entry }}</div>
-            <div class="fs-xs text-secondary font-tech fw-semibold">Awaiting Barrier In</div>
+        <div class="kpi-card p-4 text-center h-100 shadow-sm">
+            <div class="fs-1 fw-bold text-warning mb-1">{{ awaiting_entry }}</div>
+            <div class="small text-secondary fw-semibold">Awaiting Barrier In</div>
         </div>
     </div>
     <div class="col">
-        <div class="kpi-card p-3 text-center h-100">
-            <div class="fs-1 fw-bold text-success font-tech">{{ entered_today }}</div>
-            <div class="fs-xs text-secondary font-tech fw-semibold">Entered Today</div>
+        <div class="kpi-card p-4 text-center h-100 shadow-sm">
+            <div class="fs-1 fw-bold text-success mb-1">{{ entered_today }}</div>
+            <div class="small text-secondary fw-semibold">Entered Today</div>
         </div>
     </div>
     <div class="col">
-        <div class="kpi-card p-3 text-center h-100">
-            <div class="fs-1 fw-bold text-white font-tech">{{ exited_today }}</div>
-            <div class="fs-xs text-secondary font-tech fw-semibold">Exited Today</div>
+        <div class="kpi-card p-4 text-center h-100 shadow-sm">
+            <div class="fs-1 fw-bold mb-1">{{ exited_today }}</div>
+            <div class="small text-secondary fw-semibold">Exited Today</div>
         </div>
     </div>
 </div>
 
-<!-- Gate Action Cards -->
+<!-- High-Speed Gate Action Cards -->
 <div class="row g-4 mb-5">
     <div class="col-md-4">
-        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between">
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
             <div>
-                <div class="p-3 rounded-3 d-inline-block mb-3" style="background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3);">
-                    <i class="bi bi-qr-code-scan fs-2 text-info"></i>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(0, 113, 227, 0.12); color: var(--apple-primary);">
+                    <i class="bi bi-qr-code-scan fs-2"></i>
                 </div>
-                <h4 class="fw-bold text-white mb-2 font-tech">QR Pass Verification</h4>
+                <h4 class="fw-bold mb-2">QR Pass Verification</h4>
                 <p class="text-secondary small mb-4">Optical laser scan or manual code lookup to inspect pass authenticity and bay validity before barrier opening.</p>
             </div>
-            <a href="{% url 'QRVerification' %}" class="btn btn-cyber-primary btn-sm rounded-3 w-100 py-2 d-flex align-items-center justify-content-center gap-2 font-tech">
+            <a href="{% url 'QRVerification' %}" class="btn btn-cyber-primary btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                 <span>Launch QR Terminal</span>
-                <i class="bi bi-arrow-right"></i>
+                <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between">
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
             <div>
-                <div class="p-3 rounded-3 d-inline-block mb-3" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3);">
-                    <i class="bi bi-box-arrow-in-right fs-2 text-success"></i>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(52, 199, 89, 0.12); color: var(--apple-emerald);">
+                    <i class="bi bi-box-arrow-in-right fs-2"></i>
                 </div>
-                <h4 class="fw-bold text-white mb-2 font-tech">Process Vehicle Entry</h4>
+                <h4 class="fw-bold mb-2">Process Vehicle Entry</h4>
                 <p class="text-secondary small mb-4">Authorize incoming driver: automatically switches reservation to Active, updates bay to Occupied, and stamps entry log.</p>
             </div>
-            <a href="{% url 'VehicleEntry' %}" class="btn btn-cyber-success btn-sm rounded-3 w-100 py-2 d-flex align-items-center justify-content-center gap-2 font-tech">
+            <a href="{% url 'VehicleEntry' %}" class="btn btn-cyber-success btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                 <span>Process Ingress</span>
-                <i class="bi bi-arrow-right"></i>
+                <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between">
+        <div class="glass-panel glass-card-interactive p-4 h-100 d-flex flex-column justify-content-between shadow-sm">
             <div>
-                <div class="p-3 rounded-3 d-inline-block mb-3" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3);">
-                    <i class="bi bi-box-arrow-right fs-2 text-warning"></i>
+                <div class="p-3 rounded-4 d-inline-block mb-3" style="background: rgba(255, 159, 10, 0.12); color: var(--apple-amber);">
+                    <i class="bi bi-box-arrow-right fs-2"></i>
                 </div>
-                <h4 class="fw-bold text-white mb-2 font-tech">Process Vehicle Exit</h4>
+                <h4 class="fw-bold mb-2">Process Vehicle Exit</h4>
                 <p class="text-secondary small mb-4">Process departing vehicle: marks booking Completed, immediately frees up the parking bay to Available, and records exit timestamp.</p>
             </div>
-            <a href="{% url 'VehicleExit' %}" class="btn btn-cyber-warning btn-sm rounded-3 w-100 py-2 d-flex align-items-center justify-content-center gap-2 font-tech text-dark fw-bold">
+            <a href="{% url 'VehicleExit' %}" class="btn btn-cyber-warning btn-sm rounded-pill w-100 py-2 d-flex align-items-center justify-content-center gap-2">
                 <span>Process Egress</span>
-                <i class="bi bi-arrow-right"></i>
+                <i class="bi bi-chevron-right"></i>
             </a>
         </div>
     </div>
 </div>
 
-<!-- Recent Activity Log -->
+<!-- Recent Activity Log Table -->
 {% if recent_activity %}
-<div class="glass-panel rounded-4 overflow-hidden">
+<div class="glass-panel rounded-4 overflow-hidden shadow-sm">
     <div class="p-3 px-4 border-bottom border-secondary border-opacity-25 d-flex align-items-center justify-content-between">
-        <h6 class="fw-bold text-white mb-0 font-tech">
+        <h6 class="fw-bold mb-0">
             <i class="bi bi-activity me-2 text-info"></i>Barrier Entry / Exit Audit Stream
         </h6>
-        <span class="badge badge-cyber-info fs-xxs font-tech">Last {{ recent_activity|length }} Movements</span>
+        <span class="badge badge-cyber-info fs-xxs">Last {{ recent_activity|length }} Movements</span>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover mb-0 align-middle small font-tech">
+        <table class="table table-hover mb-0 align-middle small">
             <thead>
                 <tr class="text-secondary fs-xs">
                     <th class="ps-4">PASS REF</th>
@@ -159,7 +160,7 @@
             el.textContent = now.toLocaleTimeString('en-US', { hour12: false });
         }
     }
-    updateClock();
     setInterval(updateClock, 1000);
+    updateClock();
 </script>
 {% endblock %}

@@ -1,0 +1,1055 @@
+/* ==========================================================================
+   SpotBook — Apple macOS / iOS Glassmorphism Design System
+   Dual Dark & Light Mode Theme Engine (macOS Sonoma / Sequoia Aesthetic)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Theme Variables: Light Mode (:root) & Dark Mode ([data-theme="dark"])
+   -------------------------------------------------------------------------- */
+
+:root, [data-theme="light"] {
+    --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    /* Canvas / Backgrounds */
+    --apple-bg: #f5f5f7;
+    --apple-bg-subtle: #ffffff;
+    --apple-bg-gradient: radial-gradient(circle at 50% -10%, rgba(0, 113, 227, 0.08) 0%, transparent 60%),
+                         radial-gradient(circle at 100% 100%, rgba(52, 199, 89, 0.05) 0%, transparent 50%),
+                         #f5f5f7;
+
+    /* Text Colors */
+    --apple-text: #1d1d1f;
+    --apple-text-secondary: #515154;
+    --apple-text-muted: #86868b;
+    --apple-heading: #111113;
+
+    /* Advanced Glassmorphism: Light Mode */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+    --glass-blur: blur(20px);
+    --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+    /* Apple Surface & Card Tokens */
+    --apple-card-bg: rgba(255, 255, 255, 0.82);
+    --apple-card-border: 1px solid rgba(0, 0, 0, 0.07);
+    --apple-card-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --apple-hover-shadow: 0 16px 36px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    /* Navigation / Menu Bar Dock */
+    --apple-nav-bg: rgba(255, 255, 255, 0.75);
+    --apple-nav-border: 1px solid rgba(0, 0, 0, 0.07);
+    --apple-nav-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --apple-pill-active-bg: rgba(0, 113, 227, 0.12);
+    --apple-pill-active-text: #0071e3;
+    --apple-pill-hover-bg: rgba(0, 0, 0, 0.05);
+
+    /* Signature Apple Color Accents */
+    --apple-primary: #0071e3;
+    --apple-primary-hover: #0077ed;
+    --apple-emerald: #34c759;
+    --apple-emerald-glow: rgba(52, 199, 89, 0.25);
+    --apple-amber: #ff9f0a;
+    --apple-amber-glow: rgba(255, 159, 10, 0.25);
+    --apple-ruby: #ff3b30;
+    --apple-ruby-glow: rgba(255, 59, 48, 0.25);
+    --apple-purple: #af52de;
+    --apple-indigo: #5856d6;
+    --apple-teal: #00c7be;
+    --apple-gray: #8e8e93;
+
+    /* Controls & Inputs */
+    --apple-input-bg: rgba(255, 255, 255, 0.9);
+    --apple-input-border: rgba(0, 0, 0, 0.14);
+    --apple-input-focus: #0071e3;
+    --apple-input-ring: rgba(0, 113, 227, 0.25);
+    --apple-divider: rgba(0, 0, 0, 0.08);
+
+    /* Wallet Pass Specifics */
+    --pass-notch-color: #f5f5f7;
+    --pass-card-bg: rgba(255, 255, 255, 0.92);
+    --pass-barcode-lines: #1d1d1f;
+
+    /* Footer */
+    --apple-footer-bg: rgba(245, 245, 247, 0.92);
+}
+
+[data-theme="dark"] {
+    /* Canvas / Backgrounds */
+    --apple-bg: #0b0e14;
+    --apple-bg-subtle: #161b22;
+    --apple-bg-gradient: radial-gradient(circle at 50% -10%, rgba(41, 151, 255, 0.12) 0%, transparent 60%),
+                         radial-gradient(circle at 100% 100%, rgba(48, 209, 88, 0.08) 0%, transparent 50%),
+                         #0b0e14;
+
+    /* Text Colors */
+    --apple-text: #f5f5f7;
+    --apple-text-secondary: #a1a1a6;
+    --apple-text-muted: #6e6e73;
+    --apple-heading: #ffffff;
+
+    /* Advanced Glassmorphism: Dark Mode */
+    --glass-bg: rgba(22, 27, 34, 0.75);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(25px);
+    --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+
+    /* Apple Surface & Card Tokens */
+    --apple-card-bg: rgba(24, 29, 38, 0.78);
+    --apple-card-border: 1px solid rgba(255, 255, 255, 0.09);
+    --apple-card-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 1px 2px rgba(255, 255, 255, 0.04);
+    --apple-hover-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    /* Navigation / Menu Bar Dock */
+    --apple-nav-bg: rgba(18, 22, 29, 0.78);
+    --apple-nav-border: 1px solid rgba(255, 255, 255, 0.08);
+    --apple-nav-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --apple-pill-active-bg: rgba(41, 151, 255, 0.18);
+    --apple-pill-active-text: #2997ff;
+    --apple-pill-hover-bg: rgba(255, 255, 255, 0.06);
+
+    /* Signature Apple Color Accents */
+    --apple-primary: #2997ff;
+    --apple-primary-hover: #3ca3ff;
+    --apple-emerald: #30d158;
+    --apple-emerald-glow: rgba(48, 209, 88, 0.35);
+    --apple-amber: #ffd60a;
+    --apple-amber-glow: rgba(255, 214, 10, 0.35);
+    --apple-ruby: #ff453a;
+    --apple-ruby-glow: rgba(255, 69, 58, 0.35);
+    --apple-purple: #bf5af2;
+    --apple-indigo: #5e5ce6;
+    --apple-teal: #64d2ff;
+    --apple-gray: #8e8e93;
+
+    /* Controls & Inputs */
+    --apple-input-bg: rgba(28, 33, 44, 0.8);
+    --apple-input-border: rgba(255, 255, 255, 0.13);
+    --apple-input-focus: #2997ff;
+    --apple-input-ring: rgba(41, 151, 255, 0.3);
+    --apple-divider: rgba(255, 255, 255, 0.1);
+
+    /* Wallet Pass Specifics */
+    --pass-notch-color: #0b0e14;
+    --pass-card-bg: rgba(26, 32, 44, 0.88);
+    --pass-barcode-lines: #ffffff;
+
+    /* Footer */
+    --apple-footer-bg: rgba(13, 17, 23, 0.95);
+}
+
+/* --------------------------------------------------------------------------
+   2. Global Typography, Body & Canvas Reset
+   -------------------------------------------------------------------------- */
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: light dark;
+}
+
+body {
+    font-family: var(--font-apple) !important;
+    background-color: var(--apple-bg) !important;
+    background-image: var(--apple-bg-gradient) !important;
+    background-attachment: fixed !important;
+    color: var(--apple-text) !important;
+    min-height: 100vh;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Fix Bootstrap Utilities in Dark/Light themes */
+.user-body, .admin-body {
+    background-color: transparent !important;
+    color: var(--apple-text) !important;
+}
+
+h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4 {
+    font-family: var(--font-apple) !important;
+    color: var(--apple-heading) !important;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+}
+
+p, span, div, li, label, th, td {
+    font-family: var(--font-apple);
+}
+
+.text-white {
+    color: var(--apple-heading) !important;
+}
+
+.text-dark {
+    color: var(--apple-heading) !important;
+}
+
+.text-muted, .text-secondary {
+    color: var(--apple-text-secondary) !important;
+}
+
+.text-info {
+    color: var(--apple-primary) !important;
+}
+
+.text-success {
+    color: var(--apple-emerald) !important;
+}
+
+.text-warning {
+    color: var(--apple-amber) !important;
+}
+
+.text-danger {
+    color: var(--apple-ruby) !important;
+}
+
+.font-tech, .font-monospace {
+    font-family: var(--font-apple) !important;
+    letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   3. Apple Frosted Glass Panels & macOS Cards
+   -------------------------------------------------------------------------- */
+
+.glass-panel,
+.macos-glass,
+.location-glass-card,
+.kpi-card,
+.scanner-hud-container,
+.card:not(.bg-transparent) {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+    border-radius: 20px !important;
+    color: var(--apple-text) !important;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                background 0.3s ease,
+                border-color 0.3s ease;
+}
+
+.glass-panel-subtle {
+    background: rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+[data-theme="dark"] .glass-panel-subtle {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Interactive Card Hover Lift */
+.location-glass-card,
+.glass-card-interactive,
+.macos-card-hover {
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+                box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.location-glass-card:hover,
+.glass-card-interactive:hover,
+.macos-card-hover:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--apple-hover-shadow) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. macOS Floating Dock / Menu Bar Navigation
+   -------------------------------------------------------------------------- */
+
+.navbar-futuristic,
+.admin-navbar,
+.navbar-macos-dock {
+    background: var(--apple-nav-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border-bottom: var(--apple-nav-border) !important;
+    box-shadow: var(--apple-nav-shadow) !important;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    z-index: 1030;
+}
+
+/* Apple Squircle Brand Icon */
+.brand-badge,
+.apple-squircle-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, #0071e3 0%, #5856d6 100%) !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.brand-badge:hover,
+.apple-squircle-icon:hover {
+    transform: scale(1.05);
+}
+
+.brand-logo-text {
+    font-family: var(--font-apple) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.03em;
+    color: var(--apple-heading) !important;
+}
+
+.brand-glow-text {
+    color: var(--apple-primary) !important;
+    text-shadow: none !important;
+}
+
+/* macOS Pill-Shaped Navigation Links */
+.navbar-nav .nav-link {
+    font-family: var(--font-apple) !important;
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    color: var(--apple-text-secondary) !important;
+    padding: 8px 16px !important;
+    border-radius: 999px !important;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--apple-heading) !important;
+    background-color: var(--apple-pill-hover-bg) !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--apple-pill-active-text) !important;
+    background-color: var(--apple-pill-active-bg) !important;
+    font-weight: 600 !important;
+}
+
+/* macOS Sidebar for Admin */
+.admin-sidebar {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border-right: var(--apple-nav-border) !important;
+    box-shadow: var(--apple-card-shadow) !important;
+}
+
+.admin-sidebar .nav-link {
+    color: var(--apple-text-secondary) !important;
+    border-radius: 12px !important;
+    padding: 9px 14px !important;
+    font-weight: 500 !important;
+    margin-bottom: 2px;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.admin-sidebar .nav-link:hover {
+    background-color: var(--apple-pill-hover-bg) !important;
+    color: var(--apple-heading) !important;
+    transform: translateX(3px);
+}
+
+.admin-sidebar .nav-link.active {
+    background-color: var(--apple-pill-active-bg) !important;
+    color: var(--apple-pill-active-text) !important;
+    font-weight: 600 !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Apple macOS Dual Theme Toggle Switch
+   -------------------------------------------------------------------------- */
+
+.theme-toggle-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.theme-toggle-btn {
+    width: 60px;
+    height: 32px;
+    border-radius: 999px;
+    background: rgba(120, 120, 128, 0.16);
+    border: 1px solid var(--apple-divider);
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 3px;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    user-select: none;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(120, 120, 128, 0.24);
+    transform: scale(1.03);
+}
+
+.theme-toggle-thumb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, color 0.3s ease;
+    color: #ff9500;
+    font-size: 13px;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .theme-toggle-thumb {
+    transform: translateX(28px);
+    background: #1c1c1e;
+    color: #ffd60a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   6. macOS / iOS Floating Toast Notification System
+   -------------------------------------------------------------------------- */
+
+.apple-toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    width: 92%;
+    max-width: 520px;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.apple-toast-card {
+    pointer-events: auto;
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 20px !important;
+    padding: 16px 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    animation: appleToastSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.apple-toast-card.dismissing {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.96);
+}
+
+@keyframes appleToastSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Override default Bootstrap Alerts to look like Apple Toasts */
+.alert {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--apple-card-shadow) !important;
+    color: var(--apple-text) !important;
+    padding: 16px 20px !important;
+}
+
+.alert .btn-close {
+    filter: none;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+[data-theme="dark"] .alert .btn-close {
+    filter: invert(1);
+}
+.alert .btn-close:hover {
+    opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   7. macOS Hero Section & Clean Search Bar
+   -------------------------------------------------------------------------- */
+
+.hero-section {
+    background: transparent !important;
+    padding: 48px 0 32px !important;
+}
+
+.hero-title-gradient {
+    font-size: 3.2rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    color: var(--apple-heading) !important;
+    background: linear-gradient(180deg, var(--apple-heading) 0%, var(--apple-text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 768px) {
+    .hero-title-gradient {
+        font-size: 2.2rem;
+    }
+}
+
+.search-filter-card {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 20px !important;
+    padding: 12px 16px !important;
+}
+
+.search-filter-card input,
+.search-filter-card select,
+.form-control,
+.form-select {
+    font-family: var(--font-apple) !important;
+    background-color: var(--apple-input-bg) !important;
+    border: 1px solid var(--apple-input-border) !important;
+    color: var(--apple-text) !important;
+    border-radius: 14px !important;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--apple-input-bg) !important;
+    border-color: var(--apple-input-focus) !important;
+    box-shadow: 0 0 0 4px var(--apple-input-ring) !important;
+    color: var(--apple-text) !important;
+    outline: none !important;
+}
+
+.form-control::placeholder {
+    color: var(--apple-text-muted) !important;
+    opacity: 0.8;
+}
+
+/* --------------------------------------------------------------------------
+   8. Apple macOS Buttons & Interactive Elements
+   -------------------------------------------------------------------------- */
+
+/* Primary Pill Button */
+.btn-cyber-primary,
+.btn-primary,
+.btn-apple-primary {
+    background: linear-gradient(180deg, #0077ed 0%, #0071e3 100%) !important;
+    border: 1px solid rgba(0, 113, 227, 0.8) !important;
+    color: #ffffff !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    padding: 10px 24px;
+    box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    letter-spacing: -0.01em;
+}
+
+.btn-cyber-primary:hover,
+.btn-primary:hover,
+.btn-apple-primary:hover {
+    background: linear-gradient(180deg, #0080ff 0%, #0077ed 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 113, 227, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.btn-cyber-primary:active,
+.btn-primary:active,
+.btn-apple-primary:active {
+    transform: scale(0.97) !important;
+}
+
+/* Outline Cyber / Apple Secondary Button */
+.btn-outline-cyber,
+.btn-outline-secondary,
+.btn-apple-secondary {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--apple-input-border) !important;
+    color: var(--apple-text) !important;
+    border-radius: 999px !important;
+    font-weight: 500 !important;
+    padding: 8px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-outline-cyber:hover,
+.btn-outline-secondary:hover,
+.btn-apple-secondary:hover {
+    background: var(--apple-pill-hover-bg) !important;
+    border-color: var(--apple-primary) !important;
+    color: var(--apple-primary) !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-cyber:active,
+.btn-outline-secondary:active {
+    transform: scale(0.97);
+}
+
+/* Success Button */
+.btn-cyber-success,
+.btn-success {
+    background: linear-gradient(180deg, #34c759 0%, #28a745 100%) !important;
+    border: 1px solid rgba(52, 199, 89, 0.8) !important;
+    color: #ffffff !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 14px var(--apple-emerald-glow) !important;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-cyber-success:hover,
+.btn-success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--apple-emerald-glow) !important;
+    color: #ffffff !important;
+}
+
+/* Warning Button */
+.btn-cyber-warning,
+.btn-warning {
+    background: linear-gradient(180deg, #ff9f0a 0%, #f59e0b 100%) !important;
+    border: 1px solid rgba(255, 159, 10, 0.8) !important;
+    color: #ffffff !important;
+    border-radius: 999px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 14px var(--apple-amber-glow) !important;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-cyber-warning:hover,
+.btn-warning:hover {
+    transform: translateY(-1px);
+    color: #ffffff !important;
+}
+
+/* Pulse Glow Reset for Apple feel */
+.btn-pulse-glow {
+    animation: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Interactive Parking Slot Grid (Apple Grid Layout)
+   -------------------------------------------------------------------------- */
+
+.parking-blueprint-canvas {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    border-radius: 24px !important;
+    padding: 32px !important;
+    box-shadow: var(--glass-shadow) !important;
+}
+
+.parking-lane {
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 12px 0;
+    margin-bottom: 24px;
+}
+[data-theme="dark"] .parking-lane {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.parking-bay-card,
+.slot-bay-card {
+    border-radius: 18px !important;
+    padding: 18px 14px !important;
+    text-align: center;
+    text-decoration: none !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 180px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* 🟢 Available: Soft emerald glow with active hover pulse */
+.bay-available,
+.slot-available {
+    background: rgba(52, 199, 89, 0.08) !important;
+    border: 1.5px solid rgba(52, 199, 89, 0.4) !important;
+    box-shadow: 0 4px 18px rgba(52, 199, 89, 0.12) !important;
+    cursor: pointer;
+}
+
+.bay-available:hover,
+.slot-available:hover {
+    transform: translateY(-5px) scale(1.02) !important;
+    border-color: var(--apple-emerald) !important;
+    box-shadow: 0 10px 30px rgba(52, 199, 89, 0.3) !important;
+    background: rgba(52, 199, 89, 0.15) !important;
+}
+
+/* 🟡 Reserved: Warm amber frosted badge */
+.bay-reserved,
+.slot-reserved {
+    background: rgba(255, 159, 10, 0.07) !important;
+    border: 1.5px solid rgba(255, 159, 10, 0.35) !important;
+    box-shadow: 0 4px 14px rgba(255, 159, 10, 0.08) !important;
+}
+
+/* 🔴 Occupied: Muted ruby glass badge with disabled interaction */
+.bay-occupied,
+.slot-occupied {
+    background: rgba(255, 59, 48, 0.05) !important;
+    border: 1.5px solid rgba(255, 59, 48, 0.25) !important;
+    opacity: 0.72;
+    pointer-events: none;
+    box-shadow: none !important;
+}
+
+.bay-number {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em;
+    color: var(--apple-heading) !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. Apple Badges & Pill Tags
+   -------------------------------------------------------------------------- */
+
+.badge {
+    font-family: var(--font-apple) !important;
+    border-radius: 999px !important;
+    padding: 6px 12px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.01em;
+}
+
+.badge-cyber-info,
+.badge-info {
+    background: rgba(0, 113, 227, 0.12) !important;
+    color: var(--apple-primary) !important;
+    border: 1px solid rgba(0, 113, 227, 0.25) !important;
+}
+
+.badge-cyber-success,
+.badge-success {
+    background: rgba(52, 199, 89, 0.12) !important;
+    color: var(--apple-emerald) !important;
+    border: 1px solid rgba(52, 199, 89, 0.25) !important;
+}
+
+.badge-cyber-warning,
+.badge-warning {
+    background: rgba(255, 159, 10, 0.12) !important;
+    color: var(--apple-amber) !important;
+    border: 1px solid rgba(255, 159, 10, 0.25) !important;
+}
+
+.badge-cyber-danger,
+.badge-danger {
+    background: rgba(255, 59, 48, 0.12) !important;
+    color: var(--apple-ruby) !important;
+    border: 1px solid rgba(255, 59, 48, 0.25) !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. Booking Form & Live Fee Calculator
+   -------------------------------------------------------------------------- */
+
+.live-fee-counter {
+    font-size: 2.4rem !important;
+    font-weight: 800 !important;
+    color: var(--apple-primary) !important;
+    letter-spacing: -0.03em;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--apple-primary) 0%, var(--apple-indigo) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.fee-estimator-box {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1.5px solid rgba(0, 113, 227, 0.25) !important;
+    border-radius: 20px !important;
+    padding: 24px !important;
+    box-shadow: 0 10px 30px rgba(0, 113, 227, 0.08) !important;
+}
+
+/* --------------------------------------------------------------------------
+   12. Apple Wallet Pass Aesthetic ("My Bookings" & QR Pass)
+   -------------------------------------------------------------------------- */
+
+.boarding-pass-card,
+.digital-pass-card {
+    background: var(--pass-card-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    position: relative;
+    overflow: hidden;
+    color: var(--apple-text) !important;
+}
+
+/* Apple Wallet Perforation Line with Circle Notches */
+.pass-perforation {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 -32px;
+    height: 32px;
+    z-index: 2;
+}
+
+.perforation-notch-left,
+.perforation-notch-right {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--apple-bg) !important;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+    transition: background-color 0.4s ease;
+}
+
+.perforation-dash {
+    flex-grow: 1;
+    border-top: 2px dashed var(--apple-divider) !important;
+    height: 1px;
+    margin: 0 12px;
+}
+
+/* High Contrast QR Code Frame */
+.qr-cyber-frame,
+.qr-wallet-frame {
+    background: #ffffff !important;
+    padding: 16px;
+    border-radius: 18px;
+    display: inline-block;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.barcode-aesthetic {
+    height: 32px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--pass-barcode-lines) 0px,
+        var(--pass-barcode-lines) 2px,
+        transparent 2px,
+        transparent 6px,
+        var(--pass-barcode-lines) 6px,
+        var(--pass-barcode-lines) 9px,
+        transparent 9px,
+        transparent 11px,
+        var(--pass-barcode-lines) 11px,
+        var(--pass-barcode-lines) 14px,
+        transparent 14px,
+        transparent 18px
+    );
+    opacity: 0.65;
+    border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   13. Admin Dashboard & Gate Operations Terminal
+   -------------------------------------------------------------------------- */
+
+.kpi-card {
+    padding: 24px !important;
+    border-radius: 22px !important;
+}
+
+.kpi-counter-val {
+    font-size: 2.2rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em;
+    color: var(--apple-heading) !important;
+}
+
+.kpi-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* High Contrast Gate Optical Scanner HUD */
+.scanner-hud-container {
+    padding: 32px !important;
+    border-radius: 24px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.scanner-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--apple-primary) 50%, transparent 100%);
+    box-shadow: 0 0 15px var(--apple-primary);
+    animation: scannerSweep 2.5s infinite ease-in-out;
+}
+
+@keyframes scannerSweep {
+    0% { transform: translateY(0); opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { transform: translateY(320px); opacity: 0.2; }
+}
+
+/* --------------------------------------------------------------------------
+   14. Tables, Progress Bars & Modals
+   -------------------------------------------------------------------------- */
+
+.table {
+    color: var(--apple-text) !important;
+    background-color: transparent !important;
+}
+
+.table > :not(caption) > * > * {
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--apple-divider) !important;
+    color: var(--apple-text) !important;
+    padding: 14px 16px;
+}
+
+.table thead th {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--apple-text-secondary) !important;
+    border-bottom: 1.5px solid var(--apple-divider) !important;
+}
+
+.table-hover tbody tr:hover > * {
+    background-color: var(--apple-pill-hover-bg) !important;
+}
+
+/* Apple iOS rounded meter progress bar */
+.progress {
+    height: 8px !important;
+    border-radius: 999px !important;
+    background: rgba(120, 120, 128, 0.14) !important;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 999px !important;
+    background: linear-gradient(90deg, #0077ed 0%, #34c759 100%) !important;
+}
+
+/* Dropdowns in macOS style */
+.dropdown-menu {
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: var(--glass-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--apple-hover-shadow) !important;
+    padding: 8px !important;
+}
+
+.dropdown-item {
+    font-family: var(--font-apple) !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    font-size: 0.9rem !important;
+    color: var(--apple-text) !important;
+    transition: all 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--apple-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Footer styling */
+footer {
+    background: var(--apple-footer-bg) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border-top: 1px solid var(--apple-divider) !important;
+    color: var(--apple-text-secondary) !important;
+}
+
+/* Breadcrumbs */
+.breadcrumb-item a {
+    color: var(--apple-primary) !important;
+    text-decoration: none;
+}
+.breadcrumb-item.active {
+    color: var(--apple-text-secondary) !important;
+}
+
+/* Pulse Live Dot */
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--apple-emerald);
+    display: inline-block;
+    box-shadow: 0 0 8px var(--apple-emerald);
+    animation: livePulse 2s infinite ease-in-out;
+}
+
+@keyframes livePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+/* Print Overrides */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    .navbar, footer, .no-print, .btn {
+        display: none !important;
+    }
+    .boarding-pass-card, .digital-pass-card {
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+    }
+}

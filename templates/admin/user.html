@@ -3,65 +3,65 @@
 {% block title %}User Management - SpotBook Admin{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Registered Users Management</h2>
-        <p class="text-muted small mb-0">Monitor registered customer accounts, view reservation activity, and manage access</p>
+        <h2 class="fw-bold mb-1">Registered Users Management</h2>
+        <p class="text-secondary small mb-0">Monitor customer accounts, view reservation activity, and manage access</p>
     </div>
 </div>
 
 <!-- Stats Grid -->
 <div class="row g-3 mb-4">
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total Users</span>
-            <h3 class="fw-bold text-dark mb-0">{{ total_users }}</h3>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Total Users</span>
+            <h3 class="fw-bold text-info mb-0">{{ total_users }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Active Accounts</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Active Accounts</span>
             <h3 class="fw-bold text-success mb-0">{{ active_users }}</h3>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Deactivated</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Deactivated</span>
             <h3 class="fw-bold text-secondary mb-0">{{ inactive_users }}</h3>
         </div>
     </div>
 </div>
 
 <!-- Search & Filter Card -->
-<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+<div class="glass-panel p-3 rounded-4 mb-4 shadow-sm">
     <form method="GET" action="{% url 'users' %}" class="row g-2 align-items-center">
         <div class="col-md-7">
             <div class="input-group">
-                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Search by name, username, email or phone..." value="{{ search_query }}">
+                <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Search by name, username, email or phone..." value="{{ search_query }}">
             </div>
         </div>
         <div class="col-md-3">
-            <select name="status" class="form-select bg-light border-0">
+            <select name="status" class="form-select form-select-sm">
                 <option value="">All Account Statuses</option>
                 <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
                 <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive / Deactivated</option>
             </select>
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100 btn-sm">Search</button>
+            <button type="submit" class="btn btn-cyber-primary w-100 btn-sm rounded-pill">Search</button>
             {% if search_query or status_filter %}
-            <a href="{% url 'users' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            <a href="{% url 'users' %}" class="btn btn-outline-cyber btn-sm rounded-pill">Reset</a>
             {% endif %}
         </div>
     </form>
 </div>
 
 <!-- Users Table -->
-<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+<div class="glass-panel rounded-4 overflow-hidden mb-4 shadow-sm">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>#</th>
                     <th>Customer Name</th>
@@ -77,16 +77,16 @@
                 <tr>
                     <td class="text-muted small">{{ forloop.counter }}</td>
                     <td>
-                        <strong class="text-dark">{{ u.name }}</strong>
+                        <strong class="text-white">{{ u.name }}</strong>
                         {% if u.address %}
                         <div class="text-muted fs-xs text-truncate" style="max-width: 200px;">{{ u.address }}</div>
                         {% endif %}
                     </td>
-                    <td class="font-monospace text-primary">@{{ u.LOGINID.username }}</td>
-                    <td><a href="mailto:{{ u.email }}" class="text-decoration-none">{{ u.email }}</a></td>
-                    <td class="font-monospace">{{ u.phone }}</td>
+                    <td class="text-info fw-semibold">@{{ u.LOGINID.username }}</td>
+                    <td><a href="mailto:{{ u.email }}" class="text-decoration-none text-info">{{ u.email }}</a></td>
+                    <td>{{ u.phone }}</td>
                     <td>
-                        <span class="badge {% if u.LOGINID.is_active %}bg-success{% else %}bg-secondary{% endif %} rounded-pill">
+                        <span class="badge {% if u.LOGINID.is_active %}badge-cyber-success{% else %}badge-cyber-danger{% endif %} rounded-pill">
                             {% if u.LOGINID.is_active %}Active{% else %}Deactivated{% endif %}
                         </span>
                     </td>
@@ -96,7 +96,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="toggle_status">
                                 <input type="hidden" name="user_id" value="{{ u.id }}">
-                                <button type="submit" class="btn btn-sm btn-outline-warning text-dark" title="Toggle Active/Deactivate">
+                                <button type="submit" class="btn btn-sm btn-outline-cyber rounded-pill px-2 text-warning" title="Toggle Active/Deactivate">
                                     <i class="bi bi-arrow-repeat"></i> {% if u.LOGINID.is_active %}Deactivate{% else %}Activate{% endif %}
                                 </button>
                             </form>
@@ -104,7 +104,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="user_id" value="{{ u.id }}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Delete User">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>

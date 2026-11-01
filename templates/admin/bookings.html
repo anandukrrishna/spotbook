@@ -3,58 +3,58 @@
 {% block title %}Bookings Management - SpotBook Admin{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
-        <h2 class="fw-bold text-dark mb-1">Booking Management</h2>
-        <p class="text-muted small mb-0">Oversee all customer reservations, verify double-booking prevention, and manage passes</p>
+        <h2 class="fw-bold mb-1">Booking Management</h2>
+        <p class="text-secondary small mb-0">Oversee customer reservations, verify double-booking prevention, and manage passes</p>
     </div>
 </div>
 
-<!-- Booking Stats -->
+<!-- Booking Stats Grid -->
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-md">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Total</span>
-            <h3 class="fw-bold text-dark mb-0">{{ total_bookings }}</h3>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Total</span>
+            <h3 class="fw-bold mb-0">{{ total_bookings }}</h3>
         </div>
     </div>
     <div class="col-sm-6 col-md">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Upcoming</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Upcoming</span>
             <h3 class="fw-bold text-success mb-0">{{ upcoming_bookings }}</h3>
         </div>
     </div>
     <div class="col-sm-6 col-md">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Currently Parked</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Parked Inside</span>
             <h3 class="fw-bold text-warning mb-0">{{ active_bookings }}</h3>
         </div>
     </div>
     <div class="col-sm-6 col-md">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Completed</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Completed</span>
             <h3 class="fw-bold text-info mb-0">{{ completed_bookings }}</h3>
         </div>
     </div>
     <div class="col-sm-6 col-md">
-        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white text-center">
-            <span class="text-muted fs-xs text-uppercase fw-bold d-block mb-1">Cancelled</span>
+        <div class="kpi-card text-center p-3 shadow-sm h-100">
+            <span class="text-muted fs-xxs text-uppercase fw-bold d-block mb-1">Cancelled</span>
             <h3 class="fw-bold text-danger mb-0">{{ cancelled_bookings }}</h3>
         </div>
     </div>
 </div>
 
 <!-- Search & Filter Card -->
-<div class="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+<div class="glass-panel p-3 rounded-4 mb-4 shadow-sm">
     <form method="GET" action="{% url 'Bookings' %}" class="row g-2 align-items-center">
         <div class="col-md-5">
             <div class="input-group">
-                <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Booking Ref, customer name, vehicle, or slot..." value="{{ search_query }}">
+                <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="Booking Ref, customer name, vehicle, or slot..." value="{{ search_query }}">
             </div>
         </div>
         <div class="col-md-3">
-            <select name="status" class="form-select bg-light border-0">
+            <select name="status" class="form-select form-select-sm">
                 <option value="">All Statuses</option>
                 <option value="booked" {% if status_filter == 'booked' %}selected{% endif %}>Booked (Upcoming)</option>
                 <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active (Parked)</option>
@@ -63,22 +63,22 @@
             </select>
         </div>
         <div class="col-md-2">
-            <input type="date" name="date" class="form-control bg-light border-0" value="{{ date_filter }}">
+            <input type="date" name="date" class="form-control form-control-sm" value="{{ date_filter }}">
         </div>
         <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100 btn-sm">Filter</button>
+            <button type="submit" class="btn btn-cyber-primary w-100 btn-sm rounded-pill">Filter</button>
             {% if search_query or status_filter or date_filter %}
-            <a href="{% url 'Bookings' %}" class="btn btn-outline-secondary btn-sm">Reset</a>
+            <a href="{% url 'Bookings' %}" class="btn btn-outline-cyber btn-sm rounded-pill">Reset</a>
             {% endif %}
         </div>
     </form>
 </div>
 
 <!-- Bookings Table -->
-<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+<div class="glass-panel rounded-4 overflow-hidden mb-4 shadow-sm">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
+            <thead>
                 <tr>
                     <th>Ref ID</th>
                     <th>Customer</th>
@@ -94,36 +94,36 @@
                 {% for b in bookings %}
                 <tr>
                     <td>
-                        <a href="{% url 'booking_pass' b.id %}" target="_blank" class="fw-bold text-primary font-monospace text-decoration-none">
+                        <a href="{% url 'booking_pass' b.id %}" target="_blank" class="fw-bold text-info text-decoration-none">
                             {{ b.booking_id }}
                         </a>
                         <div class="text-muted fs-xxs">{{ b.created_at|date:"M d, Y H:i" }}</div>
                     </td>
                     <td>
-                        <strong class="text-dark">{{ b.USERID.name }}</strong>
+                        <strong class="text-white">{{ b.USERID.name }}</strong>
                         <div class="text-muted small">{{ b.USERID.phone }}</div>
                     </td>
                     <td>
-                        <div>{{ b.SLOTID.LOCATIONID.name }}</div>
-                        <span class="badge bg-light text-dark border fs-xxs">Slot {{ b.SLOTID.slot_number }} ({{ b.SLOTID.slot_type }})</span>
+                        <div class="text-white">{{ b.SLOTID.LOCATIONID.name }}</div>
+                        <span class="badge badge-cyber-info fs-xxs">Bay {{ b.SLOTID.slot_number }} ({{ b.SLOTID.slot_type }})</span>
                     </td>
                     <td>
-                        <span class="font-monospace fw-semibold">{{ b.vehicle_number }}</span>
+                        <span class="fw-semibold text-white">{{ b.vehicle_number }}</span>
                         <div class="text-muted fs-xxs">{{ b.vehicle_type }}</div>
                     </td>
                     <td class="small">
-                        <strong>{{ b.date }}</strong>
+                        <strong class="text-white">{{ b.date }}</strong>
                         <div class="text-muted">{{ b.start_time }} &mdash; {{ b.end_time }} ({{ b.duration_hours }}h)</div>
                     </td>
-                    <td class="fw-bold text-primary">₹{{ b.fee }}</td>
+                    <td class="fw-bold text-success">₹{{ b.fee }}</td>
                     <td>
-                        <span class="badge {% if b.status == 'Confirmed' %}bg-success{% elif b.status == 'Active' %}bg-warning text-dark{% elif b.status == 'Completed' %}bg-info text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                        <span class="badge {% if b.status == 'Confirmed' %}badge-cyber-success{% elif b.status == 'Active' %}badge-cyber-warning{% elif b.status == 'Completed' %}badge-cyber-info{% else %}badge-cyber-danger{% endif %} rounded-pill">
                             {{ b.status }}
                         </span>
                     </td>
                     <td class="text-end">
                         <div class="d-inline-flex gap-1">
-                            <a href="{% url 'booking_pass' b.id %}" target="_blank" class="btn btn-sm btn-outline-primary" title="View Pass">
+                            <a href="{% url 'booking_pass' b.id %}" target="_blank" class="btn btn-sm btn-outline-cyber rounded-pill px-3" title="View Pass">
                                 <i class="bi bi-qr-code"></i> Pass
                             </a>
                             {% if b.status == 'Confirmed' %}
@@ -131,7 +131,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="booking_id" value="{{ b.id }}">
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel Booking">
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking">
                                     <i class="bi bi-x-circle"></i> Cancel
                                 </button>
                             </form>
